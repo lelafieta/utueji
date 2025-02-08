@@ -1,6 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:phone_form_field/phone_form_field.dart';
+import 'package:utueji/src/core/resources/icons/app_icons.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -17,7 +18,7 @@ class LoginPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    'unite',
+                    'SOLIDARY',
                     style: TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
@@ -40,22 +41,47 @@ class LoginPage extends StatelessWidget {
                     children: [
                       Flexible(
                         flex: 2,
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            prefixIcon: DropdownButton<String>(
-                              value: '+91',
-                              items: ['+91', '+244', '+1']
-                                  .map((code) => DropdownMenuItem(
-                                        value: code,
-                                        child: Text(code),
-                                      ))
-                                  .toList(),
-                              onChanged: (value) {},
-                              underline: Container(),
-                            ),
-                            border: const OutlineInputBorder(),
-                            hintText: 'Digite o número de telefone',
+                        // child: TextFormField(
+                        //   decoration: InputDecoration(
+                        //     prefixIcon: DropdownButton<String>(
+                        //       value: '+91',
+                        //       items: ['+91', '+244', '+1']
+                        //           .map((code) => DropdownMenuItem(
+                        //                 value: code,
+                        //                 child: Text(code),
+                        //               ))
+                        //           .toList(),
+                        //       onChanged: (value) {},
+                        //       underline: Container(),
+                        //     ),
+                        //     border: const OutlineInputBorder(),
+                        //     hintText: 'Digite o número de telefone',
+                        //   ),
+                        // ),
+                        child: PhoneFormField(
+                          decoration: const InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
                           ),
+                          initialValue: PhoneNumber.parse('+244'),
+                          validator: PhoneValidator.compose([
+                            PhoneValidator.required(context,
+                                errorText: "Campo obrigatório"),
+                            PhoneValidator.validMobile(context,
+                                errorText: "Contacto inválido")
+                          ]),
+                          countrySelectorNavigator:
+                              const CountrySelectorNavigator.page(),
+                          onChanged: (phoneNumber) =>
+                              print('changed into $phoneNumber'),
+                          enabled: true,
+                          isCountrySelectionEnabled: true,
+                          isCountryButtonPersistent: true,
+                          countryButtonStyle: const CountryButtonStyle(
+                              showDialCode: true,
+                              showIsoCode: true,
+                              showFlag: true,
+                              flagSize: 16),
                         ),
                       ),
                     ],
@@ -84,20 +110,18 @@ class LoginPage extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      IconButton(
-                        icon: const FaIcon(FontAwesomeIcons.google,
-                            color: Colors.red),
-                        onPressed: () {},
-                      ),
-                      IconButton(
-                        icon: const FaIcon(FontAwesomeIcons.facebook,
-                            color: Colors.blue),
-                        onPressed: () {},
-                      ),
-                      IconButton(
-                        icon: const FaIcon(FontAwesomeIcons.xTwitter,
-                            color: Colors.black),
-                        onPressed: () {},
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: IconButton(
+                          icon: SvgPicture.asset(
+                            AppIcons.gmail,
+                            width: 35,
+                          ),
+                          onPressed: () {},
+                        ),
                       ),
                     ],
                   ),

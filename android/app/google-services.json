@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "257812198370",
+    "project_id": "solidary-431e5",
+    "storage_bucket": "solidary-431e5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:257812198370:android:1f6b7a8b31511f4f2c7fbb",
+        "android_client_info": {
+          "package_name": "com.example.utueji"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFH33VHG0JbR1ZxY_Q0gUlnjuij5Y68IQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

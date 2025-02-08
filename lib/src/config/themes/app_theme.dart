@@ -133,7 +133,7 @@ class AppTheme {
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(
-                  AppValues.s10,
+                  AppValues.s100,
                 ), // Define o raio da borda aqui
               ),
             ),
