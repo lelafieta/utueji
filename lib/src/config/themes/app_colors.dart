@@ -19,7 +19,8 @@ class AppColors {
   static const Color mainColor = Color(0xff333333);
   static const Color blackColor60 = Color(0xff282828);
 
-  static const Color scaffoldBackgroundColor = Colors.white;
+  static const Color scaffoldBackgroundColor =
+      Color.fromARGB(255, 248, 248, 248);
   static const Color whiteColor = Colors.white;
 
   static const Color grey = Color(0xff787b82);
