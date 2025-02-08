@@ -94,4 +94,7 @@ class AuthDataSource implements IAuthDataSource {
   Future<void> signOut() async {
     await auth.signOut();
   }
+
+  @override
+  Future<bool> isSignIn() async => auth.currentUser?.uid != null;
 }
