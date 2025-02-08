@@ -8,4 +8,5 @@ abstract class IAuthRepository {
       String phoneNumber, Function(String, int?) codeSent);
   Future<UserEntity?> verifyPhone(String verificationId, String smsCode);
   Future<void> signOut();
+  Future<bool> isSignIn();
 }

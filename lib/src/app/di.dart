@@ -3,11 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:utueji/src/features/auth/data/datasources/auth_datasource.dart';
-import 'package:utueji/src/features/auth/data/datasources/i_auth_datasource.dart';
-
+import '../features/auth/data/datasources/auth_datasource.dart';
+import '../features/auth/data/datasources/i_auth_datasource.dart';
 import '../features/auth/data/repositories/auth_repository.dart';
 import '../features/auth/domain/repositories/i_auth_repository.dart';
+import '../features/auth/domain/usecases/is_sign_in_usecase.dart';
 import '../features/auth/domain/usecases/sign_in_with_email_usecase.dart';
 import '../features/auth/domain/usecases/sign_in_with_google_usecase.dart';
 import '../features/auth/domain/usecases/sign_in_with_phone_usecase.dart';
@@ -15,6 +15,7 @@ import '../features/auth/domain/usecases/sign_out_usecase.dart';
 import '../features/auth/domain/usecases/sign_up_with_email_usecase.dart';
 import '../features/auth/domain/usecases/verify_phone_usecase.dart';
 import '../features/auth/presentation/cubit/auth_cubit.dart';
+import '../features/auth/presentation/cubit/initial_cubit/initial_cubit.dart';
 
 GetIt instance = GetIt.instance;
 
@@ -51,6 +52,8 @@ void _setUpUsecases() {
       () => VerifyPhoneUseCase(repository: instance()));
   instance.registerLazySingleton<SignInWithPhoneUseCase>(
       () => SignInWithPhoneUseCase(repository: instance()));
+  instance.registerLazySingleton<IsSignInUseCase>(
+      () => IsSignInUseCase(repository: instance()));
 }
 
 void _setUpCubits() {
@@ -61,6 +64,7 @@ void _setUpCubits() {
       signOutUseCase: instance(),
       verifyPhoneUseCase: instance(),
       signInWithPhoneUseCase: instance()));
+  instance.registerFactory(() => InitialCubit(isSignInUseCase: instance()));
 }
 
 void _setUpExternal() {

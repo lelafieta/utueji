@@ -1,9 +1,9 @@
 import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/i_auth_repository.dart';
-import '../datasources/auth_datasource.dart';
+import '../datasources/i_auth_datasource.dart';
 
 class AuthRespository extends IAuthRepository {
-  final AuthDataSource authDataSource;
+  final IAuthDataSource authDataSource;
 
   AuthRespository({required this.authDataSource});
 
@@ -29,4 +29,7 @@ class AuthRespository extends IAuthRepository {
 
   @override
   Future<void> signOut() => authDataSource.signOut();
+
+  @override
+  Future<bool> isSignIn() => authDataSource.isSignIn();
 }

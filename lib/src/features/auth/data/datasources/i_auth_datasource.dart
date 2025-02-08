@@ -8,4 +8,5 @@ abstract class IAuthDataSource {
       String phoneNumber, Function(String, int?) codeSent);
   Future<UserModel?> verifyPhone(String verificationId, String smsCode);
   Future<void> signOut();
+  Future<bool> isSignIn();
 }
