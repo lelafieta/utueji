@@ -24,7 +24,7 @@ class RouteManager {
       case AppRoutes.loginRoute:
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) {
-            return const LoginPage();
+            return LoginPage();
           },
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return SharedAxisTransition(
