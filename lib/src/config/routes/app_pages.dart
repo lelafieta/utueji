@@ -32,7 +32,7 @@ class RouteManager {
             return BlocBuilder<InitialCubit, InitialState>(
               builder: (context, authState) {
                 if (authState is Initialized) {
-                  return const SolidaryPage();
+                  return SolidaryPage();
                 } else {
                   return const LoginPage();
                 }
@@ -52,7 +52,7 @@ class RouteManager {
       case AppRoutes.solidaryRoute:
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) {
-            return const SolidaryPage();
+            return SolidaryPage();
           },
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return SharedAxisTransition(
