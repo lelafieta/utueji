@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
+import '../../../home/presentation/pages/home_page.dart';
 
 class SolidaryPage extends StatefulWidget {
   const SolidaryPage({super.key});
@@ -53,7 +54,7 @@ class _SolidaryPageState extends State<SolidaryPage> {
   ];
 
   final List<Widget> pages = [
-    const Center(child: Text("Home", style: TextStyle(fontSize: 24))),
+    const HomePage(),
     const Center(child: Text("Search", style: TextStyle(fontSize: 24))),
     const Center(child: Text("Favorites", style: TextStyle(fontSize: 24))),
     const Center(child: Text("Profile", style: TextStyle(fontSize: 24))),
