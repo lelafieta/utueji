@@ -11,6 +11,7 @@ class AppIcons {
   static const String houseChimney = "assets/icons/house-chimney.svg";
   static const String bell = "assets/icons/bell.svg";
   static const String heart = "assets/icons/heart.svg";
+  static const String heartBold = "assets/icons/heart-bold.svg";
   static const String microphone = "assets/icons/microphone.svg";
   static const String search = "assets/icons/search.svg";
 

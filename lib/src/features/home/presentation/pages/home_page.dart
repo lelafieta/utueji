@@ -281,204 +281,257 @@ class _HomePageState extends State<HomePage> {
                   return Container(
                     margin: EdgeInsets.only(left: 16),
                     child: Card(
-                      child: Container(
-                        width: 400,
-                        child: Column(
-                          children: [
-                            ClipRRect(
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(10),
-                                topRight: Radius.circular(10),
-                              ),
-                              child: Stack(
-                                children: [
-                                  Image.asset(AppImages.image1),
-                                  Positioned(
-                                    left: 0,
-                                    right: 0,
-                                    bottom: 0,
-                                    top: 0,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                          colors: [
-                                            AppColors.blue.withOpacity(.4),
-                                            AppColors.primaryColor
-                                                .withOpacity(.4),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.all(10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 400,
+                            child: Column(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10),
+                                  ),
+                                  child: Stack(
                                     children: [
-                                      Expanded(
-                                        child: Text(
-                                          "Dê o teu suporte para os estudos das crianças",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleSmall,
-                                        ),
-                                      ),
-                                      IconButton(
-                                          onPressed: () {},
-                                          icon:
-                                              SvgPicture.asset(AppIcons.heart)),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  RichText(
-                                    text: TextSpan(
-                                      style: DefaultTextStyle.of(context).style,
-                                      children: [
-                                        TextSpan(
-                                          text: "\$ ",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleSmall!
-                                              .copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18),
-                                        ),
-                                        TextSpan(
-                                          text: "1.000.000",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleSmall!
-                                              .copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18),
-                                        ),
-                                        TextSpan(text: "/"),
-                                        TextSpan(text: "800.000")
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Stack(
-                                    children: [
-                                      Container(
-                                        width: double.infinity,
-                                        height: 15,
-                                        decoration: BoxDecoration(
-                                          color: AppColors.strokeColor,
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                        ),
-                                      ),
+                                      Image.asset(AppImages.image1),
                                       Positioned(
+                                        left: 0,
+                                        right: 0,
+                                        bottom: 0,
+                                        top: 0,
                                         child: Container(
-                                          width:
-                                              MediaQuery.sizeOf(context).width *
-                                                  0.6,
-                                          height: 15,
                                           decoration: BoxDecoration(
-                                            color: Colors.black87,
-                                            borderRadius:
-                                                BorderRadius.circular(100),
-                                          ),
-                                          child: const Center(
-                                            child: Text(
-                                              "75%",
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 10,
-                                                  fontWeight: FontWeight.w600),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Container(
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: Container(
-                                            height: 16,
-                                            child: Stack(
-                                              children: [
-                                                _contributeUserItem(0, 0, 0,
-                                                    AppImages.me, Colors.black),
-                                                _contributeUserItem(8, 0, 0,
-                                                    AppImages.me, Colors.red),
-                                                _contributeUserItem(16, 0, 0,
-                                                    AppImages.me, Colors.green),
-                                                _contributeUserItem(
-                                                    24,
-                                                    0,
-                                                    0,
-                                                    AppImages.me,
-                                                    AppColors.primaryColor,
-                                                    text: "+16"),
-                                                _contributeUserDescription(
-                                                    60,
-                                                    0,
-                                                    0,
-                                                    AppImages.me,
-                                                    Colors.transparent,
-                                                    text: "Contributos"),
+                                            gradient: LinearGradient(
+                                              colors: [
+                                                AppColors.blue.withOpacity(.4),
+                                                AppColors.primaryColor
+                                                    .withOpacity(.4),
                                               ],
                                             ),
                                           ),
                                         ),
-                                        const Icon(
-                                          Icons.timelapse_rounded,
-                                          size: 16,
-                                        ),
-                                        const SizedBox(
-                                          width: 5,
-                                        ),
-                                        Text(
-                                          "Faltando 2 dias",
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                child: ElevatedButton(
-                                  style: ButtonStyle(
-                                    shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                          AppValues.s10,
-                                        ), // Define o raio da borda aqui
                                       ),
+                                      (i != 1)
+                                          ? SizedBox.shrink()
+                                          : Positioned(
+                                              left: 0,
+                                              top: 0,
+                                              child: Container(
+                                                width: 120,
+                                                height: 30,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                  gradient:
+                                                      const LinearGradient(
+                                                    colors: [
+                                                      Color.fromARGB(
+                                                          255, 110, 32, 27),
+                                                      Color.fromARGB(
+                                                          255, 248, 101, 99),
+                                                    ],
+                                                  ),
+                                                ),
+                                                child: Center(
+                                                    child: Text(
+                                                  "EMERGÊNCIA",
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 14,
+                                                  ),
+                                                )),
+                                              ),
+                                            )
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.all(10),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              "Dê o teu suporte para os estudos das crianças",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleSmall,
+                                            ),
+                                          ),
+                                          IconButton(
+                                              onPressed: () {},
+                                              icon: SvgPicture.asset(
+                                                  AppIcons.heart)),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      RichText(
+                                        text: TextSpan(
+                                          style: DefaultTextStyle.of(context)
+                                              .style,
+                                          children: [
+                                            TextSpan(
+                                              text: "\$ ",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleSmall!
+                                                  .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 18),
+                                            ),
+                                            TextSpan(
+                                              text: "1.000.000",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleSmall!
+                                                  .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 18),
+                                            ),
+                                            TextSpan(text: "/"),
+                                            TextSpan(text: "800.000")
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Stack(
+                                        children: [
+                                          Container(
+                                            width: double.infinity,
+                                            height: 15,
+                                            decoration: BoxDecoration(
+                                              color: AppColors.strokeColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(100),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            child: Container(
+                                              width: MediaQuery.sizeOf(context)
+                                                      .width *
+                                                  0.6,
+                                              height: 15,
+                                              decoration: BoxDecoration(
+                                                color: Colors.black87,
+                                                borderRadius:
+                                                    BorderRadius.circular(100),
+                                              ),
+                                              child: const Center(
+                                                child: Text(
+                                                  "75%",
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 10,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Container(
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: Container(
+                                                height: 16,
+                                                child: Stack(
+                                                  children: [
+                                                    _contributeUserItem(
+                                                        0,
+                                                        0,
+                                                        0,
+                                                        AppImages.me,
+                                                        Colors.black),
+                                                    _contributeUserItem(
+                                                        8,
+                                                        0,
+                                                        0,
+                                                        AppImages.me,
+                                                        Colors.red),
+                                                    _contributeUserItem(
+                                                        16,
+                                                        0,
+                                                        0,
+                                                        AppImages.me,
+                                                        Colors.green),
+                                                    _contributeUserItem(
+                                                        24,
+                                                        0,
+                                                        0,
+                                                        AppImages.me,
+                                                        AppColors.primaryColor,
+                                                        text: "+16"),
+                                                    _contributeUserDescription(
+                                                        60,
+                                                        0,
+                                                        0,
+                                                        AppImages.me,
+                                                        Colors.transparent,
+                                                        text: "Contributos"),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            const Icon(
+                                              Icons.timelapse_rounded,
+                                              size: 16,
+                                            ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text(
+                                              "Faltando 2 dias",
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10),
+                                    child: ElevatedButton(
+                                      style: ButtonStyle(
+                                        shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              AppValues.s10,
+                                            ), // Define o raio da borda aqui
+                                          ),
+                                        ),
+                                      ),
+                                      onPressed: () {},
+                                      child: Text("Doar"),
                                     ),
                                   ),
-                                  onPressed: () {},
-                                  child: Text("Doar"),
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   );
@@ -774,13 +827,16 @@ class _HomePageState extends State<HomePage> {
                                               .copyWith(color: Colors.black54),
                                         ),
                                       ),
-                                      SvgPicture.asset(AppIcons.heart),
+                                      SvgPicture.asset(
+                                        AppIcons.heartBold,
+                                        color: Colors.red,
+                                      ),
                                     ],
                                   ),
                                   const SizedBox(
                                     height: 10,
                                   ),
-                                  Row(
+                                  const Row(
                                     children: [
                                       Icon(
                                         Icons.access_time_rounded,
@@ -940,11 +996,11 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                         ),
                                       ),
-                                      Icon(
+                                      const Icon(
                                         Icons.add,
                                         color: AppColors.primaryColor,
                                       ),
-                                      Text(
+                                      const Text(
                                         "Juntar-se",
                                         style: TextStyle(
                                             color: AppColors.primaryColor),
