@@ -13,4 +13,13 @@ class AppIcons {
   static const String heart = "assets/icons/heart.svg";
   static const String microphone = "assets/icons/microphone.svg";
   static const String search = "assets/icons/search.svg";
+
+  static const String doctor = "assets/icons/doctor.svg";
+  static const String familyDress = "assets/icons/family-dress.svg";
+  static const String graduationCap = "assets/icons/graduation-cap.svg";
+  static const String menuDots = "assets/icons/menu-dots.svg";
+  static const String oldPeople = "assets/icons/old-people.svg";
+  static const String paw = "assets/icons/paw.svg";
+  static const String tennis = "assets/icons/tennis.svg";
+  static const String triangleWarning = "assets/icons/triangle-warning.svg";
 }
