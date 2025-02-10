@@ -1,9 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_rounded_progress_bar/flutter_rounded_progress_bar.dart';
-import 'package:flutter_rounded_progress_bar/rounded_progress_bar_style.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:utueji/src/core/resources/icons/app_icons.dart';
 
@@ -39,6 +35,11 @@ class _HomePageState extends State<HomePage> {
     AppIcons.triangleWarning,
     AppIcons.menuDots
   ];
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
