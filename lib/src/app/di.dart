@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../features/auth/data/datasources/auth_datasource.dart';
 import '../features/auth/data/datasources/i_auth_datasource.dart';
 import '../features/auth/data/repositories/auth_repository.dart';
@@ -86,6 +87,7 @@ void _setUpCubits() {
 }
 
 void _setUpExternal() {
+  instance.registerFactory(() => Supabase.instance.client);
   instance.registerFactory(() => FirebaseFirestore.instance);
   instance.registerFactory(() => GoogleSignIn());
   instance.registerFactory(() => FirebaseAuth.instance);
