@@ -16,6 +16,13 @@ import '../features/auth/domain/usecases/sign_up_with_email_usecase.dart';
 import '../features/auth/domain/usecases/verify_phone_usecase.dart';
 import '../features/auth/presentation/cubit/auth_cubit.dart';
 import '../features/auth/presentation/cubit/initial_cubit/initial_cubit.dart';
+import '../features/campaigns/data/datasources/i_campaign_datasource.dart';
+import '../features/campaigns/data/datasources/campaign_datasource.dart';
+import '../features/campaigns/data/repositories/campaign_repository.dart';
+import '../features/campaigns/domain/repositories/i_campaign_repository.dart';
+import '../features/campaigns/domain/usecases/get_campaigns_usecases.dart';
+import '../features/campaigns/domain/usecases/get_latest_campaigns_usecases.dart';
+import '../features/campaigns/presentation/cubit/campaign_cubit.dart';
 
 GetIt instance = GetIt.instance;
 
@@ -32,11 +39,16 @@ Future init() async {
 void _setUpDatasources() {
   instance.registerLazySingleton<IAuthDataSource>(
       () => AuthDataSource(auth: instance(), googleSignIn: instance()));
+  instance.registerLazySingleton<ICampaignRemoteDataSource>(() =>
+      CampaignRemoteDataSource(
+          firestore: instance(), auth: instance(), storage: instance()));
 }
 
 void _setUpRepositories() {
   instance.registerLazySingleton<IAuthRepository>(
       () => AuthRespository(authDataSource: instance()));
+  instance.registerLazySingleton<ICampaignRepository>(
+      () => CampaignRepository(campaignDataSource: instance()));
 }
 
 void _setUpUsecases() {
@@ -54,6 +66,10 @@ void _setUpUsecases() {
       () => SignInWithPhoneUseCase(repository: instance()));
   instance.registerLazySingleton<IsSignInUseCase>(
       () => IsSignInUseCase(repository: instance()));
+  instance.registerLazySingleton<GetCampaignsUseCase>(
+      () => GetCampaignsUseCase(repository: instance()));
+  instance.registerLazySingleton<GetLatestCampaignsUseCase>(
+      () => GetLatestCampaignsUseCase(repository: instance()));
 }
 
 void _setUpCubits() {
@@ -65,6 +81,8 @@ void _setUpCubits() {
       verifyPhoneUseCase: instance(),
       signInWithPhoneUseCase: instance()));
   instance.registerFactory(() => InitialCubit(isSignInUseCase: instance()));
+  instance.registerFactory(() => CampaignCubit(
+      getCampaignsUseCase: instance(), getLatestCampaignsUseCase: instance()));
 }
 
 void _setUpExternal() {

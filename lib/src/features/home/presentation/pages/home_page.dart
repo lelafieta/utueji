@@ -1,11 +1,17 @@
 import 'package:carousel_slider/carousel_slider.dart';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:utueji/src/core/resources/icons/app_icons.dart';
 
 import '../../../../config/themes/app_colors.dart';
+import '../../../../core/resources/icons/app_icons.dart';
 import '../../../../core/resources/images/app_images.dart';
-import '../../../../core/utils/app_values.dart';
+import '../../../../core/utils/app_utils.dart';
+
+import '../../../campaigns/presentation/cubit/campaign_cubit.dart';
+import '../../../campaigns/presentation/cubit/campaign_state.dart';
+import '../../../campaigns/presentation/widgets/campaign_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -39,6 +45,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    context.read<CampaignCubit>().getLatestCampaigns();
   }
 
   @override
@@ -269,277 +276,37 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            Container(
-              child: CarouselSlider(
-                options: CarouselOptions(
-                  height: 420.0,
-                  enableInfiniteScroll: false,
-                  padEnds: false,
-                  viewportFraction: 0.93,
-                ),
-                carouselController: CarouselSliderController(),
-                items: [1, 2, 3, 4, 5].map((i) {
-                  return Container(
-                    margin: EdgeInsets.only(left: 16),
-                    child: Card(
-                      child: Column(
-                        children: [
-                          Container(
-                            width: 400,
-                            child: Column(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    topRight: Radius.circular(10),
-                                  ),
-                                  child: Stack(
-                                    children: [
-                                      Image.asset(AppImages.image1),
-                                      Positioned(
-                                        left: 0,
-                                        right: 0,
-                                        bottom: 0,
-                                        top: 0,
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                              colors: [
-                                                AppColors.blue.withOpacity(.4),
-                                                AppColors.primaryColor
-                                                    .withOpacity(.4),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      (i != 1)
-                                          ? SizedBox.shrink()
-                                          : Positioned(
-                                              left: 0,
-                                              top: 0,
-                                              child: Container(
-                                                width: 120,
-                                                height: 30,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(5),
-                                                  gradient:
-                                                      const LinearGradient(
-                                                    colors: [
-                                                      Color.fromARGB(
-                                                          255, 110, 32, 27),
-                                                      Color.fromARGB(
-                                                          255, 248, 101, 99),
-                                                    ],
-                                                  ),
-                                                ),
-                                                child: Center(
-                                                    child: Text(
-                                                  "EMERGÊNCIA",
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 14,
-                                                  ),
-                                                )),
-                                              ),
-                                            )
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Text(
-                                              "Dê o teu suporte para os estudos das crianças",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleSmall,
-                                            ),
-                                          ),
-                                          IconButton(
-                                              onPressed: () {},
-                                              icon: SvgPicture.asset(
-                                                  AppIcons.heart)),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      RichText(
-                                        text: TextSpan(
-                                          style: DefaultTextStyle.of(context)
-                                              .style,
-                                          children: [
-                                            TextSpan(
-                                              text: "\$ ",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleSmall!
-                                                  .copyWith(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 18),
-                                            ),
-                                            TextSpan(
-                                              text: "1.000.000",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleSmall!
-                                                  .copyWith(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 18),
-                                            ),
-                                            TextSpan(text: "/"),
-                                            TextSpan(text: "800.000")
-                                          ],
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Stack(
-                                        children: [
-                                          Container(
-                                            width: double.infinity,
-                                            height: 15,
-                                            decoration: BoxDecoration(
-                                              color: AppColors.strokeColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(100),
-                                            ),
-                                          ),
-                                          Positioned(
-                                            child: Container(
-                                              width: MediaQuery.sizeOf(context)
-                                                      .width *
-                                                  0.6,
-                                              height: 15,
-                                              decoration: BoxDecoration(
-                                                color: Colors.black87,
-                                                borderRadius:
-                                                    BorderRadius.circular(100),
-                                              ),
-                                              child: const Center(
-                                                child: Text(
-                                                  "75%",
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Container(
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                              child: Container(
-                                                height: 16,
-                                                child: Stack(
-                                                  children: [
-                                                    _contributeUserItem(
-                                                        0,
-                                                        0,
-                                                        0,
-                                                        AppImages.me,
-                                                        Colors.black),
-                                                    _contributeUserItem(
-                                                        8,
-                                                        0,
-                                                        0,
-                                                        AppImages.me,
-                                                        Colors.red),
-                                                    _contributeUserItem(
-                                                        16,
-                                                        0,
-                                                        0,
-                                                        AppImages.me,
-                                                        Colors.green),
-                                                    _contributeUserItem(
-                                                        24,
-                                                        0,
-                                                        0,
-                                                        AppImages.me,
-                                                        AppColors.primaryColor,
-                                                        text: "+16"),
-                                                    _contributeUserDescription(
-                                                        60,
-                                                        0,
-                                                        0,
-                                                        AppImages.me,
-                                                        Colors.transparent,
-                                                        text: "Contributos"),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            const Icon(
-                                              Icons.timelapse_rounded,
-                                              size: 16,
-                                            ),
-                                            const SizedBox(
-                                              width: 5,
-                                            ),
-                                            Text(
-                                              "Faltando 2 dias",
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.bottomCenter,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10),
-                                    child: ElevatedButton(
-                                      style: ButtonStyle(
-                                        shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              AppValues.s10,
-                                            ), // Define o raio da borda aqui
-                                          ),
-                                        ),
-                                      ),
-                                      onPressed: () {},
-                                      child: Text("Doar"),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+            BlocBuilder<CampaignCubit, CampaignState>(
+              builder: (context, state) {
+                print(state);
+
+                if (state is CampaignLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
                   );
-                }).toList(),
-              ),
+                } else if (state is CampaignLoaded) {
+                  if (state.campaigns.isEmpty) {
+                    return const Center(
+                      child: Text("Sem campanhas"),
+                    );
+                  }
+                  return CarouselSlider(
+                    options: CarouselOptions(
+                      height: 420.0,
+                      enableInfiniteScroll: false,
+                      padEnds: false,
+                      viewportFraction: 0.93,
+                    ),
+                    carouselController: CarouselSliderController(),
+                    items: state.campaigns.map((camapaign) {
+                      return CampaignWidget(campaign: camapaign);
+                    }).toList(),
+                  );
+                }
+                return const Text("ERRRO");
+              },
             ),
-            // SizedBox(
+            // SizedBoxAppUtils.
             //   height: 400,
             //   child: ListView.separated(
             //     shrinkWrap: true,
@@ -881,26 +648,39 @@ class _HomePageState extends State<HomePage> {
                                             height: 16,
                                             child: Stack(
                                               children: [
-                                                _contributeUserItem(0, 0, 0,
-                                                    AppImages.me, Colors.black),
-                                                _contributeUserItem(8, 0, 0,
-                                                    AppImages.me, Colors.red),
-                                                _contributeUserItem(16, 0, 0,
-                                                    AppImages.me, Colors.green),
-                                                _contributeUserItem(
+                                                AppUtils.contributeUserItem(
+                                                    0,
+                                                    0,
+                                                    0,
+                                                    AppImages.me,
+                                                    Colors.black),
+                                                AppUtils.contributeUserItem(
+                                                    8,
+                                                    0,
+                                                    0,
+                                                    AppImages.me,
+                                                    Colors.red),
+                                                AppUtils.contributeUserItem(
+                                                    16,
+                                                    0,
+                                                    0,
+                                                    AppImages.me,
+                                                    Colors.green),
+                                                AppUtils.contributeUserItem(
                                                     24,
                                                     0,
                                                     0,
                                                     AppImages.me,
                                                     AppColors.primaryColor,
                                                     text: "+16"),
-                                                _contributeUserDescription(
-                                                    60,
-                                                    0,
-                                                    0,
-                                                    AppImages.me,
-                                                    Colors.transparent,
-                                                    text: "Contributos"),
+                                                AppUtils
+                                                    .contributeUserDescription(
+                                                        60,
+                                                        0,
+                                                        0,
+                                                        AppImages.me,
+                                                        Colors.transparent,
+                                                        text: "Contributos"),
                                               ],
                                             ),
                                           ),
@@ -980,13 +760,21 @@ class _HomePageState extends State<HomePage> {
                                           height: 16,
                                           child: Stack(
                                             children: [
-                                              _contributeUserItem(0, 0, 0,
-                                                  AppImages.me, Colors.black),
-                                              _contributeUserItem(8, 0, 0,
-                                                  AppImages.me, Colors.red),
-                                              _contributeUserItem(16, 0, 0,
-                                                  AppImages.me, Colors.green),
-                                              _contributeUserItem(
+                                              AppUtils.contributeUserItem(
+                                                  0,
+                                                  0,
+                                                  0,
+                                                  AppImages.me,
+                                                  Colors.black),
+                                              AppUtils.contributeUserItem(8, 0,
+                                                  0, AppImages.me, Colors.red),
+                                              AppUtils.contributeUserItem(
+                                                  16,
+                                                  0,
+                                                  0,
+                                                  AppImages.me,
+                                                  Colors.green),
+                                              AppUtils.contributeUserItem(
                                                   24,
                                                   0,
                                                   0,
@@ -1024,113 +812,6 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ],
-        ),
-      ),
-    );
-    return Column(
-      children: [
-        SafeArea(
-          child: ListTile(
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-            leading: ClipRRect(
-              borderRadius: BorderRadius.circular(50),
-              child: Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                ),
-                child: Image.asset(
-                  AppImages.me,
-                  width: 50,
-                  height: 50,
-                ),
-              ),
-            ),
-            // title: Text("data"),
-            trailing: Container(
-              width: 100,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: SvgPicture.asset(
-                      AppIcons.heart,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: SvgPicture.asset(
-                      AppIcons.bell,
-                      color: Colors.black87,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        )
-      ],
-    );
-  }
-
-  Positioned _contributeUserItem(
-      double left, double top, double bottom, String imagePath, Color color,
-      {String? text}) {
-    return Positioned(
-      left: left,
-      top: top,
-      bottom: bottom,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(50),
-        child: Container(
-          width: (text != null) ? 30 : 16,
-          height: 16,
-          color: color,
-          child: (text == null)
-              ? Image.asset(imagePath)
-              : Center(
-                  child: Text(
-                    text,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-        ),
-      ),
-    );
-  }
-
-  Positioned _contributeUserDescription(
-      double left, double top, double bottom, String imagePath, Color color,
-      {String? text}) {
-    return Positioned(
-      left: left,
-      top: top,
-      bottom: bottom,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(50),
-        child: Container(
-          height: 16,
-          color: color,
-          child: (text == null)
-              ? Image.asset(imagePath)
-              : Center(
-                  child: Text(
-                    text,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
         ),
       ),
     );
