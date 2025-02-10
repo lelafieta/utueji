@@ -1,8 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../ongs/data/models/ong_model.dart';
 import '../../../users/data/models/user_profile_model.dart';
 
-class NeedEntity {
+class CampaignEntity {
   final String? id;
   final String? title;
   final String? description;
@@ -11,22 +10,22 @@ class NeedEntity {
   final String? location;
   final String? ongId;
   final int? priority;
-  final int? fundraisingGoal;
-  final int? fundsRaised;
-  final int? raisedPercentage;
+  final double? fundraisingGoal;
+  final double? fundsRaised;
+  final double? raisedPercentage;
   final int? numberOfContributions;
   final int? contributionsUsers;
   final String? imageCoverUrl;
   final List<String>? imagesUrl;
   final List<String>? documentsUrl;
   final List<String>? phones;
-  final Timestamp? createdAt;
-  final Timestamp? timeLeft;
+  final DateTime? createdAt;
+  final DateTime? timeLeft;
   final OngModel? ong;
   final String? userId;
   final UserProfileModel? user;
 
-  NeedEntity({
+  CampaignEntity({
     required this.id,
     required this.title,
     required this.description,

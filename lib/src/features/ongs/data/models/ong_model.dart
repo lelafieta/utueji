@@ -29,8 +29,7 @@ class OngModel extends OngEntity {
       name: data['name'] ?? '',
       about: data['about'] ?? '',
       admins: (data['admins'] as List<dynamic>?)
-              ?.map((admin) =>
-                  UserProfileModel.fromFirestore(admin as Map<String, dynamic>))
+              ?.map((admin) => UserProfileModel.fromJson(admin))
               .toList() ??
           [],
       bio: data['bio'] ?? '',

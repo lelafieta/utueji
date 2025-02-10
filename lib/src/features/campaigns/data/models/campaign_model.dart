@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../ongs/data/models/ong_model.dart';
 import '../../../users/data/models/user_profile_model.dart';
-import '../../domain/entities/need_entity.dart';
+import '../../domain/entities/campaign_entity.dart';
 
-class NeedModel extends NeedEntity {
-  NeedModel({
+class CampaignModel extends CampaignEntity {
+  CampaignModel({
     super.id,
     super.title,
     super.description,
@@ -29,31 +29,42 @@ class NeedModel extends NeedEntity {
     super.userId,
   });
 
-  factory NeedModel.fromFirestore(DocumentSnapshot doc) {
-    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-    return NeedModel(
-      id: doc.id,
-      title: data['title'] ?? '',
-      description: data['description'] ?? '',
-      categoryName: data['category_name'] ?? '',
-      institution: data['institution'] ?? '',
-      location: data['location'] ?? '',
-      ongId: data['ong_id'] ?? '',
-      priority: data['priority'] ?? 0,
-      fundraisingGoal: data['fundraising_goal'] ?? 0,
-      fundsRaised: data['funds_raised'] ?? 0,
-      raisedPercentage: data['raised_percentage'] ?? 0,
-      numberOfContributions: data['number_of_contributions'] ?? 0,
-      contributionsUsers: data['contributions_users'] ?? 0,
-      imageCoverUrl: data['image_cover_url'] ?? '',
-      imagesUrl: List<String>.from(data['images_url'] ?? []),
-      documentsUrl: List<String>.from(data['documents_url'] ?? []),
-      phones: List<String>.from(data['phones'] ?? []),
-      createdAt: data['created_at'] ?? Timestamp.now(),
-      timeLeft: data['time_left'] ?? Timestamp.now(),
-      ong: OngModel.fromFirestore(data['ong']),
-      user: UserProfileModel.fromFirestore(data['user']),
-      userId: data['user_id'] ?? '',
+  factory CampaignModel.fromJson(Map<String, dynamic> json) {
+    // Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
+    return CampaignModel(
+      id: json['id'],
+      title: json['title'] ?? '',
+      description: json['description'] ?? '',
+      categoryName: json['category_name'] ?? '',
+      institution: json['institution'] ?? '',
+      location: json['location'] ?? '',
+      ongId: json['ong_id'] ?? '',
+      priority: json['priority'] ?? 0.0,
+      fundraisingGoal: json['fundraising_goal'] != null
+          ? double.parse(json['fundraising_goal'].toString())
+          : 0.0,
+      fundsRaised: json['funds_raised'] != null
+          ? double.parse(json['funds_raised'].toString())
+          : 0.0,
+      raisedPercentage: json['raised_percentage'] != null
+          ? double.parse(json['raised_percentage'].toString())
+          : 0,
+      numberOfContributions: json['number_of_contributions'] ?? 0,
+      contributionsUsers: json['contributions_users'] ?? 0,
+      imageCoverUrl: json['image_cover_url'] ?? '',
+      imagesUrl: List<String>.from(json['images_url'] ?? []),
+      documentsUrl: List<String>.from(json['documents_url'] ?? []),
+      phones: List<String>.from(json['phones'] ?? []),
+      createdAt: (json['created_at'] == null)
+          ? (json['created_at'] as Timestamp).toDate()
+          : DateTime.now(),
+      timeLeft: (json['time_left'] != null)
+          ? (json['time_left'] as Timestamp).toDate()
+          : DateTime.now(),
+      // ong: OngModel.fromFirestore(json['ong']),
+      // user: UserProfileModel.fromFirestore(json['user']),
+      userId: json['user_id'] ?? '',
     );
   }
 
@@ -75,15 +86,15 @@ class NeedModel extends NeedEntity {
       'images_url': imagesUrl,
       'documents_url': documentsUrl,
       'phones': phones,
-      'created_at': createdAt,
-      'time_left': timeLeft,
+      'created_at': createdAt!.toIso8601String(),
+      'time_left': timeLeft!.toIso8601String(),
       'ong': ong!.toFirestore(),
       'user': user!.toFirestore(),
       'user_id': userId,
     };
   }
 
-  NeedModel copyWith({
+  CampaignModel copyWith({
     String? id,
     String? title,
     String? description,
@@ -92,22 +103,22 @@ class NeedModel extends NeedEntity {
     String? location,
     String? ongId,
     int? priority,
-    int? fundraisingGoal,
-    int? fundsRaised,
-    int? raisedPercentage,
+    double? fundraisingGoal,
+    double? fundsRaised,
+    double? raisedPercentage,
     int? numberOfContributions,
     int? contributionsUsers,
     String? imageCoverUrl,
     List<String>? imagesUrl,
     List<String>? documentsUrl,
     List<String>? phones,
-    Timestamp? createdAt,
-    Timestamp? timeLeft,
+    DateTime? createdAt,
+    DateTime? timeLeft,
     OngModel? ongEntity,
     UserProfileModel? user,
     String? userId,
   }) {
-    return NeedModel(
+    return CampaignModel(
       id: id ?? this.id,
       title: title ?? this.title,
       description: description ?? this.description,
