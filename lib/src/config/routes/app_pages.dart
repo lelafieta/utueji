@@ -29,9 +29,9 @@ class RouteManager {
       case AppRoutes.rootRoute:
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) {
-            // return const LoginPage();
             return BlocBuilder<InitialCubit, InitialState>(
               builder: (context, authState) {
+                print(authState);
                 if (authState is Initialized) {
                   return SolidaryPage();
                 } else {

@@ -1,12 +1,11 @@
+import 'package:dartz/dartz.dart';
+
+import '../../../../core/errors/failures.dart';
 import '../entities/user_entity.dart';
 
 abstract class IAuthRepository {
-  Future<UserEntity?> signInWithEmail(String email, String password);
-  Future<UserEntity?> signUpWithEmail(String email, String password);
-  Future<UserEntity?> signInWithGoogle();
-  Future<UserEntity?> signInWithPhone(
-      String phoneNumber, Function(String, int?) codeSent);
-  Future<UserEntity?> verifyPhone(String verificationId, String smsCode);
-  Future<void> signOut();
-  Future<bool> isSignIn();
+  Future<Either<Failure, UserEntity>> signIn(String email, String password);
+  Future<Either<Failure, UserEntity>> signUp(String email, String password);
+  Future<Either<Failure, Unit>> signOut();
+  Future<Either<Failure, bool>> isSignedIn();
 }

@@ -9,12 +9,9 @@ import '../features/auth/data/datasources/i_auth_datasource.dart';
 import '../features/auth/data/repositories/auth_repository.dart';
 import '../features/auth/domain/repositories/i_auth_repository.dart';
 import '../features/auth/domain/usecases/is_sign_in_usecase.dart';
-import '../features/auth/domain/usecases/sign_in_with_email_usecase.dart';
-import '../features/auth/domain/usecases/sign_in_with_google_usecase.dart';
-import '../features/auth/domain/usecases/sign_in_with_phone_usecase.dart';
+import '../features/auth/domain/usecases/sign_in_usecase.dart';
 import '../features/auth/domain/usecases/sign_out_usecase.dart';
-import '../features/auth/domain/usecases/sign_up_with_email_usecase.dart';
-import '../features/auth/domain/usecases/verify_phone_usecase.dart';
+import '../features/auth/domain/usecases/sign_up_usecase.dart';
 import '../features/auth/presentation/cubit/auth_cubit.dart';
 import '../features/auth/presentation/cubit/initial_cubit/initial_cubit.dart';
 import '../features/campaigns/data/datasources/i_campaign_datasource.dart';
@@ -39,7 +36,7 @@ Future init() async {
 
 void _setUpDatasources() {
   instance.registerLazySingleton<IAuthDataSource>(
-      () => AuthDataSource(auth: instance(), googleSignIn: instance()));
+      () => AuthDataSource(supabase: instance()));
   instance.registerLazySingleton<ICampaignRemoteDataSource>(() =>
       CampaignRemoteDataSource(
           firestore: instance(), auth: instance(), storage: instance()));
@@ -53,18 +50,12 @@ void _setUpRepositories() {
 }
 
 void _setUpUsecases() {
-  instance.registerLazySingleton<SignInWithEmailUseCase>(
-      () => SignInWithEmailUseCase(repository: instance()));
-  instance.registerLazySingleton<SignUpWithEmailUseCase>(
-      () => SignUpWithEmailUseCase(repository: instance()));
-  instance.registerLazySingleton<SignInWithGoogleUseCase>(
-      () => SignInWithGoogleUseCase(repository: instance()));
+  instance.registerLazySingleton<SignInUseCase>(
+      () => SignInUseCase(repository: instance()));
+  instance.registerLazySingleton<SignUpUseCase>(
+      () => SignUpUseCase(repository: instance()));
   instance.registerLazySingleton<SignOutUseCase>(
       () => SignOutUseCase(repository: instance()));
-  instance.registerLazySingleton<VerifyPhoneUseCase>(
-      () => VerifyPhoneUseCase(repository: instance()));
-  instance.registerLazySingleton<SignInWithPhoneUseCase>(
-      () => SignInWithPhoneUseCase(repository: instance()));
   instance.registerLazySingleton<IsSignInUseCase>(
       () => IsSignInUseCase(repository: instance()));
   instance.registerLazySingleton<GetCampaignsUseCase>(
@@ -75,12 +66,10 @@ void _setUpUsecases() {
 
 void _setUpCubits() {
   instance.registerFactory(() => AuthCubit(
-      signInWithEmailUseCase: instance(),
-      signUpWithEmailUseCase: instance(),
-      signInWithGoogleUseCase: instance(),
-      signOutUseCase: instance(),
-      verifyPhoneUseCase: instance(),
-      signInWithPhoneUseCase: instance()));
+        signInUseCase: instance(),
+        signUpUseCase: instance(),
+        signOutUseCase: instance(),
+      ));
   instance.registerFactory(() => InitialCubit(isSignInUseCase: instance()));
   instance.registerFactory(() => CampaignCubit(
       getCampaignsUseCase: instance(), getLatestCampaignsUseCase: instance()));

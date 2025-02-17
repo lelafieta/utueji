@@ -23,4 +23,6 @@ class AppIcons {
   static const String paw = "assets/icons/paw.svg";
   static const String tennis = "assets/icons/tennis.svg";
   static const String triangleWarning = "assets/icons/triangle-warning.svg";
+  static const String envelope = "assets/icons/envelope.svg";
+  static const String key = "assets/icons/key.svg";
 }

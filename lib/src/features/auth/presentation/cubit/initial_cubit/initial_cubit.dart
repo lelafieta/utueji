@@ -10,15 +10,7 @@ class InitialCubit extends Cubit<InitialState> {
   }) : super(InitialApp());
 
   Future<void> appStarted() async {
-    try {
-      bool isSignIn = await isSignInUseCase.call();
-      if (isSignIn == true) {
-        emit(Initialized());
-      } else {
-        emit(NotInitialized());
-      }
-    } catch (e) {
-      emit(InitialFailure());
-    }
+    final response = await isSignInUseCase.call();
+    response.fold((l) => emit(NotInitialized()), (r) => emit(Initialized()));
   }
 }
