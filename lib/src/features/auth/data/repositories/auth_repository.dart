@@ -1,5 +1,11 @@
+import 'package:dartz/dartz.dart';
+import 'package:flutter/material.dart';
+
+import 'package:utueji/src/core/errors/failures.dart';
+
 import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/i_auth_repository.dart';
+import '../datasources/i_auth_datasource.dart';
 import '../datasources/i_auth_datasource.dart';
 
 class AuthRespository extends IAuthRepository {
@@ -8,28 +14,36 @@ class AuthRespository extends IAuthRepository {
   AuthRespository({required this.authDataSource});
 
   @override
-  Future<UserEntity?> signInWithEmail(String email, String password) =>
-      authDataSource.signInWithEmail(email, password);
+  Future<Either<Failure, bool>> isSignedIn() async {
+    try {
+      final response = await authDataSource.isSignIn();
+      return Right(response);
+    } catch (e) {
+      return Left(ServerFailure(error: e.toString()));
+    }
+  }
 
   @override
-  Future<UserEntity?> signUpWithEmail(String email, String password) =>
-      authDataSource.signUpWithEmail(email, password);
+  Future<Either<Failure, UserEntity>> signIn(
+      String email, String password) async {
+    try {
+      UserEntity? response = await authDataSource.signIn(email, password);
+      return Right(response!);
+    } catch (e) {
+      debugPrint("object ${e}");
+      return Left(ServerFailure(error: e.toString()));
+    }
+  }
 
   @override
-  Future<UserEntity?> signInWithGoogle() => authDataSource.signInWithGoogle();
+  Future<Either<Failure, Unit>> signOut() {
+    // TODO: implement signOut
+    throw UnimplementedError();
+  }
 
   @override
-  Future<UserEntity?> signInWithPhone(
-          String phoneNumber, Function(String, int?) codeSent) =>
-      authDataSource.signInWithPhone(phoneNumber, codeSent);
-
-  @override
-  Future<UserEntity?> verifyPhone(String verificationId, String smsCode) =>
-      authDataSource.verifyPhone(verificationId, smsCode);
-
-  @override
-  Future<void> signOut() => authDataSource.signOut();
-
-  @override
-  Future<bool> isSignIn() => authDataSource.isSignIn();
+  Future<Either<Failure, UserEntity>> signUp(String email, String password) {
+    // TODO: implement signUp
+    throw UnimplementedError();
+  }
 }

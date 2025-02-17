@@ -7,7 +7,7 @@ class AuthInitial extends AuthState {}
 class AuthLoading extends AuthState {}
 
 class Authenticated extends AuthState {
-  final UserEntity user;
+  final UserEntity? user;
   Authenticated({required this.user});
 }
 
