@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../features/auth/presentation/cubit/initial_cubit/initial_cubit.dart';
 import '../../features/auth/presentation/cubit/initial_cubit/initial_state.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
+import '../../features/explore/presentation/pages/explore_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/solidary/presentation/pages/solidary_page.dart';
 import '../../features/splash&onboarding/presentation/pages/on_boarding_page.dart';
@@ -69,6 +70,20 @@ class RouteManager {
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) {
             return HomePage();
+          },
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return SharedAxisTransition(
+              animation: animation,
+              secondaryAnimation: secondaryAnimation,
+              transitionType: SharedAxisTransitionType.vertical,
+              child: child,
+            );
+          },
+        );
+      case AppRoutes.exploreRoute:
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return ExplorePage();
           },
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return SharedAxisTransition(
