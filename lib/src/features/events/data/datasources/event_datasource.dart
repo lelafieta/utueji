@@ -17,8 +17,8 @@ class EventDataSource extends IEventDataSource {
         .asStream()
         .map((data) {
       return data.map((event) => EventModel.fromMap(event)).toList();
-    });
-
+    }).asBroadcastStream();
+    print("object");
     return events;
   }
 }

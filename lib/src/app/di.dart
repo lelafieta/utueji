@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:utueji/src/features/events/domain/usecases/fetch_latest_events_usecase.dart';
+import 'package:utueji/src/features/ongs/domain/usecases/fetch_latest_ongs_usecase.dart';
 import '../features/auth/data/datasources/auth_datasource.dart';
 import '../features/auth/data/datasources/i_auth_datasource.dart';
 import '../features/auth/data/repositories/auth_repository.dart';
@@ -27,6 +28,11 @@ import '../features/events/data/datasources/i_event_datasource.dart';
 import '../features/events/data/repositories/event_repository.dart';
 import '../features/events/domain/repositories/i_event_repository.dart';
 import '../features/events/presentation/cubit/event_cubit.dart';
+import '../features/ongs/data/datasources/i_ong_datasource.dart';
+import '../features/ongs/data/datasources/ong_datasource.dart';
+import '../features/ongs/data/repositories/ong_repository.dart';
+import '../features/ongs/domain/respositories/i_ong_repository.dart';
+import '../features/ongs/presentation/cubit/ong_cubit.dart';
 
 GetIt instance = GetIt.instance;
 
@@ -40,22 +46,26 @@ Future init() async {
   // Repositories
 }
 
-void _setUpDatasources() {
-  instance.registerLazySingleton<IAuthDataSource>(
-      () => AuthDataSource(supabase: instance()));
-  instance.registerLazySingleton<ICampaignRemoteDataSource>(
-      () => CampaignRemoteDataSource(supabase: instance()));
-  instance.registerLazySingleton<IEventDataSource>(
-      () => EventDataSource(supabase: instance()));
+void _setUpExternal() {
+  instance.registerFactory(() => Supabase.instance.client);
+  instance.registerFactory(() => FirebaseFirestore.instance);
+  instance.registerFactory(() => GoogleSignIn());
+  instance.registerFactory(() => FirebaseAuth.instance);
+  instance.registerFactory(() => FirebaseStorage.instance);
 }
 
-void _setUpRepositories() {
-  instance.registerLazySingleton<IAuthRepository>(
-      () => AuthRespository(authDataSource: instance()));
-  instance.registerLazySingleton<ICampaignRepository>(
-      () => CampaignRepository(repository: instance()));
-  instance.registerLazySingleton<IEventRepository>(
-      () => EventRepository(repository: instance()));
+void _setUpCubits() {
+  instance.registerFactory(() => AuthCubit(
+        signInUseCase: instance(),
+        signUpUseCase: instance(),
+        signOutUseCase: instance(),
+      ));
+  instance.registerFactory(() => InitialCubit(isSignInUseCase: instance()));
+  instance.registerFactory(() => CampaignCubit(
+      getCampaignsUseCase: instance(), getLatestCampaignsUseCase: instance()));
+  instance
+      .registerFactory(() => EventCubit(fetchLatestEventsUsecase: instance()));
+  instance.registerFactory(() => OngCubit(fetchLatestOngsUsecase: instance()));
 }
 
 void _setUpUsecases() {
@@ -73,25 +83,28 @@ void _setUpUsecases() {
       () => GetLatestCampaignsUseCase(repository: instance()));
   instance.registerLazySingleton<FetchLatestEventsUsecase>(
       () => FetchLatestEventsUsecase(repository: instance()));
+  instance.registerLazySingleton<FetchLatestOngsUsecase>(
+      () => FetchLatestOngsUsecase(repository: instance()));
 }
 
-void _setUpCubits() {
-  instance.registerFactory(() => AuthCubit(
-        signInUseCase: instance(),
-        signUpUseCase: instance(),
-        signOutUseCase: instance(),
-      ));
-  instance.registerFactory(() => InitialCubit(isSignInUseCase: instance()));
-  instance.registerFactory(() => CampaignCubit(
-      getCampaignsUseCase: instance(), getLatestCampaignsUseCase: instance()));
-  instance
-      .registerFactory(() => EventCubit(fetchLatestEventsUsecase: instance()));
+void _setUpRepositories() {
+  instance.registerLazySingleton<IAuthRepository>(
+      () => AuthRespository(datasource: instance()));
+  instance.registerLazySingleton<ICampaignRepository>(
+      () => CampaignRepository(datasource: instance()));
+  instance.registerLazySingleton<IEventRepository>(
+      () => EventRepository(datasource: instance()));
+  instance.registerLazySingleton<IOngRepository>(
+      () => OngRepository(datasource: instance()));
 }
 
-void _setUpExternal() {
-  instance.registerFactory(() => Supabase.instance.client);
-  instance.registerFactory(() => FirebaseFirestore.instance);
-  instance.registerFactory(() => GoogleSignIn());
-  instance.registerFactory(() => FirebaseAuth.instance);
-  instance.registerFactory(() => FirebaseStorage.instance);
+void _setUpDatasources() {
+  instance.registerLazySingleton<IAuthDataSource>(
+      () => AuthDataSource(supabase: instance()));
+  instance.registerLazySingleton<ICampaignRemoteDataSource>(
+      () => CampaignRemoteDataSource(supabase: instance()));
+  instance.registerLazySingleton<IEventDataSource>(
+      () => EventDataSource(supabase: instance()));
+  instance.registerLazySingleton<IOngDataSource>(
+      () => OngDataSource(supabase: instance()));
 }

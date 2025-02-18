@@ -3,38 +3,38 @@ import '../../domain/repositories/i_campaign_repository.dart';
 import '../datasources/i_campaign_datasource.dart';
 
 class CampaignRepository implements ICampaignRepository {
-  final ICampaignRemoteDataSource repository;
+  final ICampaignRemoteDataSource datasource;
 
-  CampaignRepository({required this.repository});
+  CampaignRepository({required this.datasource});
 
   @override
   Stream<List<CampaignEntity>> getCampaigns() {
-    return repository.fetchCampaigns();
+    return datasource.fetchCampaigns();
   }
 
   @override
   Stream<CampaignEntity> getCampaignById(String id) {
-    return repository.fetchCampaignById(id);
+    return datasource.fetchCampaignById(id);
   }
 
   @override
   Future<void> createCampaign(CampaignEntity campaign) async {
-    await repository.addCampaign(campaign);
+    await datasource.addCampaign(campaign);
   }
 
   @override
   Future<void> updateCampaign(CampaignEntity campaign) async {
-    await repository.editCampaign(campaign);
+    await datasource.editCampaign(campaign);
   }
 
   @override
   Future<void> deleteCampaign(String id) async {
-    await repository.removeCampaign(id);
+    await datasource.removeCampaign(id);
   }
 
   @override
   Stream<List<CampaignEntity>> getLatestCampaigns() {
     print("CHEGOU!!!!!");
-    return repository.fetchLatestCampaigns();
+    return datasource.fetchLatestCampaigns();
   }
 }

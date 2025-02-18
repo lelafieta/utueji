@@ -71,13 +71,17 @@ class _CampaignWidgetState extends State<CampaignWidget> {
                     ),
                     child: Stack(
                       children: [
-                        CachedNetworkImage(
-                          imageUrl: widget.campaign.imageCoverUrl!,
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) =>
-                              const CircularProgressIndicator(),
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
+                        Container(
+                          width: double.infinity,
+                          height: 190,
+                          child: CachedNetworkImage(
+                            imageUrl: widget.campaign.imageCoverUrl!,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) =>
+                                const CircularProgressIndicator(),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
+                          ),
                         ),
                         Positioned(
                           left: 0,
