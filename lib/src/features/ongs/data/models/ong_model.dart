@@ -1,103 +1,62 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
-import '../../../users/data/models/user_profile_model.dart';
 import '../../domain/entities/ong_entity.dart';
 
 class OngModel extends OngEntity {
   OngModel({
     super.id,
-    super.name,
+    super.createdAt,
+    super.updatedAt,
     super.about,
-    super.admins,
     super.bio,
     super.coverImageUrl,
-    super.createdAt,
-    super.isVerified,
+    super.isVerified = false,
     super.mission,
-    super.phones,
+    super.name,
+    super.phoneNumber,
     super.profileImageUrl,
     super.servicesNumber,
-    super.supportesNumber,
-    super.userCreatorId,
+    super.supportsNumber,
+    super.userId,
     super.vision,
-    super.userCreator,
   });
-  factory OngModel.fromFirestore(DocumentSnapshot doc) {
-    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
+  factory OngModel.fromMap(Map<String, dynamic> map) {
     return OngModel(
-      id: doc.id,
-      name: data['name'] ?? '',
-      about: data['about'] ?? '',
-      admins: (data['admins'] as List<dynamic>?)
-              ?.map((admin) => UserProfileModel.fromJson(admin))
-              .toList() ??
-          [],
-      bio: data['bio'] ?? '',
-      coverImageUrl: data['cover_image_url'] ?? '',
-      createdAt: data['created_at'] ?? Timestamp.now(),
-      isVerified: data['is_verified'] ?? false,
-      mission: data['mission'] ?? '',
-      phones: List<String>.from(data['phones'] ?? []),
-      profileImageUrl: data['profile_image_url'] ?? '',
-      servicesNumber: data['services_number'] ?? 0,
-      supportesNumber: data['supportes_number'] ?? 0,
-      userCreatorId: data['user_creator_id'] ?? '',
-      vision: data['vision'] ?? '',
+      id: map['id'],
+      createdAt: DateTime.parse(map['created_at']),
+      updatedAt:
+          map['updated_at'] != null ? DateTime.parse(map['updated_at']) : null,
+      about: map['about'],
+      bio: map['bio'],
+      coverImageUrl: map['cover_image_url'],
+      isVerified: map['is_verified'] == true,
+      mission: map['mission'],
+      name: map['name'],
+      phoneNumber: map['phone_number'],
+      profileImageUrl: map['profile_image_url'],
+      servicesNumber: map['services_number'],
+      supportsNumber: map['supports_number']?.toDouble(),
+      userId: map['user_id'],
+      vision: map['vision'],
     );
   }
 
-  Map<String, dynamic> toFirestore() {
+  Map<String, dynamic> toMap() {
     return {
-      'name': name,
+      'id': id,
+      'created_at': createdAt?.toIso8601String(),
+      'updated_at': updatedAt?.toIso8601String(),
       'about': about,
-      'admins': admins,
       'bio': bio,
       'cover_image_url': coverImageUrl,
-      'created_at': createdAt,
-      'is_verify': isVerified,
+      'is_verified': isVerified,
       'mission': mission,
-      'phones': phones,
+      'name': name,
+      'phone_number': phoneNumber,
       'profile_image_url': profileImageUrl,
       'services_number': servicesNumber,
-      'supportes_number': supportesNumber,
-      'user_creator_id': userCreatorId,
+      'supports_number': supportsNumber,
+      'user_id': userId,
       'vision': vision,
     };
-  }
-
-  OngModel copyWith({
-    String? id,
-    String? name,
-    String? about,
-    List<UserProfileModel>? admins,
-    String? bio,
-    String? coverImageUrl,
-    Timestamp? createdAt,
-    bool? isVerified,
-    String? mission,
-    List<String>? phones,
-    String? profileImageUrl,
-    int? servicesNumber,
-    int? supportesNumber,
-    String? userCreatorId,
-    String? vision,
-  }) {
-    return OngModel(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      about: about ?? this.about,
-      admins: admins ?? this.admins,
-      bio: bio ?? this.bio,
-      coverImageUrl: coverImageUrl ?? this.coverImageUrl,
-      createdAt: createdAt ?? this.createdAt,
-      isVerified: isVerified ?? this.isVerified,
-      mission: mission ?? this.mission,
-      phones: phones ?? this.phones,
-      profileImageUrl: profileImageUrl ?? this.profileImageUrl,
-      servicesNumber: servicesNumber ?? this.servicesNumber,
-      supportesNumber: supportesNumber ?? this.supportesNumber,
-      userCreatorId: userCreatorId ?? this.userCreatorId,
-      vision: vision ?? this.vision,
-    );
   }
 }

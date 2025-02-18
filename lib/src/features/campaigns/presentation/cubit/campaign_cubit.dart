@@ -1,5 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../data/models/campaign_model.dart';
 import '../../domain/usecases/get_campaigns_usecases.dart';
 import '../../domain/usecases/get_latest_campaigns_usecases.dart';
 import 'campaign_state.dart';
@@ -30,5 +32,12 @@ class CampaignCubit extends Cubit<CampaignState> {
     campaigns.listen((event) {
       emit(CampaignLoaded(campaigns: event));
     });
+    // SupabaseClient supabase = Supabase.instance.client;
+    // supabase.from('campaigns').stream(primaryKey: ['id']).listen((event) {
+    // print("ACTUALIZANDO...");
+    // print(CampaignModel.fromJson(event[0]).fundsRaised);
+    //   emit(CampaignLoaded(
+    //       campaigns: event.map((e) => CampaignModel.fromJson(e)).toList()));
+    // });
   }
 }
