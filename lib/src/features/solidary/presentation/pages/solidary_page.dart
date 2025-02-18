@@ -1,9 +1,9 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
+import '../../../explore/presentation/pages/explore_page.dart';
 import '../../../home/presentation/pages/home_page.dart';
 
 class SolidaryPage extends StatefulWidget {
@@ -55,7 +55,7 @@ class _SolidaryPageState extends State<SolidaryPage> {
 
   final List<Widget> pages = [
     const HomePage(),
-    const Center(child: Text("Search", style: TextStyle(fontSize: 24))),
+    const ExplorePage(),
     const Center(child: Text("Favorites", style: TextStyle(fontSize: 24))),
     const Center(child: Text("Profile", style: TextStyle(fontSize: 24))),
   ];

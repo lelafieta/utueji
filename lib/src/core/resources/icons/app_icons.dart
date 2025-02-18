@@ -25,4 +25,7 @@ class AppIcons {
   static const String triangleWarning = "assets/icons/triangle-warning.svg";
   static const String envelope = "assets/icons/envelope.svg";
   static const String key = "assets/icons/key.svg";
+  static const String commentAlt = "assets/icons/comment-alt.svg";
+  static const String eye = "assets/icons/eye.svg";
+  static const String paperPlane = "assets/icons/paper-plane.svg";
 }

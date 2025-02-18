@@ -58,6 +58,9 @@ class _CampaignWidgetState extends State<CampaignWidget> {
     return Container(
       margin: const EdgeInsets.only(left: 16),
       child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
         child: Column(
           children: [
             SizedBox(

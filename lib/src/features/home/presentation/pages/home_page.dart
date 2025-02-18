@@ -19,8 +19,10 @@ import '../../../campaigns/presentation/cubit/campaign_state.dart';
 import '../../../campaigns/presentation/widgets/campaign_widget.dart';
 import '../../../events/presentation/cubit/event_cubit.dart';
 import '../../../events/presentation/cubit/event_state.dart';
+import '../../../events/presentation/widgets/event_widget.dart';
 import '../../../ongs/presentation/cubit/ong_cubit.dart';
 import '../../../ongs/presentation/cubit/ong_state.dart';
+import '../../../ongs/presentation/widgets/ong_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -263,6 +265,9 @@ class _HomePageState extends State<HomePage> {
                     child: Column(
                       children: [
                         Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                           child: Container(
                             width: 60,
                             height: 60,
@@ -635,256 +640,6 @@ class _HomePageState extends State<HomePage> {
               },
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class OngWidget extends StatelessWidget {
-  final OngEntity ong;
-  const OngWidget({super.key, required this.ong});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Container(
-        width: 320,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            ListTile(
-              contentPadding: EdgeInsets.all(10),
-              titleAlignment: ListTileTitleAlignment.center,
-              leading: ClipRRect(
-                borderRadius: BorderRadius.circular(50),
-                child: CachedNetworkImage(
-                  imageUrl: ong.profileImageUrl!,
-                  placeholder: (context, url) =>
-                      const CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
-                ),
-              ),
-              title: Text(
-                "${ong.name}",
-              ),
-              subtitle: Text("${ong.bio}"),
-            ),
-            Container(
-              padding: EdgeInsets.all(10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Divider(
-                    color: AppColors.grey,
-                  ),
-                  Container(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            height: 16,
-                            child: Stack(
-                              children: [
-                                AppUtils.contributeUserItem(
-                                    0, 0, 0, AppImages.me, Colors.black),
-                                AppUtils.contributeUserItem(
-                                    8, 0, 0, AppImages.me, Colors.red),
-                                AppUtils.contributeUserItem(
-                                    16, 0, 0, AppImages.me, Colors.green),
-                                AppUtils.contributeUserItem(24, 0, 0,
-                                    AppImages.me, AppColors.primaryColor,
-                                    text: "+16"),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const Icon(
-                          Icons.add,
-                          color: AppColors.primaryColor,
-                        ),
-                        const Text(
-                          "Juntar-se",
-                          style: TextStyle(color: AppColors.primaryColor),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class EventWidget extends StatefulWidget {
-  final EventEntity event;
-  const EventWidget({super.key, required this.event});
-
-  @override
-  State<EventWidget> createState() => _EventWidgetState();
-}
-
-class _EventWidgetState extends State<EventWidget> {
-  String formatarDataPersonalizada(DateTime data) {
-    // Formatar o dia da semana, dia, mês e hora
-    String diaSemana = DateFormat.EEEE('pt_BR').format(data); // Sábado
-    String dia = DateFormat.d().format(data); // 11
-    String mes = DateFormat.MMMM('pt_BR').format(data); // Abril
-    String horaMinuto = DateFormat('HH:mm').format(data); // 10:35
-
-    // Concatenar tudo no formato desejado
-    return '$diaSemana, $dia $mes $horaMinuto';
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(left: 16),
-      child: Card(
-        child: Container(
-          width: 400,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  topRight: Radius.circular(10),
-                ),
-                child: Stack(
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      height: 190,
-                      child: CachedNetworkImage(
-                        imageUrl: widget.event.backgroundImageUrl!,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) =>
-                            const CircularProgressIndicator(),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
-                      ),
-                    ),
-                    Positioned(
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      top: 0,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              AppColors.blue.withOpacity(.4),
-                              AppColors.primaryColor.withOpacity(.4),
-                            ],
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            widget.event.title!,
-                            style: Theme.of(context).textTheme.titleSmall,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                          ),
-                        ),
-                        SvgPicture.asset(
-                          AppIcons.heartBold,
-                          color: Colors.red,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.access_time_rounded,
-                          size: 16,
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          "${formatarDataPersonalizada(widget.event.startDate!)}",
-                          style: TextStyle(
-                            fontSize: 12,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 14,
-                        ),
-                        Icon(
-                          Icons.location_on_rounded,
-                          size: 16,
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Expanded(
-                          child: Text(
-                            "${widget.event.location}",
-                            style: TextStyle(
-                              fontSize: 12,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              height: 16,
-                              child: Stack(
-                                children: [
-                                  AppUtils.contributeUserItem(
-                                      0, 0, 0, AppImages.me, Colors.black),
-                                  AppUtils.contributeUserItem(
-                                      8, 0, 0, AppImages.me, Colors.red),
-                                  AppUtils.contributeUserItem(
-                                      16, 0, 0, AppImages.me, Colors.green),
-                                  AppUtils.contributeUserItem(24, 0, 0,
-                                      AppImages.me, AppColors.primaryColor,
-                                      text: "+16"),
-                                  AppUtils.contributeUserDescription(60, 0, 0,
-                                      AppImages.me, Colors.transparent,
-                                      text: "Contributos"),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );

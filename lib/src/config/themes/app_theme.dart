@@ -103,18 +103,18 @@ class AppTheme {
           centerTitle: true,
           iconTheme: IconThemeData(color: AppColors.secondColor),
           elevation: 0,
-          shape: Border(
-            bottom: BorderSide(
-              width: AppValues.s1,
-              color: AppColors.strokeColor,
-            ),
-          ),
-          color: AppColors.whiteColor,
+          // shape: Border(
+          //   bottom: BorderSide(
+          //     width: AppValues.s1,
+          //     color: AppColors.strokeColor,
+          //   ),
+          // ),
+          color: AppColors.scaffoldBackgroundColor,
           titleTextStyle: TextStyle(
             fontFamily: AppStrings.fontFamily,
-            fontSize: AppValues.s20,
-            fontWeight: FontWeight.bold,
-            color: AppColors.primaryColor,
+            fontSize: AppValues.s18,
+            fontWeight: FontWeight.w600,
+            color: AppColors.blackColor,
           ),
         ),
         drawerTheme: const DrawerThemeData(
