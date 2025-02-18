@@ -12,6 +12,7 @@ import '../../../../core/utils/app_utils.dart';
 import '../../../campaigns/presentation/cubit/campaign_cubit.dart';
 import '../../../campaigns/presentation/cubit/campaign_state.dart';
 import '../../../campaigns/presentation/widgets/campaign_widget.dart';
+import '../../../events/presentation/cubit/event_cubit.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -29,7 +30,7 @@ class _HomePageState extends State<HomePage> {
     "Idosos",
     "Desporto",
     "Desastre",
-    "Outros"
+    "Outros",
   ];
   List<String> iconsPath = [
     AppIcons.doctor,
@@ -46,6 +47,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     context.read<CampaignCubit>().getLatestCampaigns();
+    context.read<EventCubit>().getLatestEvents();
   }
 
   @override
@@ -278,8 +280,6 @@ class _HomePageState extends State<HomePage> {
             ),
             BlocBuilder<CampaignCubit, CampaignState>(
               builder: (context, state) {
-                print(state);
-
                 if (state is CampaignLoading) {
                   return const Center(
                     child: CircularProgressIndicator(),
@@ -290,6 +290,7 @@ class _HomePageState extends State<HomePage> {
                       child: Text("Sem campanhas"),
                     );
                   }
+
                   return CarouselSlider(
                     options: CarouselOptions(
                       height: 420.0,

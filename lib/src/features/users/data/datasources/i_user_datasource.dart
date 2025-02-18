@@ -1,5 +1,5 @@
-import '../../domain/entities/user_profile_entity.dart';
+import '../../domain/entities/user_entity.dart';
 
 abstract class IUserDataSource {
-  Stream<UserProfileEntity> getUserById(String id);
+  Stream<UserEntity> getUserById(String id);
 }

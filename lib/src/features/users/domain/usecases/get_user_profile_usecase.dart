@@ -1,4 +1,4 @@
-import '../entities/user_profile_entity.dart';
+import '../entities/user_entity.dart';
 import '../repositories/i_user_repository.dart';
 
 class GetUserProfileUseCase {
@@ -6,7 +6,7 @@ class GetUserProfileUseCase {
 
   GetUserProfileUseCase({required this.repository});
 
-  Stream<UserProfileEntity> call(String id) {
+  Stream<UserEntity> call(String id) {
     return repository.getUserById(id);
   }
 }

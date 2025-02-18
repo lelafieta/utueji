@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -33,7 +34,11 @@ class _CampaignWidgetState extends State<CampaignWidget> {
   @override
   void initState() {
     super.initState();
-    finishDate = widget.campaign.timeLeft!;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    finishDate = widget.campaign.endDate!;
     fundraisingGoal = widget.campaign.fundraisingGoal!;
     fundsRaised = widget.campaign.fundsRaised!;
     raisingGoals = NumberFormat.currency(locale: 'pt_PT', symbol: 'AOA')
@@ -48,12 +53,7 @@ class _CampaignWidgetState extends State<CampaignWidget> {
 
     Duration diferenca = finishDate.difference(now);
     diasRestantes = diferenca.inDays;
-    print(finishDate);
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    print(percentage);
     progressBarWidth = MediaQuery.sizeOf(context).width * percentage;
     return Container(
       margin: const EdgeInsets.only(left: 16),
@@ -71,7 +71,14 @@ class _CampaignWidgetState extends State<CampaignWidget> {
                     ),
                     child: Stack(
                       children: [
-                        Image.asset(AppImages.image1),
+                        CachedNetworkImage(
+                          imageUrl: widget.campaign.imageCoverUrl!,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        ),
                         Positioned(
                           left: 0,
                           right: 0,
@@ -157,7 +164,10 @@ class _CampaignWidgetState extends State<CampaignWidget> {
                                         fontSize: 18),
                               ),
                               TextSpan(
-                                text: raising.toString(),
+                                text: NumberFormat.currency(
+                                        locale: 'pt_PT', symbol: 'AOA')
+                                    .format(widget.campaign.fundsRaised)
+                                    .toString(),
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall!
@@ -166,7 +176,11 @@ class _CampaignWidgetState extends State<CampaignWidget> {
                                         fontSize: 18),
                               ),
                               const TextSpan(text: " / "),
-                              TextSpan(text: raisingGoals)
+                              TextSpan(
+                                  text: NumberFormat.currency(
+                                          locale: 'pt_PT', symbol: 'AOA')
+                                      .format(widget.campaign.fundraisingGoal)
+                                      .toString())
                             ],
                           ),
                         ),

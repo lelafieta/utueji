@@ -42,7 +42,7 @@ class _SolidaryPageState extends State<SolidaryPage> {
       activeIconPath: AppIcons.compassAltBold,
     ),
     MenuItem(
-      title: "Favorites",
+      title: "Campanhas",
       iconPath: AppIcons.handsHeart,
       activeIconPath: AppIcons.handsHeartBold,
     ),

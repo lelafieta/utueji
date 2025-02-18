@@ -1,52 +1,51 @@
-import '../../../ongs/data/models/ong_model.dart';
-import '../../../users/data/models/user_profile_model.dart';
+import '../../../auth/domain/entities/user_entity.dart';
+import '../../../categories/domain/entities/category_entity.dart';
+import '../../../ongs/domain/entities/ong_entity.dart';
 
 class CampaignEntity {
   final String? id;
-  final String? title;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final String? categoryId;
   final String? description;
-  final String? categoryName;
-  final String? institution;
-  final String? location;
-  final String? ongId;
-  final int? priority;
   final double? fundraisingGoal;
   final double? fundsRaised;
-  final double? raisedPercentage;
-  final int? numberOfContributions;
-  final int? contributionsUsers;
   final String? imageCoverUrl;
-  final List<String>? imagesUrl;
-  final List<String>? documentsUrl;
-  final List<String>? phones;
-  final DateTime? createdAt;
-  final DateTime? timeLeft;
-  final OngModel? ong;
+  final String? institution;
+  final String? location;
+  final int? numberOfContributions;
+  final String? ongId;
+  final String? phoneNumber;
+  final int? priority;
+  final DateTime? endDate;
+  final String? title;
   final String? userId;
-  final UserProfileModel? user;
+  final DateTime? startDate;
+  final CategoryEntity? category;
+  final OngEntity? ong;
+  final UserEntity? user;
 
   CampaignEntity({
-    required this.id,
-    required this.title,
-    required this.description,
-    required this.categoryName,
-    required this.institution,
-    required this.location,
-    required this.ongId,
-    required this.priority,
-    required this.fundraisingGoal,
-    required this.fundsRaised,
-    required this.raisedPercentage,
-    required this.numberOfContributions,
-    required this.contributionsUsers,
-    required this.imageCoverUrl,
-    required this.imagesUrl,
-    required this.documentsUrl,
-    required this.phones,
-    required this.createdAt,
-    required this.timeLeft,
-    required this.ong,
-    required this.user,
-    required this.userId,
+    this.id,
+    this.createdAt,
+    this.updatedAt,
+    this.categoryId,
+    this.description,
+    this.fundraisingGoal,
+    this.fundsRaised,
+    this.imageCoverUrl,
+    this.institution,
+    this.location,
+    this.numberOfContributions,
+    this.ongId,
+    this.phoneNumber,
+    this.priority = 0,
+    this.endDate,
+    this.title,
+    this.userId,
+    this.startDate,
+    this.category,
+    this.ong,
+    this.user,
   });
 }
