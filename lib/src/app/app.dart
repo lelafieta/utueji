@@ -9,6 +9,7 @@ import '../features/campaigns/presentation/cubit/campaign_cubit.dart';
 import '../features/auth/presentation/cubit/auth_cubit.dart';
 import '../features/auth/presentation/cubit/initial_cubit/initial_cubit.dart';
 import '../features/events/presentation/cubit/event_cubit.dart';
+import '../features/ongs/presentation/cubit/ong_cubit.dart';
 
 class UtuejiApp extends StatelessWidget {
   const UtuejiApp({super.key});
@@ -20,6 +21,7 @@ class UtuejiApp extends StatelessWidget {
         BlocProvider(create: (_) => di.instance<AuthCubit>()),
         BlocProvider(create: (_) => di.instance<CampaignCubit>()),
         BlocProvider(create: (_) => di.instance<EventCubit>()),
+        BlocProvider(create: (_) => di.instance<OngCubit>()),
         BlocProvider(create: (_) => di.instance<InitialCubit>()..appStarted()),
       ],
       child: GetMaterialApp(

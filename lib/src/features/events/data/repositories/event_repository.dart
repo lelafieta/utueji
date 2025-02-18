@@ -1,13 +1,13 @@
-import 'package:utueji/src/features/events/domain/entities/event_entity.dart';
-
+import '../../domain/entities/event_entity.dart';
 import '../../domain/repositories/i_event_repository.dart';
+import '../datasources/i_event_datasource.dart';
 
 class EventRepository extends IEventRepository {
-  final IEventRepository repository;
+  final IEventDataSource datasource;
 
-  EventRepository({required this.repository});
+  EventRepository({required this.datasource});
   @override
   Stream<List<EventEntity>> fetchLatestEvents() {
-    return repository.fetchLatestEvents();
+    return datasource.fetchLatestEvents();
   }
 }

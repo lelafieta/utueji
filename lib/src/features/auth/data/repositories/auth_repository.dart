@@ -9,14 +9,14 @@ import '../datasources/i_auth_datasource.dart';
 import '../datasources/i_auth_datasource.dart';
 
 class AuthRespository extends IAuthRepository {
-  final IAuthDataSource authDataSource;
+  final IAuthDataSource datasource;
 
-  AuthRespository({required this.authDataSource});
+  AuthRespository({required this.datasource});
 
   @override
   Future<Either<Failure, bool>> isSignedIn() async {
     try {
-      final response = await authDataSource.isSignIn();
+      final response = await datasource.isSignIn();
       return Right(response);
     } catch (e) {
       return Left(ServerFailure(error: e.toString()));
@@ -27,7 +27,7 @@ class AuthRespository extends IAuthRepository {
   Future<Either<Failure, UserEntity>> signIn(
       String email, String password) async {
     try {
-      UserEntity? response = await authDataSource.signIn(email, password);
+      UserEntity? response = await datasource.signIn(email, password);
       return Right(response!);
     } catch (e) {
       debugPrint("object ${e}");

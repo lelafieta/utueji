@@ -4,6 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:utueji/src/app/app.dart';
 import './src/app/di.dart' as di;
 import 'src/core/supabase/supabase_consts.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,6 +14,7 @@ void main() async {
     anonKey: SupabaseConsts.supabaseKey,
   );
   await di.init();
+  await initializeDateFormatting('pt_BR', null);
 
   runApp(const UtuejiApp());
 }
