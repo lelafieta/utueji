@@ -11,6 +11,16 @@ class InitialCubit extends Cubit<InitialState> {
 
   Future<void> appStarted() async {
     final response = await isSignInUseCase.call();
-    response.fold((l) => emit(NotInitialized()), (r) => emit(Initialized()));
+    response.fold(
+      (l) => emit(NotInitialized()),
+      (r) {
+        print("STATE $r");
+        if (r == true) {
+          emit(Initialized());
+        } else {
+          emit(NotInitialized());
+        }
+      },
+    );
   }
 }

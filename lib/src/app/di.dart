@@ -28,6 +28,12 @@ import '../features/events/data/datasources/i_event_datasource.dart';
 import '../features/events/data/repositories/event_repository.dart';
 import '../features/events/domain/repositories/i_event_repository.dart';
 import '../features/events/presentation/cubit/event_cubit.dart';
+import '../features/feeds/data/datasources/feed_datasource.dart';
+import '../features/feeds/data/datasources/i_feed_datasource.dart';
+import '../features/feeds/data/repositories/feed_repository.dart';
+import '../features/feeds/domain/repositories/i_feed_repository.dart';
+import '../features/feeds/domain/usecases/fetch_feeds_usecase.dart';
+import '../features/feeds/presentation/cubit/feed_cubit.dart';
 import '../features/ongs/data/datasources/i_ong_datasource.dart';
 import '../features/ongs/data/datasources/ong_datasource.dart';
 import '../features/ongs/data/repositories/ong_repository.dart';
@@ -56,16 +62,16 @@ void _setUpExternal() {
 
 void _setUpCubits() {
   instance.registerFactory(() => AuthCubit(
-        signInUseCase: instance(),
-        signUpUseCase: instance(),
-        signOutUseCase: instance(),
-      ));
+      signInUseCase: instance(),
+      signUpUseCase: instance(),
+      signOutUseCase: instance()));
   instance.registerFactory(() => InitialCubit(isSignInUseCase: instance()));
   instance.registerFactory(() => CampaignCubit(
       getCampaignsUseCase: instance(), getLatestCampaignsUseCase: instance()));
   instance
       .registerFactory(() => EventCubit(fetchLatestEventsUsecase: instance()));
   instance.registerFactory(() => OngCubit(fetchLatestOngsUsecase: instance()));
+  instance.registerFactory(() => FeedCubit(fetchFeedsUseCase: instance()));
 }
 
 void _setUpUsecases() {
@@ -85,6 +91,8 @@ void _setUpUsecases() {
       () => FetchLatestEventsUsecase(repository: instance()));
   instance.registerLazySingleton<FetchLatestOngsUsecase>(
       () => FetchLatestOngsUsecase(repository: instance()));
+  instance.registerLazySingleton<FetchFeedsUseCase>(
+      () => FetchFeedsUseCase(repository: instance()));
 }
 
 void _setUpRepositories() {
@@ -96,6 +104,8 @@ void _setUpRepositories() {
       () => EventRepository(datasource: instance()));
   instance.registerLazySingleton<IOngRepository>(
       () => OngRepository(datasource: instance()));
+  instance.registerLazySingleton<IFeedRepository>(
+      () => FeedRepository(datasource: instance()));
 }
 
 void _setUpDatasources() {
@@ -107,4 +117,6 @@ void _setUpDatasources() {
       () => EventDataSource(supabase: instance()));
   instance.registerLazySingleton<IOngDataSource>(
       () => OngDataSource(supabase: instance()));
+  instance.registerLazySingleton<IFeedDataSource>(
+      () => FeedDataSource(supabase: instance()));
 }

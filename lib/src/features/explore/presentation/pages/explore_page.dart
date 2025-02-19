@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:utueji/src/features/ongs/presentation/widgets/ong_widget.dart';
 
 import '../../../../config/themes/app_colors.dart';
@@ -13,6 +14,9 @@ import '../../../../core/resources/images/app_images.dart';
 import '../../../events/presentation/cubit/event_cubit.dart';
 import '../../../events/presentation/cubit/event_state.dart';
 import '../../../events/presentation/widgets/event_widget.dart';
+import '../../../feeds/presentation/cubit/feed_cubit.dart';
+import '../../../feeds/presentation/cubit/feed_state.dart';
+import '../../../feeds/presentation/pages/feed_page.dart';
 import '../../../ongs/presentation/cubit/ong_cubit.dart';
 import '../../../ongs/presentation/cubit/ong_state.dart';
 
@@ -28,7 +32,7 @@ class _ExplorePageState extends State<ExplorePage> {
 
   int selectedIndex = 0;
   List<Widget> widgets = [
-    const FeedContainer(),
+    const FeedPage(),
     const BlogContainer(),
     const EventContainer(),
     const OngContainer(),
@@ -109,155 +113,6 @@ class _ExplorePageState extends State<ExplorePage> {
           ),
         ],
       ),
-    );
-  }
-}
-
-class FeedContainer extends StatelessWidget {
-  const FeedContainer({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.separated(
-      padding: const EdgeInsets.all(16),
-      itemBuilder: (context, index) {
-        return Container(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: ClipRRect(
-                  borderRadius: BorderRadius.circular(50),
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    color: Colors.black12,
-                  ),
-                ),
-                title: const Text("Ana Martins"),
-                subtitle: Text("20.Janeiro.2025"),
-                trailing: Icon(Icons.more_vert),
-              ),
-              const Text(
-                  "Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet"),
-              const SizedBox(height: 10),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: Stack(
-                  children: [
-                    SizedBox(
-                      width: double.infinity,
-                      height: 200,
-                      child: Image.asset(AppImages.image1),
-                    ),
-                    Positioned(
-                      left: 0,
-                      bottom: 0,
-                      right: 0,
-                      child: Container(
-                        height: 45,
-                        color: AppColors.primaryColor,
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Doar para sorrir",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                              ),
-                            ),
-                            Icon(
-                              Icons.arrow_forward_ios_rounded,
-                              size: 20,
-                              color: Colors.white,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset(
-                            AppIcons.heartBold,
-                            color: Colors.red,
-                            width: 16,
-                          ),
-                          const SizedBox(width: 5),
-                          const Text(
-                            "55",
-                            style: TextStyle(color: Colors.black),
-                          )
-                        ],
-                      ),
-                      const SizedBox(width: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset(
-                            AppIcons.commentAlt,
-                            color: Colors.black,
-                            width: 16,
-                          ),
-                          const SizedBox(width: 5),
-                          const Text(
-                            "58",
-                            style: TextStyle(color: Colors.black),
-                          )
-                        ],
-                      ),
-                      const SizedBox(width: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset(
-                            AppIcons.eye,
-                            color: Colors.black,
-                            width: 16,
-                          ),
-                          const SizedBox(width: 5),
-                          const Text(
-                            "1.2M",
-                            style: TextStyle(color: Colors.black),
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                  SvgPicture.asset(
-                    AppIcons.paperPlane,
-                    color: Colors.black,
-                    width: 16,
-                  ),
-                ],
-              )
-            ],
-          ),
-        );
-      },
-      separatorBuilder: (context, index) {
-        return const Divider(
-          height: 20,
-        );
-      },
-      itemCount: 10,
     );
   }
 }
