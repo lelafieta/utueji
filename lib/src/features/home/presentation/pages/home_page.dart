@@ -1,21 +1,18 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-import 'package:utueji/src/features/events/domain/entities/event_entity.dart';
-import 'package:utueji/src/features/ongs/domain/entities/ong_entity.dart';
+import 'package:utueji/src/features/events/presentation/widgets/event_skeleton_widget.dart';
+import 'package:utueji/src/features/ongs/presentation/widgets/ong_skeleton_widget.dart';
 
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
 import '../../../../core/resources/images/app_images.dart';
-import '../../../../core/utils/app_utils.dart';
-
 import '../../../campaigns/presentation/cubit/campaign_cubit.dart';
 import '../../../campaigns/presentation/cubit/campaign_state.dart';
+import '../../../campaigns/presentation/widgets/campaign_skeleton_widget.dart';
 import '../../../campaigns/presentation/widgets/campaign_widget.dart';
 import '../../../events/presentation/cubit/event_cubit.dart';
 import '../../../events/presentation/cubit/event_state.dart';
@@ -176,7 +173,6 @@ class _HomePageState extends State<HomePage> {
                   padEnds: false,
                   viewportFraction: 0.93,
                 ),
-                carouselController: CarouselSliderController(),
                 items: [1, 2, 3, 4, 5].map((i) {
                   return Container(
                     width: double.infinity,
@@ -306,8 +302,29 @@ class _HomePageState extends State<HomePage> {
             BlocBuilder<CampaignCubit, CampaignState>(
               builder: (context, state) {
                 if (state is CampaignLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
+                  return CarouselSlider.builder(
+                    itemCount: 8,
+                    itemBuilder: (BuildContext context, int itemIndex,
+                        int pageViewIndex) {
+                      return const CampaignSkeletonWidget();
+                    },
+                    options: CarouselOptions(
+                      height: 420,
+                      aspectRatio: 16 / 9,
+                      viewportFraction: 0.95,
+                      initialPage: 0,
+                      enableInfiniteScroll: false,
+                      animateToClosest: false,
+                      reverse: false,
+                      autoPlay: false,
+                      autoPlayInterval: const Duration(seconds: 3),
+                      autoPlayAnimationDuration:
+                          const Duration(milliseconds: 800),
+                      autoPlayCurve: Curves.fastOutSlowIn,
+                      enlargeCenterPage: false,
+                      enlargeFactor: 0.3,
+                      scrollDirection: Axis.horizontal,
+                    ),
                   );
                 } else if (state is CampaignLoaded) {
                   if (state.campaigns.isEmpty) {
@@ -316,17 +333,30 @@ class _HomePageState extends State<HomePage> {
                     );
                   }
 
-                  return CarouselSlider(
-                    options: CarouselOptions(
-                      height: 420.0,
-                      enableInfiniteScroll: false,
-                      padEnds: false,
-                      viewportFraction: 0.93,
-                    ),
-                    carouselController: CarouselSliderController(),
-                    items: state.campaigns.map((camapaign) {
+                  return CarouselSlider.builder(
+                    itemCount: state.campaigns.length,
+                    itemBuilder: (BuildContext context, int itemIndex,
+                        int pageViewIndex) {
+                      final camapaign = state.campaigns[itemIndex];
                       return CampaignWidget(campaign: camapaign);
-                    }).toList(),
+                    },
+                    options: CarouselOptions(
+                      height: 420,
+                      aspectRatio: 16 / 9,
+                      viewportFraction: 0.95,
+                      initialPage: 0,
+                      enableInfiniteScroll: false,
+                      animateToClosest: false,
+                      reverse: false,
+                      autoPlay: false,
+                      autoPlayInterval: const Duration(seconds: 3),
+                      autoPlayAnimationDuration:
+                          const Duration(milliseconds: 800),
+                      autoPlayCurve: Curves.fastOutSlowIn,
+                      enlargeCenterPage: false,
+                      enlargeFactor: 0.3,
+                      scrollDirection: Axis.horizontal,
+                    ),
                   );
                 }
                 return const Text("ERRRO");
@@ -559,31 +589,59 @@ class _HomePageState extends State<HomePage> {
             ),
             BlocBuilder<EventCubit, EventState>(
               builder: (context, state) {
-                print(state);
                 if (state is EventLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
+                  return CarouselSlider.builder(
+                    itemCount: 8,
+                    itemBuilder: (BuildContext context, int itemIndex,
+                        int pageViewIndex) {
+                      return const EventSkeletonWidget();
+                    },
+                    options: CarouselOptions(
+                      height: 300,
+                      aspectRatio: 16 / 9,
+                      viewportFraction: 0.95,
+                      initialPage: 0,
+                      enableInfiniteScroll: false,
+                      animateToClosest: false,
+                      reverse: false,
+                      autoPlay: false,
+                      autoPlayInterval: const Duration(seconds: 3),
+                      autoPlayAnimationDuration:
+                          const Duration(milliseconds: 800),
+                      autoPlayCurve: Curves.fastOutSlowIn,
+                      enlargeCenterPage: false,
+                      enlargeFactor: 0.3,
+                      scrollDirection: Axis.horizontal,
+                    ),
                   );
                 } else if (state is EventLoaded) {
                   if (state.events.isEmpty) {
                     return Center(child: Text("Sem eventos registados"));
                   } else {
                     final events = state.events;
-                    return Container(
-                      child: CarouselSlider(
-                        options: CarouselOptions(
-                          height: 300.0,
-                          enableInfiniteScroll: false,
-                          padEnds: false,
-                          viewportFraction: 0.93,
-                        ),
-                        carouselController: CarouselSliderController(),
-                        items: events.map((event) {
-                          return EventWidget(
-                            event: event,
-                          );
-                        }).toList(),
+                    return CarouselSlider(
+                      options: CarouselOptions(
+                        height: 300,
+                        aspectRatio: 16 / 9,
+                        viewportFraction: 0.95,
+                        initialPage: 0,
+                        enableInfiniteScroll: false,
+                        animateToClosest: false,
+                        reverse: false,
+                        autoPlay: false,
+                        autoPlayInterval: const Duration(seconds: 3),
+                        autoPlayAnimationDuration:
+                            const Duration(milliseconds: 800),
+                        autoPlayCurve: Curves.fastOutSlowIn,
+                        enlargeCenterPage: false,
+                        enlargeFactor: 0.3,
+                        scrollDirection: Axis.horizontal,
                       ),
+                      items: events.map((event) {
+                        return EventWidget(
+                          event: event,
+                        );
+                      }).toList(),
                     );
                   }
                 }
@@ -607,38 +665,62 @@ class _HomePageState extends State<HomePage> {
             BlocBuilder<OngCubit, OngState>(
               builder: (context, state) {
                 if (state is OngLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
+                  return CarouselSlider.builder(
+                    options: CarouselOptions(
+                      height: 165,
+                      aspectRatio: 16 / 9,
+                      viewportFraction: 0.8,
+                      initialPage: 0,
+                      enableInfiniteScroll: true,
+                      animateToClosest: false,
+                      reverse: false,
+                      autoPlay: false,
+                      autoPlayInterval: const Duration(seconds: 3),
+                      autoPlayAnimationDuration:
+                          const Duration(milliseconds: 800),
+                      autoPlayCurve: Curves.fastOutSlowIn,
+                      enlargeCenterPage: false,
+                      enlargeFactor: 0.3,
+                      scrollDirection: Axis.horizontal,
+                    ),
+                    itemBuilder: (context, index, pageViewIndex) {
+                      return const OngSkeletonWidget();
+                    },
+                    itemCount: 8,
                   );
                 } else if (state is OngLoaded) {
                   if (state.ongs.isEmpty) {
-                    return Center(child: Text("Sem ongs registadas"));
+                    return const Center(child: Text("Sem ongs registadas"));
                   }
-                  return SizedBox(
-                    height: 190,
-                    child: ListView.separated(
-                      shrinkWrap: true,
-                      physics: const ClampingScrollPhysics(),
+                  return CarouselSlider(
+                    options: CarouselOptions(
+                      height: 165,
+                      aspectRatio: 16 / 9,
+                      viewportFraction: 0.8,
+                      initialPage: 0,
+                      enableInfiniteScroll: true,
+                      animateToClosest: false,
+                      reverse: false,
+                      autoPlay: false,
+                      autoPlayInterval: const Duration(seconds: 3),
+                      autoPlayAnimationDuration:
+                          const Duration(milliseconds: 800),
+                      autoPlayCurve: Curves.fastOutSlowIn,
+                      enlargeCenterPage: false,
+                      enlargeFactor: 0.3,
                       scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.only(
-                          left: 16, right: 16, bottom: 16),
-                      itemBuilder: (context, index) {
-                        final ong = state.ongs[index];
-
-                        return OngWidget(
-                          ong: ong,
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return const SizedBox(width: 10);
-                      },
-                      itemCount: state.ongs.length,
                     ),
+                    items: state.ongs.map((ong) {
+                      return OngWidget(
+                        ong: ong,
+                      );
+                    }).toList(),
                   );
                 }
                 return Text("data");
               },
             ),
+            const SizedBox(height: 50),
           ],
         ),
       ),

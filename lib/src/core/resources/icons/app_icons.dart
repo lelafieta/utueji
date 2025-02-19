@@ -28,4 +28,5 @@ class AppIcons {
   static const String commentAlt = "assets/icons/comment-alt.svg";
   static const String eye = "assets/icons/eye.svg";
   static const String paperPlane = "assets/icons/paper-plane.svg";
+  static const String squarePlus = "assets/icons/square-plus.svg";
 }

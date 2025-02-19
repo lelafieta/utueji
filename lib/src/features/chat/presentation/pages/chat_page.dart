@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dotted_dashed_line/dotted_dashed_line.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -16,15 +17,15 @@ import '../../../events/presentation/widgets/event_widget.dart';
 import '../../../ongs/presentation/cubit/ong_cubit.dart';
 import '../../../ongs/presentation/cubit/ong_state.dart';
 
-class ExplorePage extends StatefulWidget {
-  const ExplorePage({super.key});
+class ChatPage extends StatefulWidget {
+  const ChatPage({super.key});
 
   @override
-  State<ExplorePage> createState() => _ExplorePageState();
+  State<ChatPage> createState() => _ChatPageState();
 }
 
-class _ExplorePageState extends State<ExplorePage> {
-  List<String> menus = ["Feeds", "Blogs", "Eventos", "Perfil ONG"];
+class _ChatPageState extends State<ChatPage> {
+  List<String> menus = ["Todas", "Pendentes", "Passado", "Pendentes"];
 
   int selectedIndex = 0;
   List<Widget> widgets = [
@@ -39,7 +40,13 @@ class _ExplorePageState extends State<ExplorePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
-        title: const Text('Navegador'),
+        title: const Text('Caixa de Entrada'),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: SvgPicture.asset(AppIcons.squarePlus),
+          )
+        ],
       ),
       body: Column(
         children: [
@@ -69,43 +76,223 @@ class _ExplorePageState extends State<ExplorePage> {
               ),
             ),
           ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              for (int index = 0; index < menus.length; index++)
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      selectedIndex = index;
-                    });
-                  },
-                  child: Container(
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: (index == selectedIndex)
-                          ? AppColors.blackColor
-                          : Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Center(
-                      child: Text(
-                        menus[index],
-                        style: TextStyle(
-                          color: (index == selectedIndex)
-                              ? AppColors.whiteColor
-                              : Colors.black,
+          Expanded(
+            child: SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
+              child: Column(
+                children: [
+                  Container(
+                    padding:
+                        const EdgeInsets.only(left: 16, right: 16, top: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Comunidades",
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
-                      ),
+                        IconButton(
+                          alignment: Alignment.centerRight,
+                          padding: EdgeInsets.zero,
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.add,
+                            color: AppColors.primaryColor,
+                          ),
+                        )
+                      ],
                     ),
                   ),
-                ),
-            ],
-          ),
-          const SizedBox(height: 5),
-          Expanded(
-            child: widgets[selectedIndex],
+                  BlocBuilder<OngCubit, OngState>(
+                    builder: (context, state) {
+                      if (state is OngLoading) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (state is OngLoaded) {
+                        if (state.ongs.isEmpty) {
+                          return Center(child: Text("Sem ongs registadas"));
+                        }
+                        return Container(
+                          height: 80,
+                          child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            shrinkWrap: true,
+                            physics: const ClampingScrollPhysics(),
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            itemBuilder: (context, index) {
+                              return ClipRRect(
+                                borderRadius: BorderRadius.circular(5),
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      width: 80,
+                                      decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      left: 0,
+                                      right: 0,
+                                      top: 0,
+                                      bottom: 0,
+                                      child: Image.asset(
+                                        AppImages.image1,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    Positioned(
+                                      left: 0,
+                                      right: 0,
+                                      top: 0,
+                                      bottom: 0,
+                                      child: Container(
+                                        color: Colors.black26,
+                                      ),
+                                    ),
+                                    Positioned(
+                                      left: 0,
+                                      right: 0,
+                                      bottom: 0,
+                                      child: Container(
+                                        height: 55,
+                                        decoration: const BoxDecoration(
+                                          gradient: LinearGradient(
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
+                                            colors: [
+                                              Colors.transparent,
+                                              Colors.black,
+                                            ],
+                                          ),
+                                        ),
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "Global",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                              Text(
+                                                "33 Serviços",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  fontSize: 10,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            separatorBuilder: (context, index) {
+                              return const SizedBox(width: 10);
+                            },
+                            itemCount: 15,
+                          ),
+                        );
+                      }
+                      return Text("data");
+                    },
+                  ),
+                  Container(
+                    padding:
+                        const EdgeInsets.only(left: 16, right: 16, top: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Mensagens",
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                      ],
+                    ),
+                  ),
+                  BlocBuilder<OngCubit, OngState>(
+                    builder: (context, state) {
+                      if (state is OngLoading) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (state is OngLoaded) {
+                        if (state.ongs.isEmpty) {
+                          return Center(child: Text("Sem ongs registadas"));
+                        }
+                        final ongs = state.ongs;
+                        return ListView.separated(
+                          shrinkWrap: true,
+                          physics: const ClampingScrollPhysics(),
+                          padding: const EdgeInsets.all(16),
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              contentPadding: const EdgeInsets.all(0),
+                              leading: ClipRRect(
+                                borderRadius: BorderRadius.circular(50),
+                                child: Container(
+                                  width: 55,
+                                  height: 55,
+                                  color: Colors.black12,
+                                  child: Image.asset(AppImages.me),
+                                ),
+                              ),
+                              title: const Text("Ana Martins"),
+                              subtitle: const Text("Olá, Tudo bem Fieta?"),
+                              trailing: SizedBox(
+                                width: 80,
+                                child: Column(
+                                  children: [
+                                    const Text("12:06m"),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Container(
+                                      width: 20,
+                                      height: 20,
+                                      decoration: BoxDecoration(
+                                        color: Colors.black,
+                                        borderRadius: BorderRadius.circular(50),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          "9",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                          separatorBuilder: (context, index) {
+                            return const SizedBox(height: 10);
+                          },
+                          itemCount: ongs.length,
+                        );
+                      }
+                      return Text("data");
+                    },
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),

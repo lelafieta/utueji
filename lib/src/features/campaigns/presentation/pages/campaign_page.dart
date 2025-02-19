@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dotted_dashed_line/dotted_dashed_line.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -16,15 +17,15 @@ import '../../../events/presentation/widgets/event_widget.dart';
 import '../../../ongs/presentation/cubit/ong_cubit.dart';
 import '../../../ongs/presentation/cubit/ong_state.dart';
 
-class ExplorePage extends StatefulWidget {
-  const ExplorePage({super.key});
+class CampaignPage extends StatefulWidget {
+  const CampaignPage({super.key});
 
   @override
-  State<ExplorePage> createState() => _ExplorePageState();
+  State<CampaignPage> createState() => _CampaignPageState();
 }
 
-class _ExplorePageState extends State<ExplorePage> {
-  List<String> menus = ["Feeds", "Blogs", "Eventos", "Perfil ONG"];
+class _CampaignPageState extends State<CampaignPage> {
+  List<String> menus = ["Todas", "Pendentes", "Passado", "Pendentes"];
 
   int selectedIndex = 0;
   List<Widget> widgets = [
@@ -39,7 +40,7 @@ class _ExplorePageState extends State<ExplorePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
-        title: const Text('Navegador'),
+        title: const Text('Minhas Campanhas'),
       ),
       body: Column(
         children: [
@@ -70,11 +71,15 @@ class _ExplorePageState extends State<ExplorePage> {
             ),
           ),
           const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              for (int index = 0; index < menus.length; index++)
-                InkWell(
+          SizedBox(
+            height: 40,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
+              physics: const ClampingScrollPhysics(),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              itemBuilder: (context, index) {
+                return InkWell(
                   onTap: () {
                     setState(() {
                       selectedIndex = index;
@@ -100,12 +105,111 @@ class _ExplorePageState extends State<ExplorePage> {
                       ),
                     ),
                   ),
-                ),
-            ],
+                );
+              },
+              separatorBuilder: (context, index) {
+                return const SizedBox(width: 10);
+              },
+              itemCount: menus.length,
+            ),
           ),
           const SizedBox(height: 5),
           Expanded(
-            child: widgets[selectedIndex],
+            child: ListView.separated(
+              padding: const EdgeInsets.all(16),
+              itemBuilder: (context, index) {
+                return Card(
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          titleAlignment: ListTileTitleAlignment.top,
+                          leading: ClipRRect(
+                            borderRadius: BorderRadius.circular(5),
+                            child: Container(
+                              width: 60,
+                              height: 70,
+                              color: Colors.red,
+                              child: Image.asset(
+                                AppImages.image1,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          title: Text(
+                              "Ajuda para as crianças que precisam de materiais escolares",
+                              style: Theme.of(context).textTheme.titleSmall,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis),
+                          subtitle: const Text("Começa: 10.Março.2025"),
+                          trailing: IconButton(
+                            onPressed: () {},
+                            icon: const Icon(Icons.share),
+                          ),
+                        ),
+                        const DottedDashedLine(
+                          height: 0,
+                          width: double.infinity,
+                          axis: Axis.horizontal,
+                          dashColor: Colors.black26,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              RichText(
+                                text: TextSpan(
+                                  style: DefaultTextStyle.of(context)
+                                      .style
+                                      .copyWith(fontSize: 12),
+                                  children: [
+                                    TextSpan(text: "Objectivo: "),
+                                    TextSpan(
+                                      style: TextStyle(
+                                        color: AppColors.primaryColor,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      text: "5.000.000 /",
+                                    ),
+                                    TextSpan(
+                                      style: TextStyle(color: Colors.black),
+                                      text: " 1.000.000",
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.history,
+                                    color: AppColors.textColor,
+                                    size: 18,
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    "a 2 dias",
+                                    style: TextStyle(fontSize: 12),
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+              separatorBuilder: (context, index) {
+                return const SizedBox(
+                  height: 10,
+                );
+              },
+              itemCount: 10,
+            ),
           ),
         ],
       ),
