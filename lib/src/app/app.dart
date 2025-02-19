@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../config/routes/app_pages.dart';
 import '../config/themes/app_theme.dart';
 import '../app/di.dart' as di;
+import '../features/blogs/presentation/cubit/blog_cubit.dart';
 import '../features/campaigns/presentation/cubit/campaign_cubit.dart';
 import '../features/auth/presentation/cubit/auth_cubit.dart';
 import '../features/auth/presentation/cubit/initial_cubit/initial_cubit.dart';
@@ -24,6 +25,7 @@ class UtuejiApp extends StatelessWidget {
         BlocProvider(create: (_) => di.instance<EventCubit>()),
         BlocProvider(create: (_) => di.instance<OngCubit>()),
         BlocProvider(create: (_) => di.instance<FeedCubit>()),
+        BlocProvider(create: (_) => di.instance<BlogCubit>()),
         BlocProvider(create: (_) => di.instance<InitialCubit>()..appStarted()),
       ],
       child: GetMaterialApp(

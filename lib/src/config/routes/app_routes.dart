@@ -6,4 +6,6 @@ class AppRoutes {
   static const String exploreRoute = "/explore";
   static const String campaignRoute = "/campaign";
   static const String chatRoute = "/chat";
+  static const String blogRoute = "/blog";
+  static const String feedRoute = "/feed";
 }

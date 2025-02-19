@@ -11,6 +11,7 @@ import 'package:utueji/src/features/ongs/presentation/widgets/ong_widget.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
 import '../../../../core/resources/images/app_images.dart';
+import '../../../blogs/presentation/pages/blog_page.dart';
 import '../../../events/presentation/cubit/event_cubit.dart';
 import '../../../events/presentation/cubit/event_state.dart';
 import '../../../events/presentation/widgets/event_widget.dart';
@@ -33,7 +34,7 @@ class _ExplorePageState extends State<ExplorePage> {
   int selectedIndex = 0;
   List<Widget> widgets = [
     const FeedPage(),
-    const BlogContainer(),
+    const BlogPage(),
     const EventContainer(),
     const OngContainer(),
   ];
@@ -111,192 +112,6 @@ class _ExplorePageState extends State<ExplorePage> {
           Expanded(
             child: widgets[selectedIndex],
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class BlogContainer extends StatelessWidget {
-  const BlogContainer({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: ClampingScrollPhysics(),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Destaques",
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                // TextButton(onPressed: () {}, child: Text("Ver mais"))
-              ],
-            ),
-          ),
-          CarouselSlider(
-            options: CarouselOptions(
-              height: 250.0,
-              enableInfiniteScroll: false,
-              padEnds: false,
-              viewportFraction: 0.93,
-            ),
-            carouselController: CarouselSliderController(),
-            items: [1, 2, 3].map((index) {
-              return ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: Container(
-                  width: double.infinity,
-                  margin: EdgeInsets.only(left: 16, top: 16),
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Stack(
-                          children: [
-                            Container(
-                              height: 150,
-                            ),
-                            Positioned(
-                              left: 0,
-                              right: 0,
-                              top: 0,
-                              child: ClipRRect(
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(8),
-                                  topRight: Radius.circular(8),
-                                ),
-                                child: Container(
-                                  height: 130,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.yellow,
-                                  ),
-                                  child: Image.asset(
-                                    AppImages.image1,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              bottom: 0,
-                              right: 25,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(50),
-                                child: Container(
-                                  width: 40,
-                                  height: 40,
-                                  color: Colors.blue,
-                                  child: Image.asset(AppImages.me),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text("Publicado aos 13, Abril, 2025"),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Text(
-                                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor",
-                                  style: Theme.of(context).textTheme.titleSmall,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 2,
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-          Container(
-            padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Para ti",
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-              ],
-            ),
-          ),
-          ListView.separated(
-            shrinkWrap: true,
-            physics: ClampingScrollPhysics(),
-            padding: EdgeInsets.all(16),
-            itemBuilder: (context, index) {
-              return Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Container(
-                  child: Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Container(
-                          width: 100,
-                          height: 100,
-                          color: Colors.red,
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor",
-                                style: Theme.of(context).textTheme.titleSmall,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              const Text("Publicado aos 13, Abril, 2025"),
-                            ],
-                          ),
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: SvgPicture.asset(
-                          AppIcons.heart,
-                          color: Colors.red,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-            separatorBuilder: (context, index) {
-              return const SizedBox(height: 10);
-            },
-            itemCount: 8,
-          )
         ],
       ),
     );
