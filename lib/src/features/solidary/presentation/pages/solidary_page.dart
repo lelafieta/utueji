@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
+import '../../../campaigns/presentation/pages/campaign_page.dart';
+import '../../../chat/presentation/pages/chat_page.dart';
 import '../../../explore/presentation/pages/explore_page.dart';
 import '../../../home/presentation/pages/home_page.dart';
 
@@ -37,7 +39,7 @@ class _SolidaryPageState extends State<SolidaryPage> {
         activeIconPath: AppIcons.houseChimneyBold,
         isActive: true),
     MenuItem(
-      title: "Explore",
+      title: "Nvegador",
       iconPath: AppIcons.compassAlt,
       activeIconPath: AppIcons.compassAltBold,
     ),
@@ -47,7 +49,7 @@ class _SolidaryPageState extends State<SolidaryPage> {
       activeIconPath: AppIcons.handsHeartBold,
     ),
     MenuItem(
-      title: "Messages",
+      title: "Chat",
       iconPath: AppIcons.comments,
       activeIconPath: AppIcons.commentsBold,
     ),
@@ -56,8 +58,8 @@ class _SolidaryPageState extends State<SolidaryPage> {
   final List<Widget> pages = [
     const HomePage(),
     const ExplorePage(),
-    const Center(child: Text("Favorites", style: TextStyle(fontSize: 24))),
-    const Center(child: Text("Profile", style: TextStyle(fontSize: 24))),
+    const CampaignPage(),
+    const ChatPage(),
   ];
 
   @override

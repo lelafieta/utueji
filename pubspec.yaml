@@ -82,6 +82,12 @@ dependencies:
   supabase_flutter: ^2.8.3
   dartz: ^0.10.1
   flutter_carousel_widget: ^3.1.0
+  infinite_carousel: ^1.1.1
+  banner_carousel: ^1.2.1
+  carousel_slider_plus: ^7.1.0
+  dotted_dashed_line: ^0.0.3
+  skeletonizer: ^1.4.3
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:

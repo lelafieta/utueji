@@ -31,149 +31,149 @@ class _EventWidgetState extends State<EventWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Container(
-          width: 400,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  topRight: Radius.circular(10),
-                ),
-                child: Stack(
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      height: 190,
-                      child: CachedNetworkImage(
-                        imageUrl: widget.event.backgroundImageUrl!,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) =>
-                            const CircularProgressIndicator(),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Container(
+        width: 400,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
+              ),
+              child: Stack(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    height: 190,
+                    child: CachedNetworkImage(
+                      imageUrl: widget.event.backgroundImageUrl!,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => const Center(
+                        child: SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: CircularProgressIndicator(),
+                        ),
                       ),
                     ),
-                    Positioned(
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      top: 0,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              AppColors.blue.withOpacity(.4),
-                              AppColors.primaryColor.withOpacity(.4),
+                  ),
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    top: 0,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            AppColors.blue.withOpacity(.4),
+                            AppColors.primaryColor.withOpacity(.4),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          widget.event.title!,
+                          style: Theme.of(context).textTheme.titleSmall,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),
+                      ),
+                      SvgPicture.asset(
+                        AppIcons.heartBold,
+                        color: Colors.red,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.access_time_rounded,
+                        size: 16,
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        formatarDataPersonalizada(widget.event.startDate!),
+                        style: const TextStyle(
+                          fontSize: 12,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 14,
+                      ),
+                      const Icon(
+                        Icons.location_on_rounded,
+                        size: 16,
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                        child: Text(
+                          "${widget.event.location}",
+                          style: const TextStyle(
+                            fontSize: 12,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          height: 16,
+                          child: Stack(
+                            children: [
+                              AppUtils.contributeUserItem(
+                                  0, 0, 0, AppImages.me, Colors.black),
+                              AppUtils.contributeUserItem(
+                                  8, 0, 0, AppImages.me, Colors.red),
+                              AppUtils.contributeUserItem(
+                                  16, 0, 0, AppImages.me, Colors.green),
+                              AppUtils.contributeUserItem(24, 0, 0,
+                                  AppImages.me, AppColors.primaryColor,
+                                  text: "+16"),
+                              AppUtils.contributeUserDescription(
+                                  60, 0, 0, AppImages.me, Colors.transparent,
+                                  text: "Contributos"),
                             ],
                           ),
                         ),
                       ),
-                    )
-                  ],
-                ),
+                    ],
+                  ),
+                ],
               ),
-              Container(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            widget.event.title!,
-                            style: Theme.of(context).textTheme.titleSmall,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                          ),
-                        ),
-                        SvgPicture.asset(
-                          AppIcons.heartBold,
-                          color: Colors.red,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.access_time_rounded,
-                          size: 16,
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          formatarDataPersonalizada(widget.event.startDate!),
-                          style: const TextStyle(
-                            fontSize: 12,
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 14,
-                        ),
-                        const Icon(
-                          Icons.location_on_rounded,
-                          size: 16,
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Expanded(
-                          child: Text(
-                            "${widget.event.location}",
-                            style: const TextStyle(
-                              fontSize: 12,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: SizedBox(
-                            height: 16,
-                            child: Stack(
-                              children: [
-                                AppUtils.contributeUserItem(
-                                    0, 0, 0, AppImages.me, Colors.black),
-                                AppUtils.contributeUserItem(
-                                    8, 0, 0, AppImages.me, Colors.red),
-                                AppUtils.contributeUserItem(
-                                    16, 0, 0, AppImages.me, Colors.green),
-                                AppUtils.contributeUserItem(24, 0, 0,
-                                    AppImages.me, AppColors.primaryColor,
-                                    text: "+16"),
-                                AppUtils.contributeUserDescription(
-                                    60, 0, 0, AppImages.me, Colors.transparent,
-                                    text: "Contributos"),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
