@@ -4,8 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:utueji/src/features/events/domain/usecases/fetch_latest_events_usecase.dart';
-import 'package:utueji/src/features/ongs/domain/usecases/fetch_latest_ongs_usecase.dart';
+
 import '../features/auth/data/datasources/auth_datasource.dart';
 import '../features/auth/data/datasources/i_auth_datasource.dart';
 import '../features/auth/data/repositories/auth_repository.dart';
@@ -16,6 +15,13 @@ import '../features/auth/domain/usecases/sign_out_usecase.dart';
 import '../features/auth/domain/usecases/sign_up_usecase.dart';
 import '../features/auth/presentation/cubit/auth_cubit.dart';
 import '../features/auth/presentation/cubit/initial_cubit/initial_cubit.dart';
+import '../features/blogs/data/datasources/blog_datasource.dart';
+import '../features/blogs/data/datasources/i_blog_datasource.dart';
+import '../features/blogs/data/repositories/blog_repository.dart';
+import '../features/blogs/domain/repositories/i_blog_repository.dart';
+import '../features/blogs/domain/usecases/fetch_blogs_usecase.dart';
+import '../features/blogs/domain/usecases/fetch_latest_blogs_usecase.dart';
+import '../features/blogs/presentation/cubit/blog_cubit.dart';
 import '../features/campaigns/data/datasources/i_campaign_datasource.dart';
 import '../features/campaigns/data/datasources/campaign_datasource.dart';
 import '../features/campaigns/data/repositories/campaign_repository.dart';
@@ -27,6 +33,7 @@ import '../features/events/data/datasources/event_datasource.dart';
 import '../features/events/data/datasources/i_event_datasource.dart';
 import '../features/events/data/repositories/event_repository.dart';
 import '../features/events/domain/repositories/i_event_repository.dart';
+import '../features/events/domain/usecases/fetch_latest_events_usecase.dart';
 import '../features/events/presentation/cubit/event_cubit.dart';
 import '../features/feeds/data/datasources/feed_datasource.dart';
 import '../features/feeds/data/datasources/i_feed_datasource.dart';
@@ -38,6 +45,7 @@ import '../features/ongs/data/datasources/i_ong_datasource.dart';
 import '../features/ongs/data/datasources/ong_datasource.dart';
 import '../features/ongs/data/repositories/ong_repository.dart';
 import '../features/ongs/domain/respositories/i_ong_repository.dart';
+import '../features/ongs/domain/usecases/fetch_latest_ongs_usecase.dart';
 import '../features/ongs/presentation/cubit/ong_cubit.dart';
 
 GetIt instance = GetIt.instance;
@@ -72,6 +80,8 @@ void _setUpCubits() {
       .registerFactory(() => EventCubit(fetchLatestEventsUsecase: instance()));
   instance.registerFactory(() => OngCubit(fetchLatestOngsUsecase: instance()));
   instance.registerFactory(() => FeedCubit(fetchFeedsUseCase: instance()));
+  instance.registerFactory(() => BlogCubit(
+      fetchBlogUseCase: instance(), fetchLatestBlogUseCase: instance()));
 }
 
 void _setUpUsecases() {
@@ -93,6 +103,11 @@ void _setUpUsecases() {
       () => FetchLatestOngsUsecase(repository: instance()));
   instance.registerLazySingleton<FetchFeedsUseCase>(
       () => FetchFeedsUseCase(repository: instance()));
+
+  instance.registerLazySingleton<FetchBlogUseCase>(
+      () => FetchBlogUseCase(repository: instance()));
+  instance.registerLazySingleton<FetchLatestBlogUseCase>(
+      () => FetchLatestBlogUseCase(repository: instance()));
 }
 
 void _setUpRepositories() {
@@ -106,6 +121,8 @@ void _setUpRepositories() {
       () => OngRepository(datasource: instance()));
   instance.registerLazySingleton<IFeedRepository>(
       () => FeedRepository(datasource: instance()));
+  instance.registerLazySingleton<IBlogRepository>(
+      () => BlogRepository(datasource: instance()));
 }
 
 void _setUpDatasources() {
@@ -119,4 +136,7 @@ void _setUpDatasources() {
       () => OngDataSource(supabase: instance()));
   instance.registerLazySingleton<IFeedDataSource>(
       () => FeedDataSource(supabase: instance()));
+
+  instance.registerLazySingleton<IBlogDataSource>(
+      () => BlogDataSource(supabase: instance()));
 }
