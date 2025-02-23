@@ -119,106 +119,110 @@ class _CampaignPageState extends State<CampaignPage> {
             child: BlocBuilder<CampaignCubit, CampaignState>(
               builder: (context, state) {
                 if (state is CampaignLoading) {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(),
                   );
-                }
-                return ListView.separated(
-                  padding: const EdgeInsets.all(16),
-                  itemBuilder: (context, index) {
-                    return Card(
-                      child: Container(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          children: [
-                            ListTile(
-                              contentPadding: EdgeInsets.zero,
-                              titleAlignment: ListTileTitleAlignment.top,
-                              leading: ClipRRect(
-                                borderRadius: BorderRadius.circular(5),
-                                child: Container(
-                                  width: 60,
-                                  height: 70,
-                                  color: Colors.red,
-                                  child: Image.asset(
-                                    AppImages.image1,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              title: Text(
-                                  "Ajuda para as crianças que precisam de materiais escolares",
-                                  style: Theme.of(context).textTheme.titleSmall,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis),
-                              subtitle: const Text("Começa: 10.Março.2025"),
-                              trailing: IconButton(
-                                onPressed: () {},
-                                icon: const Icon(Icons.share),
-                              ),
-                            ),
-                            const DottedDashedLine(
-                              height: 0,
-                              width: double.infinity,
-                              axis: Axis.horizontal,
-                              dashColor: Colors.black26,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 10),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  RichText(
-                                    text: TextSpan(
-                                      style: DefaultTextStyle.of(context)
-                                          .style
-                                          .copyWith(fontSize: 12),
-                                      children: [
-                                        TextSpan(text: "Objectivo: "),
-                                        TextSpan(
-                                          style: TextStyle(
-                                            color: AppColors.primaryColor,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                          text: "5.000.000 /",
-                                        ),
-                                        TextSpan(
-                                          style: TextStyle(color: Colors.black),
-                                          text: " 1.000.000",
-                                        ),
-                                      ],
+                } else if (state is CampaignLoaded) {
+                  return ListView.separated(
+                    padding: const EdgeInsets.all(16),
+                    itemBuilder: (context, index) {
+                      return Card(
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            children: [
+                              ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                titleAlignment: ListTileTitleAlignment.top,
+                                leading: ClipRRect(
+                                  borderRadius: BorderRadius.circular(5),
+                                  child: Container(
+                                    width: 60,
+                                    height: 70,
+                                    color: Colors.red,
+                                    child: Image.asset(
+                                      AppImages.image1,
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.history,
-                                        color: AppColors.textColor,
-                                        size: 18,
-                                      ),
-                                      const SizedBox(width: 5),
-                                      Text(
-                                        "a 2 dias",
-                                        style: TextStyle(fontSize: 12),
-                                      )
-                                    ],
-                                  )
-                                ],
+                                ),
+                                title: Text(
+                                    "Ajuda para as crianças que precisam de materiais escolares",
+                                    style:
+                                        Theme.of(context).textTheme.titleSmall,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis),
+                                subtitle: const Text("Começa: 10.Março.2025"),
+                                trailing: IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(Icons.share),
+                                ),
                               ),
-                            ),
-                          ],
+                              const DottedDashedLine(
+                                height: 0,
+                                width: double.infinity,
+                                axis: Axis.horizontal,
+                                dashColor: Colors.black26,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 10),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    RichText(
+                                      text: TextSpan(
+                                        style: DefaultTextStyle.of(context)
+                                            .style
+                                            .copyWith(fontSize: 12),
+                                        children: [
+                                          TextSpan(text: "Objectivo: "),
+                                          TextSpan(
+                                            style: TextStyle(
+                                              color: AppColors.primaryColor,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                            text: "5.000.000 /",
+                                          ),
+                                          TextSpan(
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                            text: " 1.000.000",
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.history,
+                                          color: AppColors.textColor,
+                                          size: 18,
+                                        ),
+                                        const SizedBox(width: 5),
+                                        Text(
+                                          "a 2 dias",
+                                          style: TextStyle(fontSize: 12),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return const SizedBox(
-                      height: 10,
-                    );
-                  },
-                  itemCount: 10,
-                );
+                      );
+                    },
+                    separatorBuilder: (context, index) {
+                      return const SizedBox(
+                        height: 10,
+                      );
+                    },
+                    itemCount: 10,
+                  );
+                }
+                return Text("data");
               },
             ),
           ),
