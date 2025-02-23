@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:utueji/src/features/campaigns/presentation/cubit/campaign_cubit.dart';
+import 'package:utueji/src/features/campaigns/presentation/cubit/campaign_state.dart';
 import 'package:utueji/src/features/ongs/presentation/widgets/ong_widget.dart';
 
 import '../../../../config/themes/app_colors.dart';
@@ -32,7 +34,6 @@ class _CampaignPageState extends State<CampaignPage> {
     const FeedContainer(),
     const BlogContainer(),
     const EventContainer(),
-    const OngContainer(),
   ];
 
   @override
@@ -115,100 +116,110 @@ class _CampaignPageState extends State<CampaignPage> {
           ),
           const SizedBox(height: 5),
           Expanded(
-            child: ListView.separated(
-              padding: const EdgeInsets.all(16),
-              itemBuilder: (context, index) {
-                return Card(
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      children: [
-                        ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          titleAlignment: ListTileTitleAlignment.top,
-                          leading: ClipRRect(
-                            borderRadius: BorderRadius.circular(5),
-                            child: Container(
-                              width: 60,
-                              height: 70,
-                              color: Colors.red,
-                              child: Image.asset(
-                                AppImages.image1,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          title: Text(
-                              "Ajuda para as crianças que precisam de materiais escolares",
-                              style: Theme.of(context).textTheme.titleSmall,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis),
-                          subtitle: const Text("Começa: 10.Março.2025"),
-                          trailing: IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.share),
-                          ),
-                        ),
-                        const DottedDashedLine(
-                          height: 0,
-                          width: double.infinity,
-                          axis: Axis.horizontal,
-                          dashColor: Colors.black26,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              RichText(
-                                text: TextSpan(
-                                  style: DefaultTextStyle.of(context)
-                                      .style
-                                      .copyWith(fontSize: 12),
-                                  children: [
-                                    TextSpan(text: "Objectivo: "),
-                                    TextSpan(
-                                      style: TextStyle(
-                                        color: AppColors.primaryColor,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                      text: "5.000.000 /",
-                                    ),
-                                    TextSpan(
-                                      style: TextStyle(color: Colors.black),
-                                      text: " 1.000.000",
-                                    ),
-                                  ],
+            child: BlocBuilder<CampaignCubit, CampaignState>(
+              builder: (context, state) {
+                if (state is CampaignLoading) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                return ListView.separated(
+                  padding: const EdgeInsets.all(16),
+                  itemBuilder: (context, index) {
+                    return Card(
+                      child: Container(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          children: [
+                            ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              titleAlignment: ListTileTitleAlignment.top,
+                              leading: ClipRRect(
+                                borderRadius: BorderRadius.circular(5),
+                                child: Container(
+                                  width: 60,
+                                  height: 70,
+                                  color: Colors.red,
+                                  child: Image.asset(
+                                    AppImages.image1,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
-                              Row(
+                              title: Text(
+                                  "Ajuda para as crianças que precisam de materiais escolares",
+                                  style: Theme.of(context).textTheme.titleSmall,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis),
+                              subtitle: const Text("Começa: 10.Março.2025"),
+                              trailing: IconButton(
+                                onPressed: () {},
+                                icon: const Icon(Icons.share),
+                              ),
+                            ),
+                            const DottedDashedLine(
+                              height: 0,
+                              width: double.infinity,
+                              axis: Axis.horizontal,
+                              dashColor: Colors.black26,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Icon(
-                                    Icons.history,
-                                    color: AppColors.textColor,
-                                    size: 18,
+                                  RichText(
+                                    text: TextSpan(
+                                      style: DefaultTextStyle.of(context)
+                                          .style
+                                          .copyWith(fontSize: 12),
+                                      children: [
+                                        TextSpan(text: "Objectivo: "),
+                                        TextSpan(
+                                          style: TextStyle(
+                                            color: AppColors.primaryColor,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                          text: "5.000.000 /",
+                                        ),
+                                        TextSpan(
+                                          style: TextStyle(color: Colors.black),
+                                          text: " 1.000.000",
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  const SizedBox(width: 5),
-                                  Text(
-                                    "a 2 dias",
-                                    style: TextStyle(fontSize: 12),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.history,
+                                        color: AppColors.textColor,
+                                        size: 18,
+                                      ),
+                                      const SizedBox(width: 5),
+                                      Text(
+                                        "a 2 dias",
+                                        style: TextStyle(fontSize: 12),
+                                      )
+                                    ],
                                   )
                                 ],
-                              )
-                            ],
-                          ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
+                      ),
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return const SizedBox(
+                      height: 10,
+                    );
+                  },
+                  itemCount: 10,
                 );
               },
-              separatorBuilder: (context, index) {
-                return const SizedBox(
-                  height: 10,
-                );
-              },
-              itemCount: 10,
             ),
           ),
         ],
@@ -647,159 +658,6 @@ class EventContainer extends StatelessWidget {
         }
         return Text("data");
       },
-    );
-  }
-}
-
-class OngContainer extends StatelessWidget {
-  const OngContainer({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: ClampingScrollPhysics(),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "ONG's Populares",
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                TextButton(onPressed: () {}, child: Text("Ver mais"))
-              ],
-            ),
-          ),
-          BlocBuilder<OngCubit, OngState>(
-            builder: (context, state) {
-              if (state is OngLoading) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else if (state is OngLoaded) {
-                if (state.ongs.isEmpty) {
-                  return Center(child: Text("Sem ongs registadas"));
-                }
-                return CarouselSlider(
-                  options: CarouselOptions(
-                    height: 165,
-                    aspectRatio: 16 / 9,
-                    viewportFraction: 0.8,
-                    initialPage: 0,
-                    enableInfiniteScroll: true,
-                    animateToClosest: false,
-                    reverse: false,
-                    autoPlay: false,
-                    autoPlayInterval: const Duration(seconds: 3),
-                    autoPlayAnimationDuration:
-                        const Duration(milliseconds: 800),
-                    autoPlayCurve: Curves.fastOutSlowIn,
-                    enlargeCenterPage: false,
-                    enlargeFactor: 0.3,
-                    scrollDirection: Axis.horizontal,
-                  ),
-                  items: state.ongs.map((ong) {
-                    return OngWidget(
-                      ong: ong,
-                    );
-                  }).toList(),
-                );
-              }
-              return Text("data");
-            },
-          ),
-          Container(
-            padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Para ti",
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-              ],
-            ),
-          ),
-          BlocBuilder<OngCubit, OngState>(
-            builder: (context, state) {
-              if (state is OngLoading) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else if (state is OngLoaded) {
-                if (state.ongs.isEmpty) {
-                  return Center(child: Text("Sem ongs registadas"));
-                }
-                final ongs = state.ongs;
-                return ListView.separated(
-                  shrinkWrap: true,
-                  physics: const ClampingScrollPhysics(),
-                  padding: const EdgeInsets.all(16),
-                  itemBuilder: (context, index) {
-                    final ong = ongs[index];
-                    return Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: SizedBox(
-                              width: 60,
-                              height: 60,
-                              child: CachedNetworkImage(
-                                imageUrl: ong.profileImageUrl!,
-                                placeholder: (context, url) =>
-                                    const CircularProgressIndicator(),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Lorem ipsum dolor sit amet",
-                                    style:
-                                        Theme.of(context).textTheme.titleSmall,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                  ),
-                                  const SizedBox(height: 5),
-                                  const Text("33 Membros"),
-                                ],
-                              ),
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {},
-                            child: Row(
-                              children: [Icon(Icons.add), Text("Juntar-se")],
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return const SizedBox(height: 10);
-                  },
-                  itemCount: ongs.length,
-                );
-              }
-              return Text("data");
-            },
-          ),
-        ],
-      ),
     );
   }
 }
