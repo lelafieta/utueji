@@ -8,6 +8,7 @@ import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/blogs/presentation/pages/blog_page.dart';
 import '../../features/campaigns/presentation/pages/campaign_page.dart';
 import '../../features/chat/presentation/pages/chat_page.dart';
+import '../../features/events/presentation/pages/event_page.dart';
 import '../../features/explore/presentation/pages/explore_page.dart';
 import '../../features/feeds/presentation/pages/feed_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
@@ -149,6 +150,21 @@ class RouteManager {
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) {
             return FeedPage();
+          },
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return SharedAxisTransition(
+              animation: animation,
+              secondaryAnimation: secondaryAnimation,
+              transitionType: SharedAxisTransitionType.vertical,
+              child: child,
+            );
+          },
+        );
+
+      case AppRoutes.eventRoute:
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return EventPage();
           },
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return SharedAxisTransition(

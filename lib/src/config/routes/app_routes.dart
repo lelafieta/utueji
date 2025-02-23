@@ -8,4 +8,5 @@ class AppRoutes {
   static const String chatRoute = "/chat";
   static const String blogRoute = "/blog";
   static const String feedRoute = "/feed";
+  static const String eventRoute = "/events";
 }

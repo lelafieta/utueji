@@ -1,25 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:intl/intl.dart';
-import 'package:utueji/src/features/ongs/presentation/widgets/ong_widget.dart';
 
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
-import '../../../../core/resources/images/app_images.dart';
+
 import '../../../blogs/presentation/pages/blog_page.dart';
-import '../../../events/presentation/cubit/event_cubit.dart';
-import '../../../events/presentation/cubit/event_state.dart';
-import '../../../events/presentation/widgets/event_widget.dart';
-import '../../../feeds/presentation/cubit/feed_cubit.dart';
-import '../../../feeds/presentation/cubit/feed_state.dart';
+import '../../../events/presentation/pages/event_page.dart';
 import '../../../feeds/presentation/pages/feed_page.dart';
 import '../../../ongs/presentation/cubit/ong_cubit.dart';
 import '../../../ongs/presentation/cubit/ong_state.dart';
+import '../../../ongs/presentation/widgets/ong_widget.dart';
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({super.key});
@@ -35,7 +28,7 @@ class _ExplorePageState extends State<ExplorePage> {
   List<Widget> widgets = [
     const FeedPage(),
     const BlogPage(),
-    const EventContainer(),
+    const EventPage(),
     const OngContainer(),
   ];
 
@@ -114,105 +107,6 @@ class _ExplorePageState extends State<ExplorePage> {
           ),
         ],
       ),
-    );
-  }
-}
-
-class EventContainer extends StatelessWidget {
-  const EventContainer({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<EventCubit, EventState>(
-      builder: (context, state) {
-        print(state);
-        if (state is EventLoading) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (state is EventLoaded) {
-          if (state.events.isEmpty) {
-            return const Center(child: Text("Sem eventos registados"));
-          } else {
-            final events = state.events;
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  Container(
-                    padding:
-                        const EdgeInsets.only(left: 16, right: 16, top: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Eventos próximos de si",
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                        TextButton(onPressed: () {}, child: Text("Ver mais"))
-                      ],
-                    ),
-                  ),
-                  CarouselSlider(
-                    options: CarouselOptions(
-                      height: 300,
-                      aspectRatio: 16 / 9,
-                      viewportFraction: 0.95,
-                      initialPage: 0,
-                      enableInfiniteScroll: false,
-                      animateToClosest: false,
-                      reverse: false,
-                      autoPlay: false,
-                      autoPlayInterval: const Duration(seconds: 3),
-                      autoPlayAnimationDuration:
-                          const Duration(milliseconds: 800),
-                      autoPlayCurve: Curves.fastOutSlowIn,
-                      enlargeCenterPage: false,
-                      enlargeFactor: 0.3,
-                      scrollDirection: Axis.horizontal,
-                    ),
-                    items: events.map((event) {
-                      return EventWidget(
-                        event: event,
-                      );
-                    }).toList(),
-                  ),
-                  Container(
-                    padding:
-                        const EdgeInsets.only(left: 16, right: 16, top: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Para ti",
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                        // TextButton(onPressed: () {}, child: Text("Ver mais"))
-                      ],
-                    ),
-                  ),
-                  ListView.separated(
-                      shrinkWrap: true,
-                      physics: const ClampingScrollPhysics(),
-                      padding: const EdgeInsets.all(14),
-                      itemBuilder: (context, index) {
-                        final event = events[index];
-                        return EventWidget(
-                          event: event,
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return const SizedBox(
-                          height: 10,
-                        );
-                      },
-                      itemCount: state.events.length)
-                ],
-              ),
-            );
-          }
-        }
-        return Text("data");
-      },
     );
   }
 }
