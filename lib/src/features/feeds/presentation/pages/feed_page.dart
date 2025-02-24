@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
+import '../../../../core/utils/app_utils.dart';
 import '../cubit/feed_cubit.dart';
 import '../cubit/feed_state.dart';
 
@@ -23,15 +24,6 @@ class _FeedPageState extends State<FeedPage> {
   void initState() {
     super.initState();
     context.read<FeedCubit>().getFeeds();
-  }
-
-  String formatarDataPersonalizada(DateTime data) {
-    // String diaSemana = DateFormat.EEEE('pt_BR').format(data);
-    String dia = DateFormat.d().format(data);
-    String mes = DateFormat.MMMM('pt_BR').format(data);
-    String horaMinuto = DateFormat('HH:mm').format(data);
-
-    return '$dia $mes $horaMinuto';
   }
 
   @override
@@ -79,8 +71,8 @@ class _FeedPageState extends State<FeedPage> {
                         ),
                         title: Text(
                             "${feed.user!.firstName} ${feed.user!.lastName}"),
-                        subtitle:
-                            Text(formatarDataPersonalizada(feed.createdAt!)),
+                        subtitle: Text(AppUtils.formatDate(
+                            data: feed.createdAt!, showTime: true)),
                         trailing: const Icon(Icons.more_vert),
                       ),
                       Text("${feed.description}"),
