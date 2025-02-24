@@ -13,11 +13,10 @@ import 'package:utueji/src/features/ongs/presentation/widgets/ong_widget.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
 import '../../../../core/resources/images/app_images.dart';
+import '../../../../core/utils/app_utils.dart';
 import '../../../events/presentation/cubit/event_cubit.dart';
 import '../../../events/presentation/cubit/event_state.dart';
 import '../../../events/presentation/widgets/event_widget.dart';
-import '../../../ongs/presentation/cubit/ong_cubit.dart';
-import '../../../ongs/presentation/cubit/ong_state.dart';
 
 class CampaignPage extends StatefulWidget {
   const CampaignPage({super.key});
@@ -126,6 +125,7 @@ class _CampaignPageState extends State<CampaignPage> {
                   return ListView.separated(
                     padding: const EdgeInsets.all(16),
                     itemBuilder: (context, index) {
+                      final campaign = state.campaigns[index];
                       return Card(
                         child: Container(
                           padding: const EdgeInsets.all(16),
@@ -140,19 +140,27 @@ class _CampaignPageState extends State<CampaignPage> {
                                     width: 60,
                                     height: 70,
                                     color: Colors.red,
-                                    child: Image.asset(
-                                      AppImages.image1,
+                                    child: CachedNetworkImage(
+                                      imageUrl: campaign.imageCoverUrl!,
                                       fit: BoxFit.cover,
+                                      placeholder: (context, url) =>
+                                          const Center(
+                                        child: SizedBox(
+                                          width: 40,
+                                          height: 40,
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                                title: Text(
-                                    "Ajuda para as crianças que precisam de materiais escolares",
+                                title: Text(campaign.title!,
                                     style:
                                         Theme.of(context).textTheme.titleSmall,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis),
-                                subtitle: const Text("Começa: 10.Março.2025"),
+                                subtitle: Text(
+                                    "Começa: ${AppUtils.formatDate(data: campaign.startDate!)}"),
                                 trailing: IconButton(
                                   onPressed: () {},
                                   icon: const Icon(Icons.share),
@@ -170,36 +178,40 @@ class _CampaignPageState extends State<CampaignPage> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    RichText(
-                                      text: TextSpan(
-                                        style: DefaultTextStyle.of(context)
-                                            .style
-                                            .copyWith(fontSize: 12),
-                                        children: [
-                                          TextSpan(text: "Objectivo: "),
-                                          TextSpan(
-                                            style: TextStyle(
-                                              color: AppColors.primaryColor,
-                                              fontWeight: FontWeight.w600,
+                                    Expanded(
+                                      child: RichText(
+                                        text: TextSpan(
+                                          style: DefaultTextStyle.of(context)
+                                              .style
+                                              .copyWith(fontSize: 12),
+                                          children: [
+                                            // const TextSpan(text: "Objectivo: "),
+                                            TextSpan(
+                                              style: const TextStyle(
+                                                color: AppColors.primaryColor,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                              text:
+                                                  "${AppUtils.formatMoney(campaign.fundsRaised!)} /",
                                             ),
-                                            text: "5.000.000 /",
-                                          ),
-                                          TextSpan(
-                                            style:
-                                                TextStyle(color: Colors.black),
-                                            text: " 1.000.000",
-                                          ),
-                                        ],
+                                            TextSpan(
+                                              style: const TextStyle(
+                                                  color: Colors.black),
+                                              text:
+                                                  " ${AppUtils.formatMoney(campaign.fundraisingGoal!)}",
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                    Row(
+                                    const Row(
                                       children: [
                                         Icon(
                                           Icons.history,
                                           color: AppColors.textColor,
                                           size: 18,
                                         ),
-                                        const SizedBox(width: 5),
+                                        SizedBox(width: 5),
                                         Text(
                                           "a 2 dias",
                                           style: TextStyle(fontSize: 12),
@@ -219,7 +231,7 @@ class _CampaignPageState extends State<CampaignPage> {
                         height: 10,
                       );
                     },
-                    itemCount: 10,
+                    itemCount: state.campaigns.length,
                   );
                 }
                 return Text("data");

@@ -62,6 +62,8 @@ class AppTheme {
         ),
         inputDecorationTheme: const InputDecorationTheme(
           border: InputBorder.none,
+          fillColor: Colors.white,
+          filled: true,
           contentPadding: EdgeInsets.symmetric(
             horizontal: 10,
             vertical: 10,

@@ -18,17 +18,6 @@ class EventWidget extends StatefulWidget {
 }
 
 class _EventWidgetState extends State<EventWidget> {
-  String formatarDataPersonalizada(DateTime data) {
-    // Formatar o dia da semana, dia, mês e hora
-    String diaSemana = DateFormat.EEEE('pt_BR').format(data); // Sábado
-    String dia = DateFormat.d().format(data); // 11
-    String mes = DateFormat.MMMM('pt_BR').format(data); // Abril
-    String horaMinuto = DateFormat('HH:mm').format(data); // 10:35
-
-    // Concatenar tudo no formato desejado
-    return '$diaSemana, $dia $mes $horaMinuto';
-  }
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -116,7 +105,7 @@ class _EventWidgetState extends State<EventWidget> {
                         width: 5,
                       ),
                       Text(
-                        formatarDataPersonalizada(widget.event.startDate!),
+                        AppUtils.formatDate(data: widget.event.startDate!),
                         style: const TextStyle(
                           fontSize: 12,
                         ),
