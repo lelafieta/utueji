@@ -1,5 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../../core/supabase/supabase_consts.dart';
 import '../../domain/entities/ong_entity.dart';
 import '../models/ong_model.dart';
 import 'i_ong_datasource.dart';
@@ -10,7 +11,7 @@ class OngDataSource extends IOngDataSource {
   @override
   Stream<List<OngEntity>> fetchLatestOngs() {
     final ongs = supabase
-        .from('ongs')
+        .from(SupabaseConsts.ongs)
         .select("*, user:profiles(*)")
         .order('created_at')
         .limit(10)

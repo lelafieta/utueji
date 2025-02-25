@@ -1,5 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../../core/supabase/supabase_consts.dart';
 import '../../domain/entities/campaign_entity.dart';
 import '../models/campaign_model.dart';
 import 'i_campaign_datasource.dart';
@@ -29,7 +30,7 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
   @override
   Stream<List<CampaignEntity>> fetchCampaigns() {
     final campaigns = supabase
-        .from('campaigns')
+        .from(SupabaseConsts.campaigns)
         .stream(primaryKey: ['id'])
         .eq('id', 120)
         .order('is')
@@ -49,7 +50,7 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
   @override
   Stream<List<CampaignEntity>> fetchLatestCampaigns() {
     final campaigns = supabase
-        .from('campaigns')
+        .from(SupabaseConsts.campaigns)
         .select("*, user:profiles(*), ong:ongs(*), category:categories(*)")
         .order('created_at')
         .limit(10)
