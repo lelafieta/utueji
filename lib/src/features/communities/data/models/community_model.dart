@@ -6,6 +6,8 @@ class CommunityModel extends CommunityEntity {
     super.name,
     super.description,
     super.id,
+    super.banner,
+    super.image,
     super.createdAt,
   });
 
@@ -15,6 +17,8 @@ class CommunityModel extends CommunityEntity {
       createdAt: DateTime.parse(json['created_at']),
       userId: json['user_id'],
       name: json['name'],
+      image: json['image'],
+      banner: json['banner'],
       description: json['description'],
     );
   }
@@ -25,6 +29,8 @@ class CommunityModel extends CommunityEntity {
       'created_at': createdAt?.toIso8601String(),
       'user_id': userId,
       'name': name,
+      'image': image,
+      'banner': banner,
       'description': description,
     };
   }

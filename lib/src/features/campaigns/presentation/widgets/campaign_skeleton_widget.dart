@@ -23,10 +23,14 @@ class CampaignSkeletonWidget extends StatelessWidget {
                       topLeft: Radius.circular(10),
                       topRight: Radius.circular(10),
                     ),
-                    child: Container(
-                      width: double.infinity,
-                      height: 190,
-                      color: Colors.grey[300],
+                    child: Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        width: double.infinity,
+                        height: 190,
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
                   Padding(
