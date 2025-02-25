@@ -1,12 +1,16 @@
+import 'package:utueji/src/core/usecases/stream_usecase.dart';
+
 import '../entities/community_entity.dart';
 import '../repositories/i_community_repository.dart';
 
-class GetAllCommunitiesUseCase {
-  final ICommunityRepository repository;
+class GetAllCommunitiesUseCase
+    extends StreamUseCase<List<CommunityEntity>, NoParams> {
+  final ICommunityRepository _repository;
 
-  GetAllCommunitiesUseCase({required this.repository});
+  GetAllCommunitiesUseCase(this._repository);
 
-  Stream<List<CommunityEntity>> call() {
-    return repository.getAllCommunities();
+  @override
+  Stream<List<CommunityEntity>> call(NoParams params) {
+    return _repository.getAllCommunities();
   }
 }
