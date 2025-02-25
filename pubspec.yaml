@@ -88,6 +88,7 @@ dependencies:
   dotted_dashed_line: ^0.0.3
   skeletonizer: ^1.4.3
   shimmer: ^3.0.0
+  flutter_dotenv: ^5.2.1
 
 dev_dependencies:
   flutter_test:
@@ -120,6 +121,7 @@ flutter:
     - assets/music/
     - assets/map_config.json
     - assets/
+    - .env
 
   fonts:
     - family: Poppins
