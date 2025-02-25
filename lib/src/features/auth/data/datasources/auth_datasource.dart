@@ -10,8 +10,6 @@ class AuthDataSource implements IAuthDataSource {
   AuthDataSource({required this.supabase});
   @override
   Future<bool> isSignIn() async {
-    print("SESSÃO!!!!!!!!!!!");
-    print(supabase.auth.currentSession);
     return supabase.auth.currentSession != null;
   }
 
