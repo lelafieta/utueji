@@ -29,4 +29,5 @@ class AppIcons {
   static const String eye = "assets/icons/eye.svg";
   static const String paperPlane = "assets/icons/paper-plane.svg";
   static const String squarePlus = "assets/icons/square-plus.svg";
+  static const String shieldTrust = "assets/icons/shield-trust.svg";
 }
