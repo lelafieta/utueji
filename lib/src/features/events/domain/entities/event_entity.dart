@@ -1,3 +1,6 @@
+import '../../../auth/domain/entities/user_entity.dart';
+import '../../../ongs/domain/entities/ong_entity.dart';
+
 class EventEntity {
   final String? id;
   final DateTime? createdAt;
@@ -10,6 +13,8 @@ class EventEntity {
   final DateTime? startDate;
   final DateTime? endDate;
   final DateTime? updatedAt;
+  final OngEntity? ong;
+  final UserEntity? user;
 
   EventEntity({
     this.id,
@@ -23,5 +28,7 @@ class EventEntity {
     this.backgroundImageUrl,
     this.startDate,
     this.endDate,
+    this.ong,
+    this.user,
   });
 }

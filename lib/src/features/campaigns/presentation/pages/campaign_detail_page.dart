@@ -14,15 +14,15 @@ import '../../../../core/utils/app_utils.dart';
 import '../../../../core/utils/app_values.dart';
 import '../../domain/entities/campaign_entity.dart';
 
-class CampaignDetail extends StatefulWidget {
+class CampaignDetailPage extends StatefulWidget {
   final CampaignEntity campaign;
-  const CampaignDetail({super.key, required this.campaign});
+  const CampaignDetailPage({super.key, required this.campaign});
 
   @override
-  State<CampaignDetail> createState() => _CampaignDetailState();
+  State<CampaignDetailPage> createState() => _CampaignDetailPageState();
 }
 
-class _CampaignDetailState extends State<CampaignDetail> {
+class _CampaignDetailPageState extends State<CampaignDetailPage> {
   double fundraisingGoal = 0.0;
   double fundsRaised = 0.0;
   String raisingGoals = "";
@@ -33,6 +33,7 @@ class _CampaignDetailState extends State<CampaignDetail> {
   DateTime now = DateTime.now();
   DateTime finishDate = DateTime.now();
   int diasRestantes = 0;
+  ValueNotifier<Color> color = ValueNotifier(AppColors.whiteColor);
   @override
   Widget build(BuildContext context) {
     finishDate = widget.campaign.endDate!;
@@ -54,104 +55,117 @@ class _CampaignDetailState extends State<CampaignDetail> {
     progressBarWidth = MediaQuery.sizeOf(context).width * percentage;
     return NestedScrollView(
       headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+        if (innerBoxIsScrolled) {
+          color.value = Colors.black;
+        }
         return [
-          SliverAppBar(
-            expandedHeight: 300.0,
-            floating: false,
-            pinned: true,
-            leading: IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.arrow_back),
-            ),
-            actions: [
-              IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.share),
-              ),
-            ],
-            flexibleSpace: FlexibleSpaceBar(
-              // title: Text(widget.campaign.title!),
-              background: CachedNetworkImage(
-                imageUrl: widget.campaign.imageCoverUrl!,
-                fit: BoxFit.cover,
-              ),
-            ),
-            bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(150.0),
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(20.0),
-                    topRight: Radius.circular(20.0),
+          ValueListenableBuilder(
+              valueListenable: color,
+              builder: (context, value, _) {
+                return SliverAppBar(
+                  expandedHeight: 300.0,
+                  floating: false,
+                  pinned: true,
+                  leading: IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: value,
+                    ),
                   ),
-                ),
-                child: Column(
-                  children: [
-                    ListTile(
-                      title: Text(
-                        widget.campaign.title!,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleLarge!
-                            .copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      trailing: ClipRRect(
-                        borderRadius: BorderRadius.circular(50),
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
-                          color: Colors.white,
-                          child: SvgPicture.asset(
-                            AppIcons.heartBold,
-                            color: Colors.red,
-                            width: 20,
-                          ),
-                        ),
+                  actions: [
+                    IconButton(
+                      onPressed: () {},
+                      icon: Icon(
+                        Icons.share,
+                        color: value,
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
+                  ],
+                  flexibleSpace: FlexibleSpaceBar(
+                    // title: Text(widget.campaign.title!),
+                    background: CachedNetworkImage(
+                      imageUrl: widget.campaign.imageCoverUrl!,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  bottom: PreferredSize(
+                    preferredSize: const Size.fromHeight(150.0),
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(20.0),
+                          topRight: Radius.circular(20.0),
+                        ),
+                      ),
+                      child: Column(
                         children: [
-                          Expanded(
+                          ListTile(
+                            title: Text(
+                              widget.campaign.title!,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleLarge!
+                                  .copyWith(fontWeight: FontWeight.bold),
+                            ),
+                            trailing: ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                color: Colors.white,
+                                child: SvgPicture.asset(
+                                  AppIcons.heartBold,
+                                  color: Colors.red,
+                                  width: 20,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
                             child: Row(
                               children: [
-                                const Icon(Icons.location_on, size: 20),
-                                const SizedBox(width: 8),
                                 Expanded(
-                                  child: Text(
-                                    widget.campaign.location!,
-                                    style: const TextStyle(fontSize: 14),
+                                  child: Row(
+                                    children: [
+                                      const Icon(Icons.location_on, size: 20),
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        child: Text(
+                                          widget.campaign.location!,
+                                          style: const TextStyle(fontSize: 14),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                const Expanded(
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.category, size: 20),
+                                      SizedBox(width: 8),
+                                      Expanded(
+                                        child: Text(
+                                          "Causa médica",
+                                          style: const TextStyle(fontSize: 14),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-                          const SizedBox(width: 10),
-                          const Expanded(
-                            child: Row(
-                              children: [
-                                Icon(Icons.category, size: 20),
-                                SizedBox(width: 8),
-                                Expanded(
-                                  child: Text(
-                                    "Causa médica",
-                                    style: const TextStyle(fontSize: 14),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                          )
                         ],
                       ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
+                    ),
+                  ),
+                );
+              }),
         ];
       },
       body: Container(
@@ -455,7 +469,7 @@ class UpdateWidget extends StatelessWidget {
                         Text("26 Março 2024"),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Text(
@@ -522,33 +536,48 @@ class DocumentWidget extends StatelessWidget {
             const SizedBox(height: 20),
             Center(
               child: Container(
-                width: 300,
-                height: 200,
+                width: 280,
+                height: 180,
                 color: Colors.black12,
               ),
             ),
+            const SizedBox(
+              height: 10,
+            ),
             Center(
-              child: SizedBox(
-                height: 150,
-                width: 300,
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  physics: const ClampingScrollPhysics(),
-                  padding: const EdgeInsets.all(10),
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      width: 100,
-                      height: 25,
-                      color: Colors.black12,
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return const SizedBox(width: 10);
-                  },
-                  itemCount: 3,
-                ),
-              ),
+              child: Container(
+                  width: 280,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          width: 50,
+                          height: 100,
+                          color: Colors.black12,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: Container(
+                          width: 50,
+                          height: 100,
+                          color: Colors.black12,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: Container(
+                          width: 50,
+                          height: 100,
+                          color: Colors.black12,
+                        ),
+                      ),
+                    ],
+                  )),
             )
           ],
         ),
