@@ -206,7 +206,7 @@ class _ChatPageState extends State<ChatPage> {
                           ),
                         );
                       }
-                      return Text("data");
+                      return const Text("data");
                     },
                   ),
                   Container(
@@ -230,7 +230,9 @@ class _ChatPageState extends State<ChatPage> {
                         );
                       } else if (state is OngLoaded) {
                         if (state.ongs.isEmpty) {
-                          return Center(child: Text("Sem ongs registadas"));
+                          return const Center(
+                            child: Text("Sem ongs registadas"),
+                          );
                         }
                         final ongs = state.ongs;
                         return ListView.separated(
@@ -266,7 +268,7 @@ class _ChatPageState extends State<ChatPage> {
                                         color: Colors.black,
                                         borderRadius: BorderRadius.circular(50),
                                       ),
-                                      child: Center(
+                                      child: const Center(
                                         child: Text(
                                           "9",
                                           style: TextStyle(

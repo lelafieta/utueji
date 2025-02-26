@@ -6,7 +6,6 @@ import 'package:utueji/src/core/errors/failures.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/i_auth_repository.dart';
 import '../datasources/i_auth_datasource.dart';
-import '../datasources/i_auth_datasource.dart';
 
 class AuthRespository extends IAuthRepository {
   final IAuthDataSource datasource;
@@ -25,7 +24,7 @@ class AuthRespository extends IAuthRepository {
 
   @override
   Future<Either<Failure, UserEntity>> signIn(
-      String email, String password) async {
+      {required String email, required String password}) async {
     try {
       UserEntity? response = await datasource.signIn(email, password);
       return Right(response!);

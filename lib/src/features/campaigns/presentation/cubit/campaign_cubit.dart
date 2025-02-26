@@ -1,7 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-
-import '../../data/models/campaign_model.dart';
+import '../../../../core/entities/no_params.dart';
 import '../../domain/usecases/get_campaigns_usecases.dart';
 import '../../domain/usecases/get_latest_campaigns_usecases.dart';
 import 'campaign_state.dart';
@@ -17,7 +15,7 @@ class CampaignCubit extends Cubit<CampaignState> {
   Future<void> getCampaigns() async {
     emit(CampaignLoading());
 
-    final campaigns = getCampaignsUseCase.call();
+    final campaigns = getCampaignsUseCase.call(const NoParams());
 
     campaigns.listen((event) {
       emit(CampaignLoaded(campaigns: event));
