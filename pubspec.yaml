@@ -89,6 +89,8 @@ dependencies:
   skeletonizer: ^1.4.3
   shimmer: ^3.0.0
   flutter_dotenv: ^5.2.1
+  parallax_animation: ^0.0.3
+  flutter_tilt: ^3.2.0
 
 dev_dependencies:
   flutter_test:

@@ -1,11 +1,13 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:utueji/src/features/campaigns/presentation/pages/campaign_detail.dart';
 
 import '../../features/auth/presentation/cubit/initial_cubit/initial_cubit.dart';
 import '../../features/auth/presentation/cubit/initial_cubit/initial_state.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/blogs/presentation/pages/blog_page.dart';
+import '../../features/campaigns/domain/entities/campaign_entity.dart';
 import '../../features/campaigns/presentation/pages/campaign_page.dart';
 import '../../features/chat/presentation/pages/chat_page.dart';
 import '../../features/events/presentation/pages/event_page.dart';
@@ -120,6 +122,22 @@ class RouteManager {
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) {
             return ChatPage();
+          },
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return SharedAxisTransition(
+              animation: animation,
+              secondaryAnimation: secondaryAnimation,
+              transitionType: SharedAxisTransitionType.vertical,
+              child: child,
+            );
+          },
+        );
+
+      case AppRoutes.campaignDetail:
+        final campaign = routeSettings.arguments as CampaignEntity;
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return CampaignDetail(campaign: campaign);
           },
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return SharedAxisTransition(
