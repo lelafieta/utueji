@@ -2,6 +2,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:utueji/src/features/campaigns/presentation/pages/campaign_detail_page.dart';
+import 'package:utueji/src/features/ongs/presentation/pages/ong_profile_page.dart';
 
 import '../../features/auth/presentation/cubit/initial_cubit/initial_cubit.dart';
 import '../../features/auth/presentation/cubit/initial_cubit/initial_state.dart';
@@ -16,6 +17,7 @@ import '../../features/events/presentation/pages/event_page.dart';
 import '../../features/explore/presentation/pages/explore_page.dart';
 import '../../features/feeds/presentation/pages/feed_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/ongs/domain/entities/ong_entity.dart';
 import '../../features/solidary/presentation/pages/solidary_page.dart';
 import '../../features/splash&onboarding/presentation/pages/on_boarding_page.dart';
 import 'app_routes.dart';
@@ -201,6 +203,22 @@ class RouteManager {
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) {
             return EventDetailPage(event: event);
+          },
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return SharedAxisTransition(
+              animation: animation,
+              secondaryAnimation: secondaryAnimation,
+              transitionType: SharedAxisTransitionType.vertical,
+              child: child,
+            );
+          },
+        );
+
+      case AppRoutes.ongProfileRoute:
+        final ong = routeSettings.arguments as OngEntity;
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return OngProfilePage(ong: ong);
           },
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return SharedAxisTransition(
