@@ -30,4 +30,6 @@ class AppIcons {
   static const String paperPlane = "assets/icons/paper-plane.svg";
   static const String squarePlus = "assets/icons/square-plus.svg";
   static const String shieldTrust = "assets/icons/shield-trust.svg";
+  static const String lightbulbOn = "assets/icons/lightbulb-on.svg";
+  static const String bullseyeArrow = "assets/icons/bullseye-arrow.svg";
 }
