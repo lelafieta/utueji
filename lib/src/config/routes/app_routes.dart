@@ -10,4 +10,5 @@ class AppRoutes {
   static const String feedRoute = "/feed";
   static const String eventRoute = "/events";
   static const String campaignDetail = "/campaignDetail";
+  static const String eventDetail = "/eventDetail";
 }
