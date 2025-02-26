@@ -91,6 +91,7 @@ dependencies:
   flutter_dotenv: ^5.2.1
   parallax_animation: ^0.0.3
   flutter_tilt: ^3.2.0
+  tab_container: ^3.5.3
 
 dev_dependencies:
   flutter_test:
