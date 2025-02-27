@@ -92,6 +92,7 @@ dependencies:
   parallax_animation: ^0.0.3
   flutter_tilt: ^3.2.0
   tab_container: ^3.5.3
+  shared_preferences: ^2.2.3
 
 dev_dependencies:
   flutter_test:

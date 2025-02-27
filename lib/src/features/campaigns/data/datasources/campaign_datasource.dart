@@ -1,7 +1,11 @@
+import 'dart:math';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:utueji/src/features/campaigns/domain/entities/campaign_contributor_entity.dart';
 
 import '../../../../core/supabase/supabase_consts.dart';
 import '../../domain/entities/campaign_entity.dart';
+import '../models/campaign_contribuitor_model.dart';
 import '../models/campaign_model.dart';
 import 'i_campaign_datasource.dart';
 
@@ -49,16 +53,31 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
 
   @override
   Stream<List<CampaignEntity>> fetchLatestCampaigns() {
-    final campaigns = supabase
+    return supabase
         .from(SupabaseConsts.campaigns)
-        .select("*, user:profiles(*), ong:ongs(*), category:categories(*)")
-        .order('created_at')
+        .stream(primaryKey: ['id'])
+        .order("created_at")
         .limit(10)
-        .asStream()
-        .map((data) {
-      return data.map((campaign) => CampaignModel.fromJson(campaign)).toList();
-    });
+        .asyncMap((data) async {
+          return Future.wait(data.map((campaign) async {
+            // Buscar os contribuidores da campanha
+            final contributorsMap = await supabase
+                .from(SupabaseConsts.campaignContributors)
+                .select("*, user:profiles(*)")
+                .eq('campaign_id', campaign['id']);
 
-    return campaigns;
+            List<CampaignContributorModel> contributoresList = contributorsMap
+                .map((e) => CampaignContributorModel.fromJson(e))
+                .toList();
+
+            campaign["campaign_contributor"] = contributorsMap;
+
+            CampaignModel? campaignObj = CampaignModel.fromJson(campaign);
+
+            campaignObj.campaignContributors = contributoresList;
+
+            return CampaignModel.fromJson(campaign);
+          }));
+        });
   }
 }
