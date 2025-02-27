@@ -312,6 +312,9 @@ class _CampaignWidgetState extends State<CampaignWidget> {
                       ),
                     ),
                   ),
+                  SizedBox(
+                    height: 10,
+                  )
                 ],
               ),
             ),
