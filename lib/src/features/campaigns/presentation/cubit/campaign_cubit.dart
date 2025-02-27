@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/entities/no_params.dart';
-import '../../domain/usecases/get_campaigns_usecases.dart';
-import '../../domain/usecases/get_latest_campaigns_usecases.dart';
+import '../../domain/usecases/get_campaigns_usecase.dart';
+import '../../domain/usecases/get_latest_campaigns_usecase.dart';
 import 'campaign_state.dart';
 
 class CampaignCubit extends Cubit<CampaignState> {

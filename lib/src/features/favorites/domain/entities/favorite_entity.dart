@@ -1,16 +1,16 @@
 class FavoriteEntity {
   String? id;
-  String? type; // Tipo: campanha, evento, ong, blog
-  String? title;
-  String? description;
+  String? itemId;
+  String? userId;
+  String? itemType;
   DateTime? createdAt;
   DateTime? updatedAt;
 
   FavoriteEntity({
     this.id,
-    this.type,
-    this.title,
-    this.description,
+    this.itemId,
+    this.userId,
+    this.itemType,
     this.createdAt,
     this.updatedAt,
   });

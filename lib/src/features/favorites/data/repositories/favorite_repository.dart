@@ -17,8 +17,7 @@ class FavoriteRepository extends IFavoriteRepository {
 
   @override
   Stream<List<FavoriteEntity>> getAllFavotires() {
-    // TODO: implement getAllFavotires
-    throw UnimplementedError();
+    return datasource.getAllFavotires();
   }
 
   @override
