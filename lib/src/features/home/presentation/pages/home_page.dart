@@ -301,7 +301,10 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            BlocBuilder<CampaignCubit, CampaignState>(
+            BlocConsumer<CampaignCubit, CampaignState>(
+              listener: (BuildContext context, CampaignState state) {
+                if (state is CampaignLoaded) {}
+              },
               builder: (context, state) {
                 if (state is CampaignLoading) {
                   return CarouselSlider.builder(
