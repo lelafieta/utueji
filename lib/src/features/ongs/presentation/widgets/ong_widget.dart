@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:utueji/src/config/routes/app_routes.dart';
 
 import '../../../../config/themes/app_colors.dart';
+import '../../../../core/resources/icons/app_icons.dart';
 import '../../../../core/resources/images/app_images.dart';
 import '../../../../core/utils/app_utils.dart';
 import '../../domain/entities/ong_entity.dart';
@@ -37,8 +39,16 @@ class OngWidget extends StatelessWidget {
                   errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
               ),
-              title: Text(
-                "${ong.name}",
+              title: Row(
+                children: [
+                  Text("${ong.name}"),
+                  const SizedBox(width: 5),
+                  SvgPicture.asset(
+                    width: 16,
+                    AppIcons.shieldTrust,
+                    color: AppColors.blueColor,
+                  ),
+                ],
               ),
               subtitle: Text("${ong.bio}"),
             ),

@@ -3,9 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:utueji/src/features/campaigns/presentation/widgets/campaign_skeleton_widget.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
 import '../../../../core/resources/images/app_images.dart';
+import '../../../../core/utils/app_utils.dart';
+import '../../../campaigns/presentation/cubit/campaign_cubit.dart';
+import '../../../campaigns/presentation/cubit/campaign_state.dart';
+import '../../../campaigns/presentation/widgets/campaign_widget.dart';
+import '../../../events/presentation/cubit/event_cubit.dart';
+import '../../../events/presentation/cubit/event_state.dart';
+import '../../../events/presentation/widgets/event_widget.dart';
+import '../../../feeds/presentation/cubit/feed_cubit.dart';
+import '../../../feeds/presentation/cubit/feed_state.dart';
 import '../../domain/entities/ong_entity.dart';
 import '../cubit/ong_cubit.dart';
 import '../cubit/ong_state.dart';
@@ -20,6 +30,8 @@ class OngProfilePage extends StatefulWidget {
 
 class _OngProfilePageState extends State<OngProfilePage> {
   ValueNotifier<Color> color = ValueNotifier(AppColors.whiteColor);
+  List<String> menuList = ["Recentes", "Campanhas", "Eventos", "Blogs"];
+  int selected = 0;
   @override
   Widget build(BuildContext context) {
     return NestedScrollView(
@@ -66,7 +78,7 @@ class _OngProfilePageState extends State<OngProfilePage> {
                                   CircularProgressIndicator(
                                       value: downloadProgress.progress),
                           errorWidget: (context, url, error) =>
-                              Icon(Icons.error),
+                              const Icon(Icons.error),
                         ),
                       ),
                       Positioned(
@@ -126,7 +138,7 @@ class _OngProfilePageState extends State<OngProfilePage> {
                                         CircularProgressIndicator(
                                             value: downloadProgress.progress),
                                     errorWidget: (context, url, error) =>
-                                        Icon(Icons.error),
+                                        const Icon(Icons.error),
                                   ),
                                 ),
                               ),
@@ -138,10 +150,22 @@ class _OngProfilePageState extends State<OngProfilePage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(widget.ong.name!,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          widget.ong.name!,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium,
+                                        ),
+                                        const SizedBox(width: 5),
+                                        SvgPicture.asset(
+                                          width: 16,
+                                          AppIcons.shieldTrust,
+                                          color: AppColors.blueColor,
+                                        ),
+                                      ],
+                                    ),
                                     Text(widget.ong.bio!),
                                   ],
                                 ),
@@ -199,7 +223,7 @@ class _OngProfilePageState extends State<OngProfilePage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
                   children: [
                     Expanded(
@@ -209,14 +233,14 @@ class _OngProfilePageState extends State<OngProfilePage> {
                               MaterialStateProperty.all(AppColors.whiteColor),
                           backgroundColor:
                               MaterialStateProperty.all(AppColors.primaryColor),
-                          side: MaterialStatePropertyAll(
+                          side: const MaterialStatePropertyAll(
                             BorderSide(
                               color: AppColors.primaryColor,
                             ),
                           ),
                         ),
                         onPressed: () {},
-                        child: Text(
+                        child: const Text(
                           "Juntar-se",
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
@@ -228,7 +252,7 @@ class _OngProfilePageState extends State<OngProfilePage> {
                         style: ButtonStyle(
                           foregroundColor:
                               MaterialStateProperty.all(AppColors.blackColor),
-                          side: MaterialStatePropertyAll(
+                          side: const MaterialStatePropertyAll(
                             BorderSide(
                               color: Colors.black12,
                               width: 2,
@@ -236,38 +260,36 @@ class _OngProfilePageState extends State<OngProfilePage> {
                           ),
                         ),
                         onPressed: () {},
-                        child: Text(
+                        child: const Text(
                           "Chat",
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
                     const SizedBox(width: 10),
-                    Container(
-                      child: OutlinedButton(
-                        style: ButtonStyle(
-                          foregroundColor:
-                              MaterialStateProperty.all(AppColors.blackColor),
-                          minimumSize: MaterialStatePropertyAll(
-                            Size(50, 50),
-                          ),
-                          side: MaterialStatePropertyAll(
-                            BorderSide(
-                              color: Colors.black12,
-                              width: 2,
-                            ),
+                    OutlinedButton(
+                      style: ButtonStyle(
+                        foregroundColor:
+                            MaterialStateProperty.all(AppColors.blackColor),
+                        minimumSize: const MaterialStatePropertyAll(
+                          Size(50, 50),
+                        ),
+                        side: const MaterialStatePropertyAll(
+                          BorderSide(
+                            color: Colors.black12,
+                            width: 2,
                           ),
                         ),
-                        onPressed: () {},
-                        child: Icon(Icons.phone),
                       ),
+                      onPressed: () {},
+                      child: const Icon(Icons.phone),
                     )
                   ],
                 ),
               ),
+              const SizedBox(height: 10),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
                   "Sobre",
                   style: Theme.of(context)
@@ -277,7 +299,7 @@ class _OngProfilePageState extends State<OngProfilePage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(widget.ong.about!),
               ),
               Padding(
@@ -495,31 +517,360 @@ class _OngProfilePageState extends State<OngProfilePage> {
                   return const Text("data");
                 },
               ),
+              const SizedBox(height: 10),
               Container(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
                 width: double.infinity,
-                height: 50,
+                height: 45,
+                decoration: BoxDecoration(
+                    // border: Border(
+                    //   bottom: BorderSide(
+                    //     width: 2,
+                    //     color: Colors.black12,
+                    //   ),
+                    // ),
+                    ),
                 child: ListView.separated(
-                  physics: ClampingScrollPhysics(),
+                  physics: const ClampingScrollPhysics(),
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   itemBuilder: (context, index) {
-                    return Container(
-                        color: Colors.red, child: Text("Campanhas"));
+                    return InkWell(
+                      onTap: () {
+                        setState(() {
+                          selected = index;
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                        ),
+                        decoration: BoxDecoration(
+                          border: (index == selected)
+                              ? const Border(
+                                  bottom: BorderSide(
+                                    width: 2,
+                                    color: Colors.black,
+                                  ),
+                                )
+                              : Border.all(width: 0, color: Colors.transparent),
+                        ),
+                        child: Center(
+                          child: Text(
+                            menuList[index].toString(),
+                            style: (index != selected)
+                                ? Theme.of(context).textTheme.bodyMedium
+                                : Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black),
+                          ),
+                        ),
+                      ),
+                    );
                   },
                   separatorBuilder: (context, index) {
                     return const SizedBox(
                       width: 10,
                     );
                   },
-                  itemCount: 4,
+                  itemCount: menuList.length,
                 ),
               ),
+              _menuWidget(),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget _menuWidget() {
+    switch (selected) {
+      case 0:
+        return BlocBuilder<FeedCubit, FeedState>(
+          builder: (context, state) {
+            if (state is FeedLoading) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (state is FeedLoaded) {
+              return ListView.separated(
+                padding: const EdgeInsets.all(16),
+                shrinkWrap: true,
+                physics: const ClampingScrollPhysics(),
+                itemBuilder: (context, index) {
+                  final feed = state.feeds[index];
+                  return Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 10, right: 10, bottom: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: Container(
+                                width: 40,
+                                height: 40,
+                                color: Colors.black12,
+                                child: CachedNetworkImage(
+                                  imageUrl: feed.user!.avatarUrl!,
+                                  fit: BoxFit.cover,
+                                  progressIndicatorBuilder:
+                                      (context, url, downloadProgress) =>
+                                          CircularProgressIndicator(
+                                              value: downloadProgress.progress),
+                                  errorWidget: (context, url, error) =>
+                                      Icon(Icons.error),
+                                ),
+                              ),
+                            ),
+                            title: Text(
+                                "${feed.user!.firstName} ${feed.user!.lastName}"),
+                            subtitle: Text(AppUtils.formatDate(
+                                data: feed.createdAt!, showTime: true)),
+                            trailing: const Icon(Icons.more_vert),
+                          ),
+                          Text("${feed.description}"),
+                          const SizedBox(height: 10),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Stack(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: SizedBox(
+                                    width: double.infinity,
+                                    height: 200,
+                                    child: CachedNetworkImage(
+                                      imageUrl: feed.image!,
+                                      fit: BoxFit.cover,
+                                      progressIndicatorBuilder:
+                                          (context, url, downloadProgress) =>
+                                              SizedBox(
+                                        width: 40,
+                                        height: 40,
+                                        child: CircularProgressIndicator(
+                                          value: downloadProgress.progress,
+                                        ),
+                                      ),
+                                      errorWidget: (context, url, error) =>
+                                          Icon(Icons.error),
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  left: 0,
+                                  bottom: 0,
+                                  right: 0,
+                                  child: Container(
+                                    height: 45,
+                                    color: AppColors.primaryColor,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10),
+                                    child: const Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Doar para sorrir",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                        Icon(
+                                          Icons.arrow_forward_ios_rounded,
+                                          size: 20,
+                                          color: Colors.white,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset(
+                                        AppIcons.heartBold,
+                                        color: Colors.red,
+                                        width: 16,
+                                      ),
+                                      const SizedBox(width: 5),
+                                      const Text(
+                                        "55",
+                                        style: TextStyle(color: Colors.black),
+                                      )
+                                    ],
+                                  ),
+                                  const SizedBox(width: 20),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset(
+                                        AppIcons.commentAlt,
+                                        color: Colors.black,
+                                        width: 16,
+                                      ),
+                                      const SizedBox(width: 5),
+                                      const Text(
+                                        "58",
+                                        style: TextStyle(color: Colors.black),
+                                      )
+                                    ],
+                                  ),
+                                  const SizedBox(width: 20),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset(
+                                        AppIcons.eye,
+                                        color: Colors.black,
+                                        width: 16,
+                                      ),
+                                      const SizedBox(width: 5),
+                                      const Text(
+                                        "1.2M",
+                                        style: TextStyle(color: Colors.black),
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                              SvgPicture.asset(
+                                AppIcons.paperPlane,
+                                color: Colors.black,
+                                width: 16,
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return const Divider(
+                    height: 20,
+                  );
+                },
+                itemCount: 10,
+              );
+            }
+            return const Text("data");
+          },
+        );
+
+      case 1:
+        return BlocBuilder<CampaignCubit, CampaignState>(
+          builder: (context, state) {
+            if (state is CampaignLoading) {
+              return ListView.separated(
+                padding: const EdgeInsets.all(16),
+                shrinkWrap: true,
+                physics: const ClampingScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return const CampaignSkeletonWidget();
+                },
+                separatorBuilder: (context, index) {
+                  return const SizedBox(height: 20);
+                },
+                itemCount: 8,
+              );
+            } else if (state is CampaignLoaded) {
+              if (state.campaigns.isEmpty) {
+                return const Center(
+                  child: Text("Sem campanhas"),
+                );
+              }
+
+              return ListView.separated(
+                padding: const EdgeInsets.all(16),
+                shrinkWrap: true,
+                physics: const ClampingScrollPhysics(),
+                itemBuilder: (context, index) {
+                  final campaign = state.campaigns[index];
+                  return CampaignWidget(campaign: campaign);
+                },
+                separatorBuilder: (context, index) {
+                  return const SizedBox(height: 20);
+                },
+                itemCount: state.campaigns.length,
+              );
+            }
+            return const Text("ERRRO");
+          },
+        );
+
+      case 2:
+        return BlocBuilder<EventCubit, EventState>(
+          builder: (context, state) {
+            if (state is CampaignLoading) {
+              return ListView.separated(
+                padding: const EdgeInsets.all(16),
+                shrinkWrap: true,
+                physics: const ClampingScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return const CampaignSkeletonWidget();
+                },
+                separatorBuilder: (context, index) {
+                  return const SizedBox(height: 20);
+                },
+                itemCount: 8,
+              );
+            } else if (state is EventLoaded) {
+              if (state.events.isEmpty) {
+                return const Center(
+                  child: Text("Sem campanhas"),
+                );
+              }
+
+              return ListView.separated(
+                padding: const EdgeInsets.all(16),
+                shrinkWrap: true,
+                physics: const ClampingScrollPhysics(),
+                itemBuilder: (context, index) {
+                  final event = state.events[index];
+                  return EventWidget(
+                    event: event,
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return const SizedBox(height: 20);
+                },
+                itemCount: state.events.length,
+              );
+            }
+            return const Text("ERRRO");
+          },
+        );
+      case 3:
+        return Text("3");
+      default:
+        return Text("4");
+    }
   }
 }

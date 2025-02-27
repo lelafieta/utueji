@@ -59,6 +59,11 @@ class AppTheme {
             fontFamily: AppStrings.fontFamily,
             color: AppColors.textColor,
           ),
+          titleMedium: TextStyle(
+            fontFamily: AppStrings.fontFamily,
+            color: AppColors.blackColor,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         inputDecorationTheme: const InputDecorationTheme(
           border: InputBorder.none,
