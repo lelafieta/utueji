@@ -1,8 +1,4 @@
-import 'dart:math';
-
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:utueji/src/features/campaigns/domain/entities/campaign_contributor_entity.dart';
-
 import '../../../../core/supabase/supabase_consts.dart';
 import '../../domain/entities/campaign_entity.dart';
 import '../models/campaign_contribuitor_model.dart';
@@ -28,7 +24,17 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
 
   @override
   Stream<CampaignEntity> fetchCampaignById(String id) {
-    throw UnimplementedError();
+    final campaign = supabase
+        .from(SupabaseConsts.campaigns)
+        .select(
+            "*, user:profiles(*), ong:ongs(*), campaign_contributor:campaign_contributors(*, user:profiles(*))") // Aqui incluí o user dentro de campaign_contributors
+        .order('created_at')
+        .limit(10)
+        .asStream()
+        .map((data) {
+      return data.map((event) => CampaignModel.fromJson(event)).toList()[0];
+    }).asBroadcastStream();
+    return campaign;
   }
 
   @override
@@ -59,25 +65,23 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
         .order("created_at")
         .limit(10)
         .asyncMap((data) async {
-          return Future.wait(data.map((campaign) async {
+          final List<CampaignModel> campaigns = [];
+          for (var campaign in data) {
             // Buscar os contribuidores da campanha
             final contributorsMap = await supabase
                 .from(SupabaseConsts.campaignContributors)
                 .select("*, user:profiles(*)")
                 .eq('campaign_id', campaign['id']);
 
-            List<CampaignContributorModel> contributoresList = contributorsMap
+            final contributorsList = contributorsMap
                 .map((e) => CampaignContributorModel.fromJson(e))
                 .toList();
 
-            campaign["campaign_contributor"] = contributorsMap;
-
-            CampaignModel? campaignObj = CampaignModel.fromJson(campaign);
-
-            campaignObj.campaignContributors = contributoresList;
-
-            return CampaignModel.fromJson(campaign);
-          }));
+            final campaignObj = CampaignModel.fromJson(campaign)
+              ..campaignContributors = contributorsList;
+            campaigns.add(campaignObj);
+          }
+          return campaigns;
         });
   }
 }

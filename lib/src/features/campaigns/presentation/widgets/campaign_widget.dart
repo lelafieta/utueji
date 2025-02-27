@@ -13,6 +13,7 @@ import '../../../../core/resources/icons/app_icons.dart';
 import '../../../../core/resources/images/app_images.dart';
 import '../../../../core/utils/app_utils.dart';
 import '../../../../core/utils/app_values.dart';
+import '../../domain/entities/campaign_contributor_entity.dart';
 import '../../domain/entities/campaign_entity.dart';
 import '../cubit/campaign_cubit.dart';
 import '../cubit/campaign_favorite_cubit/campaign_favorite_state.dart';
@@ -44,7 +45,6 @@ class _CampaignWidgetState extends State<CampaignWidget> {
 
   @override
   Widget build(BuildContext context) {
-    context.read<CampaignFavoriteCubit>().isFavorited(widget.campaign.id!);
     finishDate = widget.campaign.endDate!;
     fundraisingGoal = widget.campaign.fundraisingGoal!;
     fundsRaised = widget.campaign.fundsRaised!;
@@ -166,8 +166,14 @@ class _CampaignWidgetState extends State<CampaignWidget> {
                             BlocBuilder<CampaignFavoriteCubit,
                                     CampaignFavoriteState>(
                                 builder: (context, state) {
+                              print(state);
                               if (state is CampaignFavoriteLoading) {
-                                return Text("Loading...");
+                                return IconButton(
+                                    onPressed: () {},
+                                    icon: SvgPicture.asset(
+                                      AppIcons.heartBold,
+                                      color: Colors.grey,
+                                    ));
                               } else if (state is CampaignFavoriteSuccess) {
                                 if (state.isFavorited) {
                                   return IconButton(
@@ -179,6 +185,23 @@ class _CampaignWidgetState extends State<CampaignWidget> {
                                 return IconButton(
                                     onPressed: () {},
                                     icon: SvgPicture.asset(AppIcons.heart));
+                              } else if (state is CampaignFavoriteLoaded) {
+                                print(state.favorites.any((element) {
+                                  return element.itemId == widget.campaign.id;
+                                }));
+                                return (state.favorites.any((element) =>
+                                        element.itemId == widget.campaign.id))
+                                    ? IconButton(
+                                        onPressed: () {},
+                                        icon: SvgPicture.asset(
+                                          AppIcons.heartBold,
+                                          color: Colors.red,
+                                        ))
+                                    : IconButton(
+                                        onPressed: () {},
+                                        icon: SvgPicture.asset(
+                                          AppIcons.heart,
+                                        ));
                               }
                               return Text("DATA");
                             }),
@@ -294,7 +317,8 @@ class _CampaignWidgetState extends State<CampaignWidget> {
                               //     ),
                               //   ),
                               // ),
-                              contributores(),
+                              AppUtils.contributores(
+                                  widget.campaign.campaignContributors),
 
                               const Icon(
                                 Icons.timelapse_rounded,
@@ -338,162 +362,6 @@ class _CampaignWidgetState extends State<CampaignWidget> {
                   SizedBox(height: 10)
                 ],
               ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget contributores() {
-    if (widget.campaign.campaignContributors!.isEmpty) {
-      return Expanded(
-        child: SizedBox(
-          height: 16,
-          child: Stack(
-            children: [
-              AppUtils.contributeUserItem(
-                  0, 0, 0, AppImages.me, AppColors.primaryColor,
-                  text: "0"),
-              AppUtils.contributeUserDescription(
-                  40, 0, 0, AppImages.me, Colors.transparent,
-                  text: "Nenhuma Pessoa"),
-            ],
-          ),
-        ),
-      );
-    } else if (widget.campaign.campaignContributors!.length == 1) {
-      return Expanded(
-        child: SizedBox(
-          height: 16,
-          child: Stack(
-            children: [
-              AppUtils.contributeUserItem(
-                  0,
-                  0,
-                  0,
-                  widget.campaign.campaignContributors![0].user!.avatarUrl!,
-                  Colors.black),
-              AppUtils.contributeUserItem(
-                  8, 0, 0, AppImages.me, AppColors.primaryColor,
-                  text: "1"),
-              AppUtils.contributeUserDescription(
-                  45, 0, 0, AppImages.me, Colors.transparent,
-                  text: "Contributo"),
-            ],
-          ),
-        ),
-      );
-    } else if (widget.campaign.campaignContributors!.length == 2) {
-      return Expanded(
-        child: SizedBox(
-          height: 16,
-          child: Stack(
-            children: [
-              AppUtils.contributeUserItem(
-                  0,
-                  0,
-                  0,
-                  widget.campaign.campaignContributors![0].user!.avatarUrl!,
-                  Colors.transparent),
-              AppUtils.contributeUserItem(
-                  8,
-                  0,
-                  0,
-                  widget.campaign.campaignContributors![1].user!.avatarUrl!,
-                  Colors.transparent),
-              AppUtils.contributeUserItem(
-                  16, 0, 0, AppImages.me, AppColors.primaryColor,
-                  text: "2"),
-              AppUtils.contributeUserDescription(
-                  50, 0, 0, AppImages.me, Colors.transparent,
-                  text: "Contributos"),
-            ],
-          ),
-        ),
-      );
-    } else if (widget.campaign.campaignContributors!.length == 3) {
-      return Expanded(
-        child: SizedBox(
-          height: 16,
-          child: Stack(
-            children: [
-              AppUtils.contributeUserItem(
-                  0,
-                  0,
-                  0,
-                  widget.campaign.campaignContributors![0].user!.avatarUrl!,
-                  Colors.black),
-              AppUtils.contributeUserItem(
-                  8,
-                  0,
-                  0,
-                  widget.campaign.campaignContributors![1].user!.avatarUrl!,
-                  Colors.red),
-              AppUtils.contributeUserItem(
-                  16,
-                  0,
-                  0,
-                  widget.campaign.campaignContributors![2].user!.avatarUrl!,
-                  Colors.green),
-              AppUtils.contributeUserItem(
-                  24, 0, 0, AppImages.me, AppColors.primaryColor,
-                  text: "3"),
-              AppUtils.contributeUserDescription(
-                  55, 0, 0, AppImages.me, Colors.transparent,
-                  text: "Contributos"),
-            ],
-          ),
-        ),
-      );
-    }
-    return Expanded(
-      child: SizedBox(
-        height: 16,
-        child: Stack(
-          children: [
-            AppUtils.contributeUserItem(0, 0, 0, AppImages.me, Colors.black),
-            AppUtils.contributeUserItem(8, 0, 0, AppImages.me, Colors.red),
-            AppUtils.contributeUserItem(16, 0, 0, AppImages.me, Colors.green),
-            AppUtils.contributeUserItem(
-                24, 0, 0, AppImages.me, AppColors.primaryColor,
-                text: "+${widget.campaign.campaignContributors!.length - 3}"),
-            AppUtils.contributeUserDescription(
-                60, 0, 0, AppImages.me, Colors.transparent,
-                text: "Contributos"),
-          ],
-        ),
-      ),
-    );
-    return Expanded(
-      child: SizedBox(
-        height: 16,
-        child: Stack(
-          children: [
-            for (int i = 0;
-                i <
-                    (widget.campaign.campaignContributors!.length > 3
-                        ? 3
-                        : widget.campaign.campaignContributors!.length);
-                i++)
-              AppUtils.contributeUserItem(
-                  i * 8, 0, 0, AppImages.me, getColorByIndex(i)),
-            if (widget.campaign.campaignContributors!.length > 3)
-              AppUtils.contributeUserItem(
-                24,
-                0,
-                0,
-                AppImages.me,
-                AppColors.primaryColor,
-                text: "+${widget.campaign.campaignContributors!.length - 3}",
-              ),
-            AppUtils.contributeUserDescription(
-              60,
-              0,
-              0,
-              AppImages.me,
-              Colors.transparent,
-              text: "Contributos",
             ),
           ],
         ),

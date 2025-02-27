@@ -19,8 +19,12 @@ class FavoriteDataSource extends IFavoriteDataSource {
 
   @override
   Stream<List<FavoriteModel>> getAllFavotires() {
-    // TODO: implement getAllFavotires
-    throw UnimplementedError();
+    final response = supabase
+        .from(SupabaseConsts.favorites)
+        .stream(primaryKey: ['id']).map(
+            (data) => data.map((e) => FavoriteModel.fromJson(e)).toList());
+
+    return response;
   }
 
   @override

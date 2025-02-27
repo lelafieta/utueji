@@ -1,8 +1,7 @@
-import 'package:utueji/src/features/campaigns/domain/entities/campaign_contributor_entity.dart';
-
 import '../../../auth/domain/entities/user_entity.dart';
 import '../../../categories/domain/entities/category_entity.dart';
 import '../../../ongs/domain/entities/ong_entity.dart';
+import 'campaign_contributor_entity.dart';
 
 class CampaignEntity {
   String? id;
