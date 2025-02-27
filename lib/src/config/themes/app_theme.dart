@@ -62,7 +62,7 @@ class AppTheme {
           titleMedium: TextStyle(
             fontFamily: AppStrings.fontFamily,
             color: AppColors.blackColor,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w600,
           ),
         ),
         inputDecorationTheme: const InputDecorationTheme(
@@ -104,7 +104,11 @@ class AppTheme {
           ),
           prefixIconColor: AppColors.secondaryColor,
           suffixIconColor: AppColors.secondaryColor,
-          hintStyle: TextStyle(fontSize: AppValues.s14),
+          hintStyle: TextStyle(
+            fontFamily: AppStrings.fontFamily,
+            fontWeight: FontWeight.w400,
+            color: AppColors.secondaryTextColor,
+          ),
         ),
         appBarTheme: const AppBarTheme(
           centerTitle: true,
