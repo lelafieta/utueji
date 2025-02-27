@@ -156,7 +156,9 @@ class _OngProfilePageState extends State<OngProfilePage> {
                                           widget.ong.name!,
                                           style: Theme.of(context)
                                               .textTheme
-                                              .titleMedium,
+                                              .titleMedium!
+                                              .copyWith(
+                                                  fontWeight: FontWeight.bold),
                                         ),
                                         const SizedBox(width: 5),
                                         SvgPicture.asset(
@@ -292,10 +294,7 @@ class _OngProfilePageState extends State<OngProfilePage> {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
                   "Sobre",
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium!
-                      .copyWith(fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.titleMedium!,
                 ),
               ),
               Padding(
