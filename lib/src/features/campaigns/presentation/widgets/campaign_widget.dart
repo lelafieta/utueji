@@ -252,27 +252,29 @@ class _CampaignWidgetState extends State<CampaignWidget> {
                         Container(
                           child: Row(
                             children: [
-                              Expanded(
-                                child: SizedBox(
-                                  height: 16,
-                                  child: Stack(
-                                    children: [
-                                      AppUtils.contributeUserItem(
-                                          0, 0, 0, AppImages.me, Colors.black),
-                                      AppUtils.contributeUserItem(
-                                          8, 0, 0, AppImages.me, Colors.red),
-                                      AppUtils.contributeUserItem(
-                                          16, 0, 0, AppImages.me, Colors.green),
-                                      AppUtils.contributeUserItem(24, 0, 0,
-                                          AppImages.me, AppColors.primaryColor,
-                                          text: "+16"),
-                                      AppUtils.contributeUserDescription(60, 0,
-                                          0, AppImages.me, Colors.transparent,
-                                          text: "Contributos"),
-                                    ],
-                                  ),
-                                ),
-                              ),
+                              // Expanded(
+                              //   child: SizedBox(
+                              //     height: 16,
+                              //     child: Stack(
+                              //       children: [
+                              //         AppUtils.contributeUserItem(
+                              //             0, 0, 0, AppImages.me, Colors.black),
+                              //         AppUtils.contributeUserItem(
+                              //             8, 0, 0, AppImages.me, Colors.red),
+                              //         AppUtils.contributeUserItem(
+                              //             16, 0, 0, AppImages.me, Colors.green),
+                              //         AppUtils.contributeUserItem(24, 0, 0,
+                              //             AppImages.me, AppColors.primaryColor,
+                              //             text: "+16"),
+                              //         AppUtils.contributeUserDescription(60, 0,
+                              //             0, AppImages.me, Colors.transparent,
+                              //             text: "Contributos"),
+                              //       ],
+                              //     ),
+                              //   ),
+                              // ),
+                              contributores(),
+
                               const Icon(
                                 Icons.timelapse_rounded,
                                 size: 16,
@@ -312,9 +314,7 @@ class _CampaignWidgetState extends State<CampaignWidget> {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: 10,
-                  )
+                  SizedBox(height: 10)
                 ],
               ),
             ),
@@ -322,5 +322,174 @@ class _CampaignWidgetState extends State<CampaignWidget> {
         ),
       ),
     );
+  }
+
+  Widget contributores() {
+    if (widget.campaign.campaignContributors!.isEmpty) {
+      return Expanded(
+        child: SizedBox(
+          height: 16,
+          child: Stack(
+            children: [
+              AppUtils.contributeUserItem(
+                  0, 0, 0, AppImages.me, AppColors.primaryColor,
+                  text: "0"),
+              AppUtils.contributeUserDescription(
+                  40, 0, 0, AppImages.me, Colors.transparent,
+                  text: "Nenhuma Pessoa"),
+            ],
+          ),
+        ),
+      );
+    } else if (widget.campaign.campaignContributors!.length == 1) {
+      return Expanded(
+        child: SizedBox(
+          height: 16,
+          child: Stack(
+            children: [
+              AppUtils.contributeUserItem(
+                  0,
+                  0,
+                  0,
+                  widget.campaign.campaignContributors![0].user!.avatarUrl!,
+                  Colors.black),
+              AppUtils.contributeUserItem(
+                  8, 0, 0, AppImages.me, AppColors.primaryColor,
+                  text: "1"),
+              AppUtils.contributeUserDescription(
+                  45, 0, 0, AppImages.me, Colors.transparent,
+                  text: "Contributo"),
+            ],
+          ),
+        ),
+      );
+    } else if (widget.campaign.campaignContributors!.length == 2) {
+      return Expanded(
+        child: SizedBox(
+          height: 16,
+          child: Stack(
+            children: [
+              AppUtils.contributeUserItem(
+                  0,
+                  0,
+                  0,
+                  widget.campaign.campaignContributors![0].user!.avatarUrl!,
+                  Colors.transparent),
+              AppUtils.contributeUserItem(
+                  8,
+                  0,
+                  0,
+                  widget.campaign.campaignContributors![1].user!.avatarUrl!,
+                  Colors.transparent),
+              AppUtils.contributeUserItem(
+                  16, 0, 0, AppImages.me, AppColors.primaryColor,
+                  text: "2"),
+              AppUtils.contributeUserDescription(
+                  50, 0, 0, AppImages.me, Colors.transparent,
+                  text: "Contributos"),
+            ],
+          ),
+        ),
+      );
+    } else if (widget.campaign.campaignContributors!.length == 3) {
+      return Expanded(
+        child: SizedBox(
+          height: 16,
+          child: Stack(
+            children: [
+              AppUtils.contributeUserItem(
+                  0,
+                  0,
+                  0,
+                  widget.campaign.campaignContributors![0].user!.avatarUrl!,
+                  Colors.black),
+              AppUtils.contributeUserItem(
+                  8,
+                  0,
+                  0,
+                  widget.campaign.campaignContributors![1].user!.avatarUrl!,
+                  Colors.red),
+              AppUtils.contributeUserItem(
+                  16,
+                  0,
+                  0,
+                  widget.campaign.campaignContributors![2].user!.avatarUrl!,
+                  Colors.green),
+              AppUtils.contributeUserItem(
+                  24, 0, 0, AppImages.me, AppColors.primaryColor,
+                  text: "3"),
+              AppUtils.contributeUserDescription(
+                  55, 0, 0, AppImages.me, Colors.transparent,
+                  text: "Contributos"),
+            ],
+          ),
+        ),
+      );
+    }
+    return Expanded(
+      child: SizedBox(
+        height: 16,
+        child: Stack(
+          children: [
+            AppUtils.contributeUserItem(0, 0, 0, AppImages.me, Colors.black),
+            AppUtils.contributeUserItem(8, 0, 0, AppImages.me, Colors.red),
+            AppUtils.contributeUserItem(16, 0, 0, AppImages.me, Colors.green),
+            AppUtils.contributeUserItem(
+                24, 0, 0, AppImages.me, AppColors.primaryColor,
+                text: "+${widget.campaign.campaignContributors!.length - 3}"),
+            AppUtils.contributeUserDescription(
+                60, 0, 0, AppImages.me, Colors.transparent,
+                text: "Contributos"),
+          ],
+        ),
+      ),
+    );
+    return Expanded(
+      child: SizedBox(
+        height: 16,
+        child: Stack(
+          children: [
+            for (int i = 0;
+                i <
+                    (widget.campaign.campaignContributors!.length > 3
+                        ? 3
+                        : widget.campaign.campaignContributors!.length);
+                i++)
+              AppUtils.contributeUserItem(
+                  i * 8, 0, 0, AppImages.me, getColorByIndex(i)),
+            if (widget.campaign.campaignContributors!.length > 3)
+              AppUtils.contributeUserItem(
+                24,
+                0,
+                0,
+                AppImages.me,
+                AppColors.primaryColor,
+                text: "+${widget.campaign.campaignContributors!.length - 3}",
+              ),
+            AppUtils.contributeUserDescription(
+              60,
+              0,
+              0,
+              AppImages.me,
+              Colors.transparent,
+              text: "Contributos",
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Color getColorByIndex(int index) {
+    switch (index) {
+      case 0:
+        return Colors.black;
+      case 1:
+        return Colors.red;
+      case 2:
+        return Colors.green;
+      default:
+        return AppColors.primaryColor;
+    }
   }
 }

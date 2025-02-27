@@ -12,4 +12,5 @@ class AppRoutes {
   static const String campaignDetail = "/campaignDetail";
   static const String eventDetail = "/eventDetail";
   static const String ongProfileRoute = "/ongProfile";
+  static const String favoriteRoute = "/favorite";
 }

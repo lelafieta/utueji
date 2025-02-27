@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -44,7 +45,13 @@ class AppUtils {
           height: 16,
           color: color,
           child: (text == null)
-              ? Image.asset(imagePath)
+              ? CachedNetworkImage(
+                  imageUrl: imagePath,
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      CircularProgressIndicator(
+                          value: downloadProgress.progress),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                )
               : Center(
                   child: Text(
                     text,
@@ -73,7 +80,13 @@ class AppUtils {
           height: 16,
           color: color,
           child: (text == null)
-              ? Image.asset(imagePath)
+              ? CachedNetworkImage(
+                  imageUrl: imagePath,
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      CircularProgressIndicator(
+                          value: downloadProgress.progress),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                )
               : Center(
                   child: Text(
                     text,
