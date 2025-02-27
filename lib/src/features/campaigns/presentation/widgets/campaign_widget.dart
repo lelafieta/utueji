@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:utueji/src/features/campaigns/presentation/cubit/campaign_favorite_cubit/campaign_favorite_cubit.dart';
 
 import '../../../../config/routes/app_routes.dart';
 import '../../../../config/themes/app_colors.dart';
@@ -12,6 +14,8 @@ import '../../../../core/resources/images/app_images.dart';
 import '../../../../core/utils/app_utils.dart';
 import '../../../../core/utils/app_values.dart';
 import '../../domain/entities/campaign_entity.dart';
+import '../cubit/campaign_cubit.dart';
+import '../cubit/campaign_favorite_cubit/campaign_favorite_state.dart';
 
 class CampaignWidget extends StatefulWidget {
   final CampaignEntity campaign;
@@ -40,6 +44,7 @@ class _CampaignWidgetState extends State<CampaignWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.read<CampaignFavoriteCubit>().isFavorited(widget.campaign.id!);
     finishDate = widget.campaign.endDate!;
     fundraisingGoal = widget.campaign.fundraisingGoal!;
     fundsRaised = widget.campaign.fundsRaised!;
@@ -158,9 +163,25 @@ class _CampaignWidgetState extends State<CampaignWidget> {
                                 maxLines: 2,
                               ),
                             ),
-                            IconButton(
-                                onPressed: () {},
-                                icon: SvgPicture.asset(AppIcons.heart)),
+                            BlocBuilder<CampaignFavoriteCubit,
+                                    CampaignFavoriteState>(
+                                builder: (context, state) {
+                              if (state is CampaignFavoriteLoading) {
+                                return Text("Loading...");
+                              } else if (state is CampaignFavoriteSuccess) {
+                                if (state.isFavorited) {
+                                  return IconButton(
+                                    onPressed: () {},
+                                    icon: SvgPicture.asset(AppIcons.heartBold),
+                                    color: Colors.red,
+                                  );
+                                }
+                                return IconButton(
+                                    onPressed: () {},
+                                    icon: SvgPicture.asset(AppIcons.heart));
+                              }
+                              return Text("DATA");
+                            }),
                           ],
                         ),
                         const SizedBox(
