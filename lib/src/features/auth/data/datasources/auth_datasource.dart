@@ -26,7 +26,6 @@ class AuthDataSource implements IAuthDataSource {
       if (user == null) {
         throw ServerFailure(error: 'Usuário não encontrado.');
       }
-
       return UserModel.fromJson(user.toJson());
     } catch (e) {
       throw ServerFailure(error: 'Erro inesperado ao tentar fazer login.');
