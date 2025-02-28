@@ -33,6 +33,7 @@ import '../features/campaigns/domain/usecases/get_latest_campaigns_usecase.dart'
 import '../features/campaigns/presentation/cubit/campaign_cubit.dart';
 import '../features/campaigns/presentation/cubit/campaign_detail_cubit/campaign_detail_cubit.dart';
 import '../features/campaigns/presentation/cubit/campaign_favorite_cubit/campaign_favorite_cubit.dart';
+import '../features/campaigns/presentation/cubit/campaign_store_favorite_cubit/campaign_store_favorite_cubit.dart';
 import '../features/events/data/datasources/event_datasource.dart';
 import '../features/events/data/datasources/i_event_datasource.dart';
 import '../features/events/data/repositories/event_repository.dart';
@@ -43,8 +44,10 @@ import '../features/favorites/data/datasources/favorite_datasource.dart';
 import '../features/favorites/data/datasources/i_favorite_datasource.dart';
 import '../features/favorites/data/repositories/favorite_repository.dart';
 import '../features/favorites/domain/repositories/i_favorite_repository.dart';
+import '../features/favorites/domain/usecases/add_favorite_usecase.dart';
 import '../features/favorites/domain/usecases/get_all_favorites_usecase.dart';
 import '../features/favorites/domain/usecases/is_my_favorite_usecase.dart';
+import '../features/favorites/domain/usecases/remove_favorite_usecase.dart';
 import '../features/feeds/data/datasources/feed_datasource.dart';
 import '../features/feeds/data/datasources/i_feed_datasource.dart';
 import '../features/feeds/data/repositories/feed_repository.dart';
@@ -102,8 +105,13 @@ void _setUpCubits() {
 
   instance.registerFactory(() => CampaignFavoriteCubit(
       isMyFavoriteUseCase: instance(), getAllFavoritesByUseCase: instance()));
-  instance.registerFactory(
-      () => CampaignDetailCubit(getCampaignByIdUseCase: instance()));
+  instance.registerFactory(() => CampaignDetailCubit(
+      getCampaignByIdUseCase: instance(),
+      addFavoriteUseCase: instance(),
+      removeFavoriteUseCase: instance()));
+
+  instance.registerFactory(() => CampaignStoreFavoriteCubit(
+      addFavoriteUseCase: instance(), removeFavoriteUseCase: instance()));
 }
 
 void _setUpUsecases() {
@@ -138,6 +146,11 @@ void _setUpUsecases() {
 
   instance.registerLazySingleton<GetCampaignByIdUseCase>(
       () => GetCampaignByIdUseCase(repository: instance()));
+
+  instance.registerLazySingleton<AddFavoriteUseCase>(
+      () => AddFavoriteUseCase(repository: instance()));
+  instance.registerLazySingleton<RemoveFavoriteUseCase>(
+      () => RemoveFavoriteUseCase(repository: instance()));
 }
 
 void _setUpRepositories() {

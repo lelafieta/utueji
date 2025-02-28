@@ -16,6 +16,10 @@ class CampaignFavoriteLoaded extends CampaignFavoriteState {
   CampaignFavoriteLoaded({required this.favorites});
 }
 
-class CampaignFavoriteFailure extends CampaignFavoriteState {}
+class CampaignFavoriteFailure extends CampaignFavoriteState {
+  final String failure;
+
+  CampaignFavoriteFailure({required this.failure});
+}
 
 class CampaignFavoriteLoading extends CampaignFavoriteState {}

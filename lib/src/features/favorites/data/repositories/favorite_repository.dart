@@ -4,15 +4,21 @@ import '../../../../core/errors/failures.dart';
 import '../../domain/entities/favorite_entity.dart';
 import '../../domain/repositories/i_favorite_repository.dart';
 import '../datasources/i_favorite_datasource.dart';
+import '../models/favorite_model.dart';
 
 class FavoriteRepository extends IFavoriteRepository {
   final IFavoriteDataSource datasource;
 
   FavoriteRepository({required this.datasource});
   @override
-  Future<Either<Failure, Unit>> addFavorite(FavoriteEntity favorite) {
-    // TODO: implement addFavorite
-    throw UnimplementedError();
+  Future<Either<Failure, Unit>> addFavorite(FavoriteEntity favorite) async {
+    try {
+      final response =
+          await datasource.addFavorite(FavoriteModel.fromEntity(favorite));
+      return Right(response);
+    } catch (e) {
+      return Left(ServerFailure(error: e.toString()));
+    }
   }
 
   @override
@@ -37,8 +43,14 @@ class FavoriteRepository extends IFavoriteRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> removeFavorite(String id) {
-    // TODO: implement removeFavorite
-    throw UnimplementedError();
+  Future<Either<Failure, Unit>> removeFavorite(FavoriteEntity favorite) async {
+    print(favorite);
+    try {
+      final response =
+          await datasource.removeFavorite(FavoriteModel.fromEntity(favorite));
+      return Right(response);
+    } catch (e) {
+      return Left(ServerFailure(error: e.toString()));
+    }
   }
 }

@@ -11,12 +11,11 @@ class FavoriteModel extends FavoriteEntity {
   });
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'itemId': itemId,
-      'userId': userId,
-      'itemType': itemType,
-      'createdAt': createdAt?.toIso8601String(),
-      'updatedAt': updatedAt?.toIso8601String(),
+      'item_id': itemId,
+      'user_id': userId,
+      'item_type': itemType,
+      'created_at': createdAt?.toIso8601String(),
+      'updated_at': updatedAt?.toIso8601String(),
     };
   }
 
@@ -31,6 +30,17 @@ class FavoriteModel extends FavoriteEntity {
           map['created_at'] != null ? DateTime.parse(map['created_at']) : null,
       updatedAt:
           map['updated_at'] != null ? DateTime.parse(map['updated_at']) : null,
+    );
+  }
+
+  factory FavoriteModel.fromEntity(FavoriteEntity entity) {
+    return FavoriteModel(
+      id: entity.id,
+      itemId: entity.itemId,
+      userId: entity.userId,
+      itemType: entity.itemType,
+      createdAt: entity.createdAt,
+      updatedAt: entity.updatedAt,
     );
   }
 }

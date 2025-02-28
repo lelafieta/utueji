@@ -17,7 +17,7 @@ class CampaignFavoriteCubit extends Cubit<CampaignFavoriteState> {
     emit(CampaignFavoriteLoading());
     final response = await isMyFavoriteUseCase.call(id);
 
-    response.fold((l) => emit(CampaignFavoriteFailure()),
+    response.fold((l) => emit(CampaignFavoriteFailure(failure: l.toString())),
         (r) => emit(CampaignFavoriteSuccess(isFavorited: r)));
   }
 
@@ -26,7 +26,6 @@ class CampaignFavoriteCubit extends Cubit<CampaignFavoriteState> {
     final response = getAllFavoritesByUseCase.call(const NoParams());
 
     response.listen((event) {
-      print("ARRASY ${event.length}");
       emit(CampaignFavoriteLoaded(favorites: event));
     });
   }

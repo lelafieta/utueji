@@ -27,9 +27,9 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
     final campaign = supabase
         .from(SupabaseConsts.campaigns)
         .select(
-            "*, user:profiles(*), ong:ongs(*), campaign_contributor:campaign_contributors(*, user:profiles(*))") // Aqui incluí o user dentro de campaign_contributors
+            "*, user:profiles(*), ong:ongs(*), campaign_contributor:campaign_contributors(*, user:profiles(*))")
         .order('created_at')
-        .limit(10)
+        .limit(1)
         .asStream()
         .map((data) {
       return data.map((event) => CampaignModel.fromJson(event)).toList()[0];
@@ -59,29 +59,16 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
 
   @override
   Stream<List<CampaignEntity>> fetchLatestCampaigns() {
-    return supabase
+    final campaigns = supabase
         .from(SupabaseConsts.campaigns)
-        .stream(primaryKey: ['id'])
-        .order("created_at")
+        .select(
+            "*, user:profiles(*), ong:ongs(*), campaign_contributor:campaign_contributors(*, user:profiles(*))")
+        .order('created_at')
         .limit(10)
-        .asyncMap((data) async {
-          final List<CampaignModel> campaigns = [];
-          for (var campaign in data) {
-            // Buscar os contribuidores da campanha
-            final contributorsMap = await supabase
-                .from(SupabaseConsts.campaignContributors)
-                .select("*, user:profiles(*)")
-                .eq('campaign_id', campaign['id']);
-
-            final contributorsList = contributorsMap
-                .map((e) => CampaignContributorModel.fromJson(e))
-                .toList();
-
-            final campaignObj = CampaignModel.fromJson(campaign)
-              ..campaignContributors = contributorsList;
-            campaigns.add(campaignObj);
-          }
-          return campaigns;
-        });
+        .asStream()
+        .map((data) {
+      return data.map((event) => CampaignModel.fromJson(event)).toList();
+    });
+    return campaigns;
   }
 }
