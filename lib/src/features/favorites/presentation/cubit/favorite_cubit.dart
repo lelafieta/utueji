@@ -15,8 +15,6 @@ class FavoriteCubit extends Cubit<FavoriteState> {
     final response = getAllFavoritesByUseCase.call(const NoParams());
 
     response.listen((favorites) {
-      print("Tamanho");
-      print(favorites.length);
       emit(FavoriteLoaded(favorites: favorites));
     });
   }

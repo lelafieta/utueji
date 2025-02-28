@@ -160,45 +160,13 @@ class _CampaignWidgetState extends State<CampaignWidget> {
                                 maxLines: 2,
                               ),
                             ),
-                            BlocBuilder<CampaignFavoriteCubit,
-                                    CampaignFavoriteState>(
-                                builder: (context, state) {
-                              print(state);
-                              if (state is CampaignFavoriteLoading) {
-                                return IconButton(
-                                    onPressed: () {},
-                                    icon: SvgPicture.asset(
-                                      AppIcons.heartBold,
-                                      color: Colors.grey,
-                                    ));
-                              } else if (state is CampaignFavoriteSuccess) {
-                                if (state.isFavorited) {
-                                  return IconButton(
-                                    onPressed: () {},
-                                    icon: SvgPicture.asset(AppIcons.heartBold),
-                                    color: Colors.red,
-                                  );
-                                }
-                                return IconButton(
-                                    onPressed: () {},
-                                    icon: SvgPicture.asset(AppIcons.heart));
-                              } else if (state is CampaignFavoriteLoaded) {
-                                return (state.favorites.any((element) =>
-                                        element.itemId == widget.campaign.id))
-                                    ? IconButton(
-                                        onPressed: () {},
-                                        icon: SvgPicture.asset(
-                                          AppIcons.heartBold,
-                                          color: Colors.red,
-                                        ))
-                                    : IconButton(
-                                        onPressed: () {},
-                                        icon: SvgPicture.asset(
-                                          AppIcons.heart,
-                                        ));
-                              }
-                              return Text("DATA");
-                            }),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: AppUtils.favoriteWidget(
+                                  context: context,
+                                  itemId: widget.campaign.id!,
+                                  itemType: "campaign"),
+                            ),
                           ],
                         ),
                         const SizedBox(

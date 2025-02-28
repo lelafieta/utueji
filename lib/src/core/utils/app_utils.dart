@@ -324,10 +324,6 @@ class AppUtils {
                 state.favorites.any((element) => element.itemId == itemId);
             isMyFavorite.value = isFavorite;
 
-            print(state.favorites.length);
-            print(itemId);
-            print(isFavorite);
-
             return ValueListenableBuilder(
                 valueListenable: isMyFavorite,
                 builder: (context, value, _) {
