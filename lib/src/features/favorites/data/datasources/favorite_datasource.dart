@@ -14,13 +14,9 @@ class FavoriteDataSource extends IFavoriteDataSource {
   @override
   Future<Unit> addFavorite(FavoriteModel favorite) async {
     try {
-      final response = await supabase
-          .from(SupabaseConsts.favorites)
-          .insert(favorite.toMap());
-      print(response.toString());
+      await supabase.from(SupabaseConsts.favorites).insert(favorite.toMap());
       return unit;
     } catch (e) {
-      print("ERRRORRRORRRRRR $e");
       throw ServerFailure(error: 'Erro inesperado ao tentar fazer login.');
     }
   }

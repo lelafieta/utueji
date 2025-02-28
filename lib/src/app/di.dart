@@ -48,6 +48,7 @@ import '../features/favorites/domain/usecases/add_favorite_usecase.dart';
 import '../features/favorites/domain/usecases/get_all_favorites_usecase.dart';
 import '../features/favorites/domain/usecases/is_my_favorite_usecase.dart';
 import '../features/favorites/domain/usecases/remove_favorite_usecase.dart';
+import '../features/favorites/presentation/cubit/favorite_cubit.dart';
 import '../features/feeds/data/datasources/feed_datasource.dart';
 import '../features/feeds/data/datasources/i_feed_datasource.dart';
 import '../features/feeds/data/repositories/feed_repository.dart';
@@ -112,6 +113,9 @@ void _setUpCubits() {
 
   instance.registerFactory(() => CampaignStoreFavoriteCubit(
       addFavoriteUseCase: instance(), removeFavoriteUseCase: instance()));
+
+  instance.registerFactory(
+      () => FavoriteCubit(getAllFavoritesByUseCase: instance()));
 }
 
 void _setUpUsecases() {

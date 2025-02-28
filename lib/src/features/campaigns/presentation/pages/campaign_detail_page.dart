@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
 import 'package:utueji/src/features/campaigns/presentation/cubit/campaign_store_favorite_cubit/campaign_store_favorite_cubit.dart';
@@ -12,6 +14,8 @@ import '../../../../core/resources/icons/app_icons.dart';
 import '../../../../core/resources/images/app_images.dart';
 import '../../../../core/utils/app_utils.dart';
 import '../../../../core/utils/app_values.dart';
+import '../../../favorites/presentation/cubit/favorite_cubit.dart';
+import '../../../favorites/presentation/cubit/favorite_state.dart';
 import '../../domain/entities/campaign_entity.dart';
 import '../cubit/campaign_detail_cubit/campaign_detail_cubit.dart';
 import '../cubit/campaign_detail_cubit/campaign_detail_state.dart';
@@ -132,7 +136,10 @@ class _CampaignDetailPageState extends State<CampaignDetailPage> {
                                   ),
                                   trailing: ClipRRect(
                                     borderRadius: BorderRadius.circular(50),
-                                    child: favoriteWidget(),
+                                    child: AppUtils.favoriteWidget(
+                                        context: context,
+                                        itemId: widget.campaign.id!,
+                                        itemType: "campaign"),
                                   ),
                                 ),
                                 Padding(
@@ -465,125 +472,6 @@ class _CampaignDetailPageState extends State<CampaignDetailPage> {
           child: CircularProgressIndicator(),
         );
       },
-    );
-  }
-
-  Widget favoriteWidget() {
-    return Container(
-      color: Colors.white,
-      child: BlocBuilder<CampaignFavoriteCubit, CampaignFavoriteState>(
-          builder: (context, state) {
-        if (state is CampaignFavoriteLoading) {
-          return IconButton(
-            onPressed: () {},
-            icon: SvgPicture.asset(
-              AppIcons.heartBold,
-              color: Colors.grey,
-            ),
-          );
-        } else if (state is CampaignFavoriteSuccess) {
-          if (state.isFavorited) {
-            return IconButton(
-              onPressed: () {},
-              icon: SvgPicture.asset(
-                AppIcons.heartBold,
-                width: 10,
-              ),
-              color: Colors.red,
-            );
-          }
-          return IconButton(
-            onPressed: () {},
-            icon: SvgPicture.asset(
-              AppIcons.heart,
-              width: 10,
-            ),
-          );
-        } else if (state is CampaignFavoriteLoaded) {
-          return (state.favorites
-                  .any((element) => element.itemId == widget.campaign.id))
-              ? RoundCheckBox(
-                  uncheckedColor: Colors.transparent,
-                  checkedColor: Colors.transparent,
-                  borderColor: Colors.transparent,
-                  checkedWidget: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SvgPicture.asset(
-                      AppIcons.heartBold,
-                      color: Colors.red,
-                    ),
-                  ),
-                  uncheckedWidget: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SvgPicture.asset(
-                      AppIcons.heartBold,
-                    ),
-                  ),
-                  onTap: (selected) {
-                    if (selected!) {
-                      print("===================eeeeee");
-
-                      context.read<CampaignStoreFavoriteCubit>().removeFavorite(
-                            FavoriteEntity(
-                              itemId: widget.campaign.id,
-                              userId: "0eb7ec7a-8c77-4305-b086-fe2b22820e60",
-                              itemType: "campaign",
-                            ),
-                          );
-                    } else {
-                      context.read<CampaignStoreFavoriteCubit>().removeFavorite(
-                            FavoriteEntity(
-                              itemId: widget.campaign.id,
-                              userId: "0eb7ec7a-8c77-4305-b086-fe2b22820e60",
-                              itemType: "campaign",
-                            ),
-                          );
-                    }
-                  },
-                )
-              : RoundCheckBox(
-                  uncheckedColor: Colors.transparent,
-                  checkedColor: Colors.transparent,
-                  borderColor: Colors.transparent,
-                  checkedWidget: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SvgPicture.asset(
-                      AppIcons.heartBold,
-                      color: Colors.red,
-                    ),
-                  ),
-                  uncheckedWidget: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SvgPicture.asset(
-                      AppIcons.heartBold,
-                    ),
-                  ),
-                  onTap: (selected) {
-                    if (selected!) {
-                      print("===================");
-                      context.read<CampaignStoreFavoriteCubit>().addFavorite(
-                            FavoriteEntity(
-                              itemId: widget.campaign.id,
-                              userId: "0eb7ec7a-8c77-4305-b086-fe2b22820e60",
-                              itemType: "campaign",
-                              createdAt: DateTime.now(),
-                              updatedAt: DateTime.now(),
-                            ),
-                          );
-                    } else {
-                      context.read<CampaignStoreFavoriteCubit>().removeFavorite(
-                            FavoriteEntity(
-                              itemId: widget.campaign.id,
-                              userId: "0eb7ec7a-8c77-4305-b086-fe2b22820e60",
-                              itemType: "campaign",
-                            ),
-                          );
-                    }
-                  },
-                );
-        }
-        return Text("DATA");
-      }),
     );
   }
 
