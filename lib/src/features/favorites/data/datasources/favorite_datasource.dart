@@ -23,17 +23,18 @@ class FavoriteDataSource extends IFavoriteDataSource {
 
   @override
   Stream<List<FavoriteModel>> getAllFavotires() {
+    final uid = supabase.auth.currentUser!.id;
     final response = supabase
         .from(SupabaseConsts.favorites)
-        .stream(primaryKey: ['id']).map(
-            (data) => data.map((e) => FavoriteModel.fromJson(e)).toList());
+        .stream(primaryKey: ['id'])
+        .eq('user_id', uid)
+        .map((data) => data.map((e) => FavoriteModel.fromJson(e)).toList());
 
     return response;
   }
 
   @override
   Stream<List<FavoriteModel>> getFavoriteByType() {
-    // TODO: implement getFavoriteByType
     throw UnimplementedError();
   }
 

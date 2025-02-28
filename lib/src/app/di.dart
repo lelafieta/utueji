@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import '../core/cache/secure_storage.dart';
 import '../features/auth/data/datasources/auth_datasource.dart';
 import '../features/auth/data/datasources/i_auth_datasource.dart';
 import '../features/auth/data/repositories/auth_repository.dart';
@@ -87,13 +89,16 @@ void _setUpExternal() async {
   instance.registerFactory(() => GoogleSignIn());
   instance.registerFactory(() => FirebaseAuth.instance);
   instance.registerFactory(() => FirebaseStorage.instance);
+
+  instance.registerLazySingleton<SecureCacheHelper>(() => SecureCacheHelper());
 }
 
 void _setUpCubits() {
   instance.registerFactory(() => AuthCubit(
       signInUseCase: instance(),
       signUpUseCase: instance(),
-      signOutUseCase: instance()));
+      signOutUseCase: instance(),
+      secureCacheHelper: instance()));
   instance.registerFactory(() => InitialCubit(isSignInUseCase: instance()));
   instance.registerFactory(() => CampaignCubit(
       getCampaignsUseCase: instance(), getLatestCampaignsUseCase: instance()));

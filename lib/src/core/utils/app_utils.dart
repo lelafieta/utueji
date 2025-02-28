@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
+import 'package:utueji/src/app/app_entity.dart';
 
 import '../../config/themes/app_colors.dart';
 import '../../features/campaigns/domain/entities/campaign_contributor_entity.dart';
@@ -356,8 +357,8 @@ class AppUtils {
                         context.read<CampaignStoreFavoriteCubit>().addFavorite(
                               FavoriteEntity(
                                 itemId: itemId,
-                                userId: "0eb7ec7a-8c77-4305-b086-fe2b22820e60",
-                                itemType: "campaign",
+                                userId: AppEntity.uid,
+                                itemType: itemType,
                               ),
                             );
                       } else {
@@ -366,7 +367,7 @@ class AppUtils {
                             .removeFavorite(
                               FavoriteEntity(
                                 itemId: itemId,
-                                userId: "0eb7ec7a-8c77-4305-b086-fe2b22820e60",
+                                userId: AppEntity.uid,
                                 itemType: itemType,
                               ),
                             );

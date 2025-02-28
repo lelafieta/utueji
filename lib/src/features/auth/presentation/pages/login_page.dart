@@ -5,6 +5,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:phone_form_field/phone_form_field.dart';
+import 'package:utueji/src/app/app_entity.dart';
 
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
@@ -26,7 +27,8 @@ class LoginPage extends StatelessWidget {
           } else if (state is AuthFailure) {
             EasyLoading.dismiss();
             AppUtils.errorToast(state.failure);
-          } else {
+          } else if (state is Authenticated) {
+            AppEntity.uid = state.user!.id;
             EasyLoading.dismiss();
             AppUtils.successToast("SUCESSO.");
           }
