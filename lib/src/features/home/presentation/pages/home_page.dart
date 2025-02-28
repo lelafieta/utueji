@@ -13,12 +13,14 @@ import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
 import '../../../../core/resources/images/app_images.dart';
 import '../../../campaigns/presentation/cubit/campaign_cubit.dart';
+import '../../../campaigns/presentation/cubit/campaign_favorite_cubit/campaign_favorite_cubit.dart';
 import '../../../campaigns/presentation/cubit/campaign_state.dart';
 import '../../../campaigns/presentation/widgets/campaign_skeleton_widget.dart';
 import '../../../campaigns/presentation/widgets/campaign_widget.dart';
 import '../../../events/presentation/cubit/event_cubit.dart';
 import '../../../events/presentation/cubit/event_state.dart';
 import '../../../events/presentation/widgets/event_widget.dart';
+import '../../../favorites/presentation/cubit/favorite_cubit.dart';
 import '../../../ongs/presentation/cubit/ong_cubit.dart';
 import '../../../ongs/presentation/cubit/ong_state.dart';
 import '../../../ongs/presentation/widgets/ong_widget.dart';
@@ -55,6 +57,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    context.read<FavoriteCubit>().getAllFavorites();
     context.read<CampaignCubit>().getLatestCampaigns();
     context.read<EventCubit>().getLatestEvents();
     context.read<OngCubit>().getLatestOngs();

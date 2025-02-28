@@ -1,11 +1,19 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:roundcheckbox/roundcheckbox.dart';
 
 import '../../config/themes/app_colors.dart';
 import '../../features/campaigns/domain/entities/campaign_contributor_entity.dart';
+import '../../features/campaigns/presentation/cubit/campaign_store_favorite_cubit/campaign_store_favorite_cubit.dart';
+import '../../features/favorites/domain/entities/favorite_entity.dart';
+import '../../features/favorites/presentation/cubit/favorite_cubit.dart';
+import '../../features/favorites/presentation/cubit/favorite_state.dart';
+import '../resources/icons/app_icons.dart';
 import '../resources/images/app_images.dart';
 
 class AppUtils {
@@ -289,6 +297,86 @@ class AppUtils {
                 text: "Contributos"),
           ],
         ),
+      ),
+    );
+  }
+
+  static Widget favoriteWidget(
+      {required BuildContext context,
+      required String itemId,
+      required String itemType}) {
+    ValueNotifier<bool> isMyFavorite = ValueNotifier<bool>(false);
+    return Container(
+      color: Colors.white,
+      child: BlocBuilder<FavoriteCubit, FavoriteState>(
+        builder: (context, state) {
+          if (state is FavoriteLoading) {
+            return IconButton(
+              onPressed: () {},
+              icon: SvgPicture.asset(
+                AppIcons.heartBold,
+                color: Colors.grey,
+              ),
+            );
+          } else if (state is FavoriteLoaded) {
+            bool isFavorite =
+                state.favorites.any((element) => element.itemId == itemId);
+            isMyFavorite.value = isFavorite;
+
+            print(state.favorites.length);
+            print(itemId);
+            print(isFavorite);
+
+            return ValueListenableBuilder(
+                valueListenable: isMyFavorite,
+                builder: (context, value, _) {
+                  return RoundCheckBox(
+                    uncheckedColor: Colors.transparent,
+                    checkedColor: Colors.transparent,
+                    borderColor: Colors.transparent,
+                    isChecked: value,
+                    checkedWidget: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SvgPicture.asset(
+                          AppIcons.heartBold,
+                          color: Colors.red,
+                        )),
+                    uncheckedWidget: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SvgPicture.asset(
+                        AppIcons.heartBold,
+                      ),
+                    ),
+                    onTap: (selected) {
+                      isMyFavorite.value = selected!;
+                      // setState(() {
+                      //   isMyFavorite = isMyFavorite;
+
+                      if (selected) {
+                        context.read<CampaignStoreFavoriteCubit>().addFavorite(
+                              FavoriteEntity(
+                                itemId: itemId,
+                                userId: "0eb7ec7a-8c77-4305-b086-fe2b22820e60",
+                                itemType: "campaign",
+                              ),
+                            );
+                      } else {
+                        context
+                            .read<CampaignStoreFavoriteCubit>()
+                            .removeFavorite(
+                              FavoriteEntity(
+                                itemId: itemId,
+                                userId: "0eb7ec7a-8c77-4305-b086-fe2b22820e60",
+                                itemType: itemType,
+                              ),
+                            );
+                      }
+                    },
+                  );
+                });
+          }
+          return Text("DATA");
+        },
       ),
     );
   }
