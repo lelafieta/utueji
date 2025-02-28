@@ -309,72 +309,80 @@ class AppUtils {
     ValueNotifier<bool> isMyFavorite = ValueNotifier<bool>(false);
     return Container(
       color: Colors.white,
-      child: BlocBuilder<FavoriteCubit, FavoriteState>(
-        builder: (context, state) {
-          if (state is FavoriteLoading) {
-            return IconButton(
-              onPressed: () {},
-              icon: SvgPicture.asset(
-                AppIcons.heartBold,
-                color: Colors.grey,
-              ),
-            );
-          } else if (state is FavoriteLoaded) {
-            bool isFavorite =
-                state.favorites.any((element) => element.itemId == itemId);
-            isMyFavorite.value = isFavorite;
+      child:
+          BlocConsumer<CampaignStoreFavoriteCubit, CampaignStoreFavoriteState>(
+              listener: (context, state) {
+        if (state == CampaignStoreFavoriteState.success) {
+          context.read<FavoriteCubit>().getAllFavorites();
+        }
+      }, builder: (context, stateStore) {
+        return BlocBuilder<FavoriteCubit, FavoriteState>(
+          builder: (context, state) {
+            if (state is FavoriteLoading) {
+              return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SvgPicture.asset(
+                    AppIcons.heartBold,
+                  ));
+            } else if (state is FavoriteLoaded) {
+              bool isFavorite =
+                  state.favorites.any((element) => element.itemId == itemId);
+              isMyFavorite.value = isFavorite;
 
-            return ValueListenableBuilder(
-                valueListenable: isMyFavorite,
-                builder: (context, value, _) {
-                  return RoundCheckBox(
-                    uncheckedColor: Colors.transparent,
-                    checkedColor: Colors.transparent,
-                    borderColor: Colors.transparent,
-                    isChecked: value,
-                    checkedWidget: Padding(
+              return ValueListenableBuilder(
+                  valueListenable: isMyFavorite,
+                  builder: (context, value, _) {
+                    return RoundCheckBox(
+                      uncheckedColor: Colors.transparent,
+                      checkedColor: Colors.transparent,
+                      borderColor: Colors.transparent,
+                      isChecked: value,
+                      checkedWidget: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SvgPicture.asset(
+                            AppIcons.heartBold,
+                            color: Colors.red,
+                          )),
+                      uncheckedWidget: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: SvgPicture.asset(
                           AppIcons.heartBold,
-                          color: Colors.red,
-                        )),
-                    uncheckedWidget: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SvgPicture.asset(
-                        AppIcons.heartBold,
+                        ),
                       ),
-                    ),
-                    onTap: (selected) {
-                      isMyFavorite.value = selected!;
-                      // setState(() {
-                      //   isMyFavorite = isMyFavorite;
+                      onTap: (selected) {
+                        isMyFavorite.value = selected!;
+                        // setState(() {
+                        //   isMyFavorite = isMyFavorite;
 
-                      if (selected) {
-                        context.read<CampaignStoreFavoriteCubit>().addFavorite(
-                              FavoriteEntity(
-                                itemId: itemId,
-                                userId: AppEntity.uid,
-                                itemType: itemType,
-                              ),
-                            );
-                      } else {
-                        context
-                            .read<CampaignStoreFavoriteCubit>()
-                            .removeFavorite(
-                              FavoriteEntity(
-                                itemId: itemId,
-                                userId: AppEntity.uid,
-                                itemType: itemType,
-                              ),
-                            );
-                      }
-                    },
-                  );
-                });
-          }
-          return Text("DATA");
-        },
-      ),
+                        if (selected) {
+                          context
+                              .read<CampaignStoreFavoriteCubit>()
+                              .addFavorite(
+                                FavoriteEntity(
+                                  itemId: itemId,
+                                  userId: AppEntity.uid,
+                                  itemType: itemType,
+                                ),
+                              );
+                        } else {
+                          context
+                              .read<CampaignStoreFavoriteCubit>()
+                              .removeFavorite(
+                                FavoriteEntity(
+                                  itemId: itemId,
+                                  userId: AppEntity.uid,
+                                  itemType: itemType,
+                                ),
+                              );
+                        }
+                      },
+                    );
+                  });
+            }
+            return Text("DATA");
+          },
+        );
+      }),
     );
   }
 }
