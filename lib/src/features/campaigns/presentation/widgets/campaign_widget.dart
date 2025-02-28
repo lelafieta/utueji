@@ -10,12 +10,9 @@ import 'package:utueji/src/features/campaigns/presentation/cubit/campaign_favori
 import '../../../../config/routes/app_routes.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
-import '../../../../core/resources/images/app_images.dart';
 import '../../../../core/utils/app_utils.dart';
 import '../../../../core/utils/app_values.dart';
-import '../../domain/entities/campaign_contributor_entity.dart';
 import '../../domain/entities/campaign_entity.dart';
-import '../cubit/campaign_cubit.dart';
 import '../cubit/campaign_favorite_cubit/campaign_favorite_state.dart';
 
 class CampaignWidget extends StatefulWidget {
@@ -186,9 +183,6 @@ class _CampaignWidgetState extends State<CampaignWidget> {
                                     onPressed: () {},
                                     icon: SvgPicture.asset(AppIcons.heart));
                               } else if (state is CampaignFavoriteLoaded) {
-                                print(state.favorites.any((element) {
-                                  return element.itemId == widget.campaign.id;
-                                }));
                                 return (state.favorites.any((element) =>
                                         element.itemId == widget.campaign.id))
                                     ? IconButton(

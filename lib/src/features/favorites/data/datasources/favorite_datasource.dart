@@ -13,8 +13,16 @@ class FavoriteDataSource extends IFavoriteDataSource {
   FavoriteDataSource({required this.supabase});
   @override
   Future<Unit> addFavorite(FavoriteModel favorite) async {
-    // TODO: implement getAllFavotires
-    throw UnimplementedError();
+    try {
+      final response = await supabase
+          .from(SupabaseConsts.favorites)
+          .insert(favorite.toMap());
+      print(response.toString());
+      return unit;
+    } catch (e) {
+      print("ERRRORRRORRRRRR $e");
+      throw ServerFailure(error: 'Erro inesperado ao tentar fazer login.');
+    }
   }
 
   @override
@@ -35,14 +43,12 @@ class FavoriteDataSource extends IFavoriteDataSource {
 
   @override
   Future<bool> isMyFavorite(String id) async {
-    print("VARIAVEL $id");
     try {
       final response = await supabase
           .from(SupabaseConsts.favorites)
           .select()
           .eq("item_id", id);
 
-      print("VER AGORA: $response");
       if (response.isNotEmpty) {
         return true;
       }
@@ -53,8 +59,21 @@ class FavoriteDataSource extends IFavoriteDataSource {
   }
 
   @override
-  Future<Unit> removeFavorite(String id) {
-    // TODO: implement removeFavorite
-    throw UnimplementedError();
+  Future<Unit> removeFavorite(FavoriteModel favorite) async {
+    print("PARAAREMOVERR ${favorite.toMap()}-${favorite.itemId}");
+    try {
+      final response = await supabase
+          .from(SupabaseConsts.favorites)
+          .delete()
+          .eq("item_id", favorite.itemId!)
+          .eq('user_id', favorite.userId!);
+      // .gt('age', 18);
+
+      print("REMOVEU!!! $response");
+      return unit;
+    } catch (e) {
+      print("NAAAOAOAOOA $e");
+      throw ServerFailure(error: 'Erro inesperado ao tentar fazer login.');
+    }
   }
 }

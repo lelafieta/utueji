@@ -3,7 +3,7 @@ import '../models/favorite_model.dart';
 
 abstract class IFavoriteDataSource {
   Future<Unit> addFavorite(FavoriteModel favorite);
-  Future<Unit> removeFavorite(String id);
+  Future<Unit> removeFavorite(FavoriteModel favorite);
   Future<bool> isMyFavorite(String id);
   Stream<List<FavoriteModel>> getAllFavotires();
   Stream<List<FavoriteModel>> getFavoriteByType();

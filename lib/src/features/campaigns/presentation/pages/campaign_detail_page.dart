@@ -4,6 +4,9 @@ import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.da
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:roundcheckbox/roundcheckbox.dart';
+import 'package:utueji/src/features/campaigns/presentation/cubit/campaign_store_favorite_cubit/campaign_store_favorite_cubit.dart';
+import 'package:utueji/src/features/favorites/domain/entities/favorite_entity.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
 import '../../../../core/resources/images/app_images.dart';
@@ -12,6 +15,8 @@ import '../../../../core/utils/app_values.dart';
 import '../../domain/entities/campaign_entity.dart';
 import '../cubit/campaign_detail_cubit/campaign_detail_cubit.dart';
 import '../cubit/campaign_detail_cubit/campaign_detail_state.dart';
+import '../cubit/campaign_favorite_cubit/campaign_favorite_cubit.dart';
+import '../cubit/campaign_favorite_cubit/campaign_favorite_state.dart';
 
 class CampaignDetailPage extends StatefulWidget {
   final CampaignEntity campaign;
@@ -33,6 +38,8 @@ class _CampaignDetailPageState extends State<CampaignDetailPage> {
   DateTime finishDate = DateTime.now();
   int diasRestantes = 0;
   ValueNotifier<Color> color = ValueNotifier(AppColors.whiteColor);
+  List<String> menuList = ["Sobre", "Documentos", "Actualizações", "Ajuda"];
+  int selected = 0;
 
   @override
   void initState() {
@@ -125,15 +132,7 @@ class _CampaignDetailPageState extends State<CampaignDetailPage> {
                                   ),
                                   trailing: ClipRRect(
                                     borderRadius: BorderRadius.circular(50),
-                                    child: Container(
-                                      padding: const EdgeInsets.all(8),
-                                      color: Colors.white,
-                                      child: SvgPicture.asset(
-                                        AppIcons.heartBold,
-                                        color: Colors.red,
-                                        width: 20,
-                                      ),
-                                    ),
+                                    child: favoriteWidget(),
                                   ),
                                 ),
                                 Padding(
@@ -187,255 +186,277 @@ class _CampaignDetailPageState extends State<CampaignDetailPage> {
               decoration: BoxDecoration(
                 color: Theme.of(context).scaffoldBackgroundColor,
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Divider(),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.all(0),
-                      leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(50),
-                        child: Container(
-                          width: 50,
-                          height: 50,
-                          child: CachedNetworkImage(
-                            imageUrl: campaign.ong!.coverImageUrl!,
-                            fit: BoxFit.cover,
-                            progressIndicatorBuilder:
-                                (context, url, downloadProgress) =>
-                                    CircularProgressIndicator(
-                                        value: downloadProgress.progress),
-                            errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Divider(),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.all(0),
+                        leading: ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: Container(
+                            width: 50,
+                            height: 50,
+                            child: CachedNetworkImage(
+                              imageUrl: campaign.ong!.coverImageUrl!,
+                              fit: BoxFit.cover,
+                              progressIndicatorBuilder:
+                                  (context, url, downloadProgress) =>
+                                      CircularProgressIndicator(
+                                          value: downloadProgress.progress),
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
+                            ),
+                          ),
+                        ),
+                        title: Text(
+                          "Criado por",
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        subtitle: Text(
+                          campaign.ong!.name!,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium!
+                              .copyWith(fontWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        trailing: Container(
+                          padding: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            border: Border.all(
+                              color: AppColors.grey,
+                            ),
+                          ),
+                          child: const Icon(Icons.call),
+                        ),
+                      ),
+                    ),
+                    const Divider(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 20, horizontal: 10),
+                      child: Text(
+                        "Valores a ser arrecadado",
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium!
+                            .copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black54),
+                      ),
+                    ),
+                    ListTile(
+                      leading: Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: Colors.black12,
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Image.asset(
+                            AppImages.healthcare,
+                            width: 10,
                           ),
                         ),
                       ),
                       title: Text(
-                        "Criado por",
+                        "Proxmo de 70% do fundo já foram colectados. A sua modesta doação pode impactar a urgência do necessitado.",
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
-                      subtitle: Text(
-                        campaign.ong!.name!,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium!
-                            .copyWith(fontWeight: FontWeight.bold),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      trailing: Container(
-                        padding: const EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          border: Border.all(
-                            color: AppColors.grey,
-                          ),
-                        ),
-                        child: const Icon(Icons.call),
-                      ),
                     ),
-                  ),
-                  const Divider(),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20, horizontal: 10),
-                    child: Text(
-                      "Valores a ser arrecadado",
-                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                          fontWeight: FontWeight.bold, color: Colors.black54),
-                    ),
-                  ),
-                  ListTile(
-                    leading: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: Colors.black12,
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Image.asset(
-                          AppImages.healthcare,
-                          width: 10,
-                        ),
-                      ),
-                    ),
-                    title: Text(
-                      "Proxmo de 70% do fundo já foram colectados. A sua modesta doação pode impactar a urgência do necessitado.",
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 20),
-                        RichText(
-                          text: TextSpan(
-                            style: DefaultTextStyle.of(context).style,
-                            children: [
-                              TextSpan(
-                                text: "\$ ",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleSmall!
-                                    .copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18),
-                              ),
-                              TextSpan(
-                                text: NumberFormat.currency(
-                                        locale: 'pt_PT', symbol: 'AOA')
-                                    .format(widget.campaign.fundsRaised)
-                                    .toString(),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleSmall!
-                                    .copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18),
-                              ),
-                              const TextSpan(text: " / "),
-                              TextSpan(
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 20),
+                          RichText(
+                            text: TextSpan(
+                              style: DefaultTextStyle.of(context).style,
+                              children: [
+                                TextSpan(
+                                  text: "\$ ",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall!
+                                      .copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18),
+                                ),
+                                TextSpan(
                                   text: NumberFormat.currency(
                                           locale: 'pt_PT', symbol: 'AOA')
-                                      .format(campaign.fundraisingGoal)
-                                      .toString())
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Stack(
-                          children: [
-                            Container(
-                              width: double.infinity,
-                              height: 15,
-                              decoration: BoxDecoration(
-                                color: AppColors.strokeColor,
-                                borderRadius: BorderRadius.circular(100),
-                              ),
-                            ),
-                            Positioned(
-                              child: FAProgressBar(
-                                  currentValue: percentage,
-                                  backgroundColor: AppColors.strokeColor,
-                                  progressColor: Colors.black,
-                                  changeProgressColor: Colors.red,
-                                  size: 15,
-                                  displayTextStyle: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 10,
-                                    color: Colors.white,
-                                  ),
-                                  displayText: '%'),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          child: Row(
-                            children: [
-                              AppUtils.contributores(
-                                  campaign.campaignContributors),
-                              const Icon(
-                                Icons.timelapse_rounded,
-                                size: 16,
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                "Faltando $diasRestantes dias",
-                                style: const TextStyle(
-                                  fontSize: 12,
+                                      .format(widget.campaign.fundsRaised)
+                                      .toString(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall!
+                                      .copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18),
                                 ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                AppValues.s10,
-                              ), // Define o raio da borda aqui
-                            ),
-                          ),
-                        ),
-                        onPressed: () {},
-                        child: const Text("Doar"),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-                  const Divider(),
-                  Expanded(
-                    child: DefaultTabController(
-                      length: 4,
-                      child: Column(
-                        children: [
-                          TabBar(
-                            labelColor: Colors.black,
-                            unselectedLabelColor: AppColors.textColor,
-                            unselectedLabelStyle: Theme.of(context)
-                                .textTheme
-                                .titleSmall!
-                                .copyWith(fontWeight: FontWeight.w600),
-                            labelStyle: Theme.of(context)
-                                .textTheme
-                                .titleSmall!
-                                .copyWith(fontWeight: FontWeight.bold),
-                            tabs: const [
-                              Tab(
-                                text: "Sobre",
-                              ),
-                              Tab(
-                                text: "Documentos",
-                              ),
-                              Tab(
-                                text: "Actualizações",
-                              ),
-                              Tab(
-                                text: "Ajuda",
-                              ),
-                            ],
-                          ),
-                          Expanded(
-                            child: TabBarView(
-                              children: [
-                                AboutWidget(
-                                  campaign: widget.campaign,
-                                ),
-                                const DocumentWidget(),
-                                const UpdateWidget(),
-                                const Center(child: Text('Página Perfil')),
+                                const TextSpan(text: " / "),
+                                TextSpan(
+                                    text: NumberFormat.currency(
+                                            locale: 'pt_PT', symbol: 'AOA')
+                                        .format(campaign.fundraisingGoal)
+                                        .toString())
                               ],
                             ),
-                          )
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Stack(
+                            children: [
+                              Container(
+                                width: double.infinity,
+                                height: 15,
+                                decoration: BoxDecoration(
+                                  color: AppColors.strokeColor,
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                              ),
+                              Positioned(
+                                child: FAProgressBar(
+                                    currentValue: percentage,
+                                    backgroundColor: AppColors.strokeColor,
+                                    progressColor: Colors.black,
+                                    changeProgressColor: Colors.red,
+                                    size: 15,
+                                    displayTextStyle: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 10,
+                                      color: Colors.white,
+                                    ),
+                                    displayText: '%'),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            child: Row(
+                              children: [
+                                AppUtils.contributores(
+                                    campaign.campaignContributors),
+                                const Icon(
+                                  Icons.timelapse_rounded,
+                                  size: 16,
+                                ),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  "Faltando $diasRestantes dias",
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                  ),
-                ],
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                  AppValues.s10,
+                                ), // Define o raio da borda aqui
+                              ),
+                            ),
+                          ),
+                          onPressed: () {},
+                          child: const Text("Doar"),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    const Divider(),
+                    Container(
+                      width: double.infinity,
+                      height: 45,
+                      decoration: BoxDecoration(
+                          // border: Border(
+                          //   bottom: BorderSide(
+                          //     width: 2,
+                          //     color: Colors.black12,
+                          //   ),
+                          // ),
+                          ),
+                      child: ListView.separated(
+                        physics: const ClampingScrollPhysics(),
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            onTap: () {
+                              setState(() {
+                                selected = index;
+                              });
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                              ),
+                              decoration: BoxDecoration(
+                                border: (index == selected)
+                                    ? const Border(
+                                        bottom: BorderSide(
+                                          width: 2,
+                                          color: Colors.black,
+                                        ),
+                                      )
+                                    : Border.all(
+                                        width: 0, color: Colors.transparent),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  menuList[index].toString(),
+                                  style: (index != selected)
+                                      ? Theme.of(context).textTheme.bodyMedium
+                                      : Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                        separatorBuilder: (context, index) {
+                          return const SizedBox(
+                            width: 10,
+                          );
+                        },
+                        itemCount: menuList.length,
+                      ),
+                    ),
+                    _menuWidget()
+                  ],
+                ),
               ),
             ),
           );
@@ -445,6 +466,141 @@ class _CampaignDetailPageState extends State<CampaignDetailPage> {
         );
       },
     );
+  }
+
+  Widget favoriteWidget() {
+    return Container(
+      color: Colors.white,
+      child: BlocBuilder<CampaignFavoriteCubit, CampaignFavoriteState>(
+          builder: (context, state) {
+        if (state is CampaignFavoriteLoading) {
+          return IconButton(
+            onPressed: () {},
+            icon: SvgPicture.asset(
+              AppIcons.heartBold,
+              color: Colors.grey,
+            ),
+          );
+        } else if (state is CampaignFavoriteSuccess) {
+          if (state.isFavorited) {
+            return IconButton(
+              onPressed: () {},
+              icon: SvgPicture.asset(
+                AppIcons.heartBold,
+                width: 10,
+              ),
+              color: Colors.red,
+            );
+          }
+          return IconButton(
+            onPressed: () {},
+            icon: SvgPicture.asset(
+              AppIcons.heart,
+              width: 10,
+            ),
+          );
+        } else if (state is CampaignFavoriteLoaded) {
+          return (state.favorites
+                  .any((element) => element.itemId == widget.campaign.id))
+              ? RoundCheckBox(
+                  uncheckedColor: Colors.transparent,
+                  checkedColor: Colors.transparent,
+                  borderColor: Colors.transparent,
+                  checkedWidget: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SvgPicture.asset(
+                      AppIcons.heartBold,
+                      color: Colors.red,
+                    ),
+                  ),
+                  uncheckedWidget: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SvgPicture.asset(
+                      AppIcons.heartBold,
+                    ),
+                  ),
+                  onTap: (selected) {
+                    if (selected!) {
+                      print("===================eeeeee");
+
+                      context.read<CampaignStoreFavoriteCubit>().removeFavorite(
+                            FavoriteEntity(
+                              itemId: widget.campaign.id,
+                              userId: "0eb7ec7a-8c77-4305-b086-fe2b22820e60",
+                              itemType: "campaign",
+                            ),
+                          );
+                    } else {
+                      context.read<CampaignStoreFavoriteCubit>().removeFavorite(
+                            FavoriteEntity(
+                              itemId: widget.campaign.id,
+                              userId: "0eb7ec7a-8c77-4305-b086-fe2b22820e60",
+                              itemType: "campaign",
+                            ),
+                          );
+                    }
+                  },
+                )
+              : RoundCheckBox(
+                  uncheckedColor: Colors.transparent,
+                  checkedColor: Colors.transparent,
+                  borderColor: Colors.transparent,
+                  checkedWidget: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SvgPicture.asset(
+                      AppIcons.heartBold,
+                      color: Colors.red,
+                    ),
+                  ),
+                  uncheckedWidget: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SvgPicture.asset(
+                      AppIcons.heartBold,
+                    ),
+                  ),
+                  onTap: (selected) {
+                    if (selected!) {
+                      print("===================");
+                      context.read<CampaignStoreFavoriteCubit>().addFavorite(
+                            FavoriteEntity(
+                              itemId: widget.campaign.id,
+                              userId: "0eb7ec7a-8c77-4305-b086-fe2b22820e60",
+                              itemType: "campaign",
+                              createdAt: DateTime.now(),
+                              updatedAt: DateTime.now(),
+                            ),
+                          );
+                    } else {
+                      context.read<CampaignStoreFavoriteCubit>().removeFavorite(
+                            FavoriteEntity(
+                              itemId: widget.campaign.id,
+                              userId: "0eb7ec7a-8c77-4305-b086-fe2b22820e60",
+                              itemType: "campaign",
+                            ),
+                          );
+                    }
+                  },
+                );
+        }
+        return Text("DATA");
+      }),
+    );
+  }
+
+  Widget _menuWidget() {
+    switch (selected) {
+      case 0:
+        return AboutWidget(campaign: widget.campaign);
+      case 1:
+        return DocumentWidget();
+      case 2:
+        return UpdateWidget();
+      case 3:
+        return Text("data");
+        return Text("3");
+      default:
+        return Text("4");
+    }
   }
 }
 
