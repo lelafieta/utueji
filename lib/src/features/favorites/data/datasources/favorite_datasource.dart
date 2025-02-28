@@ -28,7 +28,10 @@ class FavoriteDataSource extends IFavoriteDataSource {
         .from(SupabaseConsts.favorites)
         .stream(primaryKey: ['id'])
         .eq('user_id', uid)
-        .map((data) => data.map((e) => FavoriteModel.fromJson(e)).toList());
+        .map((data) {
+          print("TEMPO REAL");
+          return data.map((e) => FavoriteModel.fromJson(e)).toList();
+        });
 
     return response;
   }
