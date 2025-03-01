@@ -1,15 +1,15 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/entities/no_params.dart';
 import '../../domain/usecases/get_campaigns_usecase.dart';
-import '../../domain/usecases/get_latest_campaigns_usecase.dart';
+import '../../domain/usecases/get_latest_urgent_campaigns_usecase.dart';
 import 'campaign_state.dart';
 
 class CampaignCubit extends Cubit<CampaignState> {
   final GetCampaignsUseCase getCampaignsUseCase;
-  final GetLatestCampaignsUseCase getLatestCampaignsUseCase;
+  final GetLatestUrgentCampaignsUseCase getLatestUrgentCampaignsUseCase;
   CampaignCubit({
     required this.getCampaignsUseCase,
-    required this.getLatestCampaignsUseCase,
+    required this.getLatestUrgentCampaignsUseCase,
   }) : super(CampaignInitial());
 
   Future<void> getCampaigns() async {
@@ -22,10 +22,10 @@ class CampaignCubit extends Cubit<CampaignState> {
     });
   }
 
-  Future<void> getLatestCampaigns() async {
+  Future<void> getLatestUrgentCampaigns() async {
     emit(CampaignLoading());
 
-    final campaigns = getLatestCampaignsUseCase.call();
+    final campaigns = getLatestUrgentCampaignsUseCase.call();
 
     campaigns.listen((event) {
       emit(CampaignLoaded(campaigns: event));

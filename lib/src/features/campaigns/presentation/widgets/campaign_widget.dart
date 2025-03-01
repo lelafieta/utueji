@@ -1,19 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:utueji/src/features/campaigns/presentation/cubit/campaign_favorite_cubit/campaign_favorite_cubit.dart';
 
 import '../../../../config/routes/app_routes.dart';
 import '../../../../config/themes/app_colors.dart';
-import '../../../../core/resources/icons/app_icons.dart';
+
 import '../../../../core/utils/app_utils.dart';
 import '../../../../core/utils/app_values.dart';
 import '../../domain/entities/campaign_entity.dart';
-import '../cubit/campaign_favorite_cubit/campaign_favorite_state.dart';
 
 class CampaignWidget extends StatefulWidget {
   final CampaignEntity campaign;
@@ -154,7 +150,7 @@ class _CampaignWidgetState extends State<CampaignWidget> {
                           children: [
                             Expanded(
                               child: Text(
-                                widget.campaign.description!,
+                                widget.campaign.title!,
                                 style: Theme.of(context).textTheme.titleSmall,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 2,

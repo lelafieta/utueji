@@ -22,6 +22,7 @@ class CampaignEntity {
   String? ongId;
   String? phoneNumber;
   int? priority;
+  bool? isUrgent;
   DateTime? endDate;
   String? title;
   String? userId;
@@ -40,6 +41,7 @@ class CampaignEntity {
       this.updatedAt,
       this.categoryId,
       this.description,
+      this.isUrgent,
       this.fundraisingGoal,
       this.fundsRaised,
       this.imageCoverUrl,

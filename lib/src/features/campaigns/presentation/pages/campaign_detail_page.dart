@@ -1,28 +1,20 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
+
 import 'package:intl/intl.dart';
-import 'package:pdf_render/pdf_render_widgets.dart';
-import 'package:roundcheckbox/roundcheckbox.dart';
-import 'package:utueji/src/features/campaigns/presentation/cubit/campaign_store_favorite_cubit/campaign_store_favorite_cubit.dart';
-import 'package:utueji/src/features/favorites/domain/entities/favorite_entity.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
 import '../../../../core/resources/images/app_images.dart';
 import '../../../../core/utils/app_utils.dart';
 import '../../../../core/utils/app_values.dart';
-import '../../../favorites/presentation/cubit/favorite_cubit.dart';
-import '../../../favorites/presentation/cubit/favorite_state.dart';
 import '../../domain/entities/campaign_entity.dart';
 import '../cubit/campaign_detail_cubit/campaign_detail_cubit.dart';
 import '../cubit/campaign_detail_cubit/campaign_detail_state.dart';
-import '../cubit/campaign_favorite_cubit/campaign_favorite_cubit.dart';
-import '../cubit/campaign_favorite_cubit/campaign_favorite_state.dart';
 
 class CampaignDetailPage extends StatefulWidget {
   final CampaignEntity campaign;
@@ -166,14 +158,15 @@ class _CampaignDetailPageState extends State<CampaignDetailPage> {
                                         ),
                                       ),
                                       const SizedBox(width: 10),
-                                      const Expanded(
+                                      Expanded(
                                         child: Row(
                                           children: [
                                             Icon(Icons.category, size: 20),
                                             SizedBox(width: 8),
                                             Expanded(
                                               child: Text(
-                                                "Causa médica",
+                                                state.campaign.category!.name
+                                                    .toString(),
                                                 style: TextStyle(fontSize: 14),
                                               ),
                                             ),
