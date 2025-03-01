@@ -47,7 +47,7 @@ class _CampaignUrgentPageState extends State<CampaignUrgentPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
-        title: const Text('Minhas Campanhas'),
+        title: const Text('Campanhas Urgentes'),
       ),
       body: Column(
         children: [
