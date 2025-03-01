@@ -12,7 +12,8 @@ import '../../../events/presentation/cubit/event_cubit.dart';
 import '../../../events/presentation/cubit/event_state.dart';
 import '../../../events/presentation/widgets/event_widget.dart';
 import '../cubit/campaign_cubit.dart';
-import '../cubit/campaign_state.dart';
+import '../cubit/campaign_urgent_cubit/campaign_urgent_cubit.dart';
+import '../cubit/campaign_urgent_cubit/campaign_urgent_state.dart';
 
 class CampaignPage extends StatefulWidget {
   const CampaignPage({super.key});

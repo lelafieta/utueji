@@ -6,14 +6,14 @@ import '../../../../core/usecases/base_usecase.dart';
 import '../entities/campaign_entity.dart';
 import '../repositories/i_campaign_repository.dart';
 
-class GetLatestUrgentCampaignsUseCase
+class GetAllCampaignsUseCase
     extends BaseUseCase<List<CampaignEntity>, NoParams> {
   final ICampaignRepository repository;
 
-  GetLatestUrgentCampaignsUseCase({required this.repository});
+  GetAllCampaignsUseCase({required this.repository});
 
   @override
   Future<Either<Failure, List<CampaignEntity>>> call(NoParams params) async {
-    return await repository.getLatestUrgentCampaigns();
+    return await repository.getAllCampaigns();
   }
 }

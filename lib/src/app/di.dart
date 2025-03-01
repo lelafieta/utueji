@@ -1,13 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../core/cache/secure_storage.dart';
+import '../core/network/i_network_info.dart';
+import '../core/network/network_info.dart';
 import '../features/auth/data/datasources/auth_datasource.dart';
 import '../features/auth/data/datasources/i_auth_datasource.dart';
 import '../features/auth/data/repositories/auth_repository.dart';
@@ -29,13 +32,16 @@ import '../features/campaigns/data/datasources/i_campaign_datasource.dart';
 import '../features/campaigns/data/datasources/campaign_datasource.dart';
 import '../features/campaigns/data/repositories/campaign_repository.dart';
 import '../features/campaigns/domain/repositories/i_campaign_repository.dart';
+import '../features/campaigns/domain/usecases/create_campaign_usecase.dart';
+import '../features/campaigns/domain/usecases/delete_campaign_usecase.dart';
+import '../features/campaigns/domain/usecases/get_all_campaigns_usecase.dart';
+import '../features/campaigns/domain/usecases/get_all_urgent_campaigns_usecase.dart';
 import '../features/campaigns/domain/usecases/get_campaign_by_id_usecase.dart';
-import '../features/campaigns/domain/usecases/get_campaigns_usecase.dart';
 import '../features/campaigns/domain/usecases/get_latest_urgent_campaigns_usecase.dart';
-import '../features/campaigns/presentation/cubit/campaign_cubit.dart';
+import '../features/campaigns/domain/usecases/update_campaign_usecase.dart';
 import '../features/campaigns/presentation/cubit/campaign_detail_cubit/campaign_detail_cubit.dart';
-import '../features/campaigns/presentation/cubit/campaign_favorite_cubit/campaign_favorite_cubit.dart';
 import '../features/campaigns/presentation/cubit/campaign_store_favorite_cubit/campaign_store_favorite_cubit.dart';
+import '../features/campaigns/presentation/cubit/campaign_urgent_cubit/campaign_urgent_cubit.dart';
 import '../features/events/data/datasources/event_datasource.dart';
 import '../features/events/data/datasources/i_event_datasource.dart';
 import '../features/events/data/repositories/event_repository.dart';
@@ -57,6 +63,7 @@ import '../features/feeds/data/repositories/feed_repository.dart';
 import '../features/feeds/domain/repositories/i_feed_repository.dart';
 import '../features/feeds/domain/usecases/fetch_feeds_usecase.dart';
 import '../features/feeds/presentation/cubit/feed_cubit.dart';
+import '../features/home/presentation/cubit/home_campaign_cubit/home_campaign_cubit.dart';
 import '../features/ongs/data/datasources/i_ong_datasource.dart';
 import '../features/ongs/data/datasources/ong_datasource.dart';
 import '../features/ongs/data/repositories/ong_repository.dart';
@@ -91,6 +98,8 @@ void _setUpExternal() async {
   instance.registerFactory(() => FirebaseStorage.instance);
 
   instance.registerLazySingleton<SecureCacheHelper>(() => SecureCacheHelper());
+  instance.registerLazySingleton<INetWorkInfo>(
+      () => NetWorkInfo(netWorkInfo: InternetConnection.createInstance()));
 }
 
 void _setUpCubits() {
@@ -100,9 +109,11 @@ void _setUpCubits() {
       signOutUseCase: instance(),
       secureCacheHelper: instance()));
   instance.registerFactory(() => InitialCubit(isSignInUseCase: instance()));
-  instance.registerFactory(() => CampaignCubit(
-      getCampaignsUseCase: instance(),
-      getLatestUrgentCampaignsUseCase: instance()));
+  instance.registerFactory(
+      () => HomeCampaignCubit(getLatestUrgentCampaignsUseCase: instance()));
+  instance.registerFactory(
+      () => CampaignUrgentCubit(getUrgentCampaignsUseCase: instance()));
+
   instance
       .registerFactory(() => EventCubit(fetchLatestEventsUsecase: instance()));
   instance.registerFactory(() => OngCubit(fetchLatestOngsUsecase: instance()));
@@ -110,12 +121,8 @@ void _setUpCubits() {
   instance.registerFactory(() => BlogCubit(
       fetchBlogUseCase: instance(), fetchLatestBlogUseCase: instance()));
 
-  instance.registerFactory(() => CampaignFavoriteCubit(
-      isMyFavoriteUseCase: instance(), getAllFavoritesByUseCase: instance()));
-  instance.registerFactory(() => CampaignDetailCubit(
-      getCampaignByIdUseCase: instance(),
-      addFavoriteUseCase: instance(),
-      removeFavoriteUseCase: instance()));
+  instance.registerFactory(
+      () => CampaignDetailCubit(getCampaignByIdUseCase: instance()));
 
   instance.registerFactory(() => CampaignStoreFavoriteCubit(
       addFavoriteUseCase: instance(), removeFavoriteUseCase: instance()));
@@ -133,8 +140,19 @@ void _setUpUsecases() {
       () => SignOutUseCase(repository: instance()));
   instance.registerLazySingleton<IsSignInUseCase>(
       () => IsSignInUseCase(repository: instance()));
-  instance.registerLazySingleton<GetCampaignsUseCase>(
-      () => GetCampaignsUseCase(repository: instance()));
+  instance.registerLazySingleton<CreateCampaignUseCase>(
+      () => CreateCampaignUseCase(repository: instance()));
+
+  instance.registerLazySingleton<DeleteCampaignUseCase>(
+      () => DeleteCampaignUseCase(repository: instance()));
+  instance.registerLazySingleton<GetAllCampaignsUseCase>(
+      () => GetAllCampaignsUseCase(repository: instance()));
+  instance.registerLazySingleton<GetAllUrgentCampaignsUseCase>(
+      () => GetAllUrgentCampaignsUseCase(repository: instance()));
+
+  instance.registerLazySingleton<UpdateCampaignUseCase>(
+      () => UpdateCampaignUseCase(repository: instance()));
+
   instance.registerLazySingleton<GetLatestUrgentCampaignsUseCase>(
       () => GetLatestUrgentCampaignsUseCase(repository: instance()));
   instance.registerLazySingleton<FetchLatestEventsUsecase>(
@@ -166,8 +184,8 @@ void _setUpUsecases() {
 void _setUpRepositories() {
   instance.registerLazySingleton<IAuthRepository>(
       () => AuthRespository(datasource: instance()));
-  instance.registerLazySingleton<ICampaignRepository>(
-      () => CampaignRepository(datasource: instance()));
+  instance.registerLazySingleton<ICampaignRepository>(() =>
+      CampaignRepository(datasource: instance(), networkInfo: instance()));
   instance.registerLazySingleton<IEventRepository>(
       () => EventRepository(datasource: instance()));
   instance.registerLazySingleton<IOngRepository>(

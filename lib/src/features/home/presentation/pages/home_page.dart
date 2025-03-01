@@ -6,15 +6,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:utueji/src/features/events/presentation/widgets/event_skeleton_widget.dart';
+import 'package:utueji/src/features/home/presentation/cubit/home_campaign_cubit/home_campaign_cubit.dart';
 import 'package:utueji/src/features/ongs/presentation/widgets/ong_skeleton_widget.dart';
 
 import '../../../../config/routes/app_routes.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
 import '../../../../core/resources/images/app_images.dart';
-import '../../../campaigns/presentation/cubit/campaign_cubit.dart';
-import '../../../campaigns/presentation/cubit/campaign_favorite_cubit/campaign_favorite_cubit.dart';
-import '../../../campaigns/presentation/cubit/campaign_state.dart';
 import '../../../campaigns/presentation/widgets/campaign_skeleton_widget.dart';
 import '../../../campaigns/presentation/widgets/campaign_widget.dart';
 import '../../../events/presentation/cubit/event_cubit.dart';
@@ -24,6 +22,7 @@ import '../../../favorites/presentation/cubit/favorite_cubit.dart';
 import '../../../ongs/presentation/cubit/ong_cubit.dart';
 import '../../../ongs/presentation/cubit/ong_state.dart';
 import '../../../ongs/presentation/widgets/ong_widget.dart';
+import '../cubit/home_campaign_cubit/home_campaign_state.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -58,7 +57,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     context.read<FavoriteCubit>().getAllFavorites();
-    context.read<CampaignCubit>().getLatestUrgentCampaigns();
+    context.read<HomeCampaignCubit>().getLatestUrgentCampaigns();
     context.read<EventCubit>().getLatestEvents();
     context.read<OngCubit>().getLatestOngs();
   }
@@ -308,37 +307,15 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            BlocConsumer<CampaignCubit, CampaignState>(
-              listener: (BuildContext context, CampaignState state) {
-                if (state is CampaignLoaded) {}
-              },
+            BlocBuilder<HomeCampaignCubit, HomeCampaignState>(
               builder: (context, state) {
-                if (state is CampaignLoading) {
-                  return CarouselSlider.builder(
-                    itemCount: 8,
-                    itemBuilder: (BuildContext context, int itemIndex,
-                        int pageViewIndex) {
-                      return const CampaignSkeletonWidget();
-                    },
-                    options: CarouselOptions(
-                      height: 420,
-                      aspectRatio: 16 / 9,
-                      viewportFraction: 0.95,
-                      initialPage: 0,
-                      enableInfiniteScroll: false,
-                      animateToClosest: false,
-                      reverse: false,
-                      autoPlay: false,
-                      autoPlayInterval: const Duration(seconds: 3),
-                      autoPlayAnimationDuration:
-                          const Duration(milliseconds: 800),
-                      autoPlayCurve: Curves.fastOutSlowIn,
-                      enlargeCenterPage: false,
-                      enlargeFactor: 0.3,
-                      scrollDirection: Axis.horizontal,
-                    ),
-                  );
-                } else if (state is CampaignLoaded) {
+                print("ESTADO");
+                print(state);
+                if (state is HomeCampaignLoading) {
+                  return HomeCampaignSkeletonWidget();
+                } else if (state is HomeCampaignError) {
+                  return Text("${state.message}");
+                } else if (state is HomeCampaignLoaded) {
                   if (state.campaigns.isEmpty) {
                     return const Center(
                       child: Text("Sem campanhas"),
@@ -735,6 +712,38 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: 50),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class HomeCampaignSkeletonWidget extends StatelessWidget {
+  const HomeCampaignSkeletonWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return CarouselSlider.builder(
+      itemCount: 8,
+      itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) {
+        return const CampaignSkeletonWidget();
+      },
+      options: CarouselOptions(
+        height: 420,
+        aspectRatio: 16 / 9,
+        viewportFraction: 0.95,
+        initialPage: 0,
+        enableInfiniteScroll: false,
+        animateToClosest: false,
+        reverse: false,
+        autoPlay: false,
+        autoPlayInterval: const Duration(seconds: 3),
+        autoPlayAnimationDuration: const Duration(milliseconds: 800),
+        autoPlayCurve: Curves.fastOutSlowIn,
+        enlargeCenterPage: false,
+        enlargeFactor: 0.3,
+        scrollDirection: Axis.horizontal,
       ),
     );
   }

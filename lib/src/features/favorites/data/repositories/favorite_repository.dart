@@ -17,7 +17,7 @@ class FavoriteRepository extends IFavoriteRepository {
           await datasource.addFavorite(FavoriteModel.fromEntity(favorite));
       return Right(response);
     } catch (e) {
-      return Left(ServerFailure(error: e.toString()));
+      return Left(ServerFailure(message: e.toString()));
     }
   }
 
@@ -38,7 +38,7 @@ class FavoriteRepository extends IFavoriteRepository {
       final response = await datasource.isMyFavorite(id);
       return Right(response);
     } catch (e) {
-      return Left(ServerFailure(error: e.toString()));
+      return Left(ServerFailure(message: e.toString()));
     }
   }
 
@@ -50,7 +50,7 @@ class FavoriteRepository extends IFavoriteRepository {
           await datasource.removeFavorite(FavoriteModel.fromEntity(favorite));
       return Right(response);
     } catch (e) {
-      return Left(ServerFailure(error: e.toString()));
+      return Left(ServerFailure(message: e.toString()));
     }
   }
 }
