@@ -23,6 +23,7 @@ class CampaignModel extends CampaignEntity {
       super.ongId,
       super.phoneNumber,
       super.priority = 0,
+      super.isUrgent,
       super.endDate,
       super.title,
       super.isFavorited,
@@ -37,6 +38,7 @@ class CampaignModel extends CampaignEntity {
       super.comments});
 
   factory CampaignModel.fromJson(Map<String, dynamic> map) {
+    print(map["category"]);
     return CampaignModel(
       id: map['id'],
       createdAt:
@@ -58,6 +60,7 @@ class CampaignModel extends CampaignEntity {
       isFavorited: map['is_favorited'],
       phoneNumber: map['phone_number'],
       priority: map['priority'] ?? 0,
+      isUrgent: map['is_urgent'],
       endDate: map['end_date'] != null ? DateTime.parse(map['end_date']) : null,
       title: map['title'],
       userId: map['user_id'],

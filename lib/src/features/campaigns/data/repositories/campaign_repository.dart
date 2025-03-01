@@ -33,8 +33,7 @@ class CampaignRepository implements ICampaignRepository {
   }
 
   @override
-  Stream<List<CampaignEntity>> getLatestCampaigns() {
-    print("CHEGOU!!!!!");
-    return datasource.fetchLatestCampaigns();
+  Stream<List<CampaignEntity>> getLatestUrgentCampaigns() {
+    return datasource.fetchLatestUrgentCampaigns();
   }
 }

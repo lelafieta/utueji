@@ -31,7 +31,7 @@ import '../features/campaigns/data/repositories/campaign_repository.dart';
 import '../features/campaigns/domain/repositories/i_campaign_repository.dart';
 import '../features/campaigns/domain/usecases/get_campaign_by_id_usecase.dart';
 import '../features/campaigns/domain/usecases/get_campaigns_usecase.dart';
-import '../features/campaigns/domain/usecases/get_latest_campaigns_usecase.dart';
+import '../features/campaigns/domain/usecases/get_latest_urgent_campaigns_usecase.dart';
 import '../features/campaigns/presentation/cubit/campaign_cubit.dart';
 import '../features/campaigns/presentation/cubit/campaign_detail_cubit/campaign_detail_cubit.dart';
 import '../features/campaigns/presentation/cubit/campaign_favorite_cubit/campaign_favorite_cubit.dart';
@@ -101,7 +101,8 @@ void _setUpCubits() {
       secureCacheHelper: instance()));
   instance.registerFactory(() => InitialCubit(isSignInUseCase: instance()));
   instance.registerFactory(() => CampaignCubit(
-      getCampaignsUseCase: instance(), getLatestCampaignsUseCase: instance()));
+      getCampaignsUseCase: instance(),
+      getLatestUrgentCampaignsUseCase: instance()));
   instance
       .registerFactory(() => EventCubit(fetchLatestEventsUsecase: instance()));
   instance.registerFactory(() => OngCubit(fetchLatestOngsUsecase: instance()));
@@ -134,8 +135,8 @@ void _setUpUsecases() {
       () => IsSignInUseCase(repository: instance()));
   instance.registerLazySingleton<GetCampaignsUseCase>(
       () => GetCampaignsUseCase(repository: instance()));
-  instance.registerLazySingleton<GetLatestCampaignsUseCase>(
-      () => GetLatestCampaignsUseCase(repository: instance()));
+  instance.registerLazySingleton<GetLatestUrgentCampaignsUseCase>(
+      () => GetLatestUrgentCampaignsUseCase(repository: instance()));
   instance.registerLazySingleton<FetchLatestEventsUsecase>(
       () => FetchLatestEventsUsecase(repository: instance()));
   instance.registerLazySingleton<FetchLatestOngsUsecase>(

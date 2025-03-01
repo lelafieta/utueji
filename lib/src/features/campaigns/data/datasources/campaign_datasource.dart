@@ -29,6 +29,7 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
       *, 
       user:profiles(*), 
       ong:ongs(*), 
+      category:categories(*), 
       contributors:campaign_contributors(*, user:profiles(*)), 
       documents:campaign_documents(*), 
       updates:campaign_updates(*), 
@@ -71,14 +72,27 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
   Stream<List<CampaignEntity>> fetchLatestCampaigns() {
     final campaigns = supabase
         .from(SupabaseConsts.campaigns)
-        .select(
-            "*, user:profiles(*), ong:ongs(*), campaign_contributor:campaign_contributors(*, user:profiles(*))")
+        .select('''
+      *, 
+      user:profiles(*), 
+      ong:ongs(*), 
+      category:categories(*), 
+      contributors:campaign_contributors(*, user:profiles(*)), 
+      documents:campaign_documents(*), 
+      updates:campaign_updates(*), 
+      comments:campaign_comments(*, user:profiles(*))
+    ''')
+        .eq('is_urgent', true)
         .order('created_at')
         .limit(10)
         .asStream()
         .map((data) {
-      return data.map((event) => CampaignModel.fromJson(event)).toList();
-    });
+          return data.map((event) {
+            return CampaignModel.fromJson(event);
+          }).toList();
+        })
+        .asBroadcastStream();
+
     return campaigns;
   }
 }

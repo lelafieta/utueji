@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     context.read<FavoriteCubit>().getAllFavorites();
-    context.read<CampaignCubit>().getLatestCampaigns();
+    context.read<CampaignCubit>().getLatestUrgentCampaigns();
     context.read<EventCubit>().getLatestEvents();
     context.read<OngCubit>().getLatestOngs();
   }
@@ -300,7 +300,11 @@ class _HomePageState extends State<HomePage> {
                     "Necessidades Urgentes",
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
-                  TextButton(onPressed: () {}, child: Text("Ver mais"))
+                  TextButton(
+                      onPressed: () {
+                        Get.toNamed(AppRoutes.campaignUrgentsRoute);
+                      },
+                      child: Text("Ver mais"))
                 ],
               ),
             ),

@@ -1,12 +1,12 @@
 import '../entities/campaign_entity.dart';
 import '../repositories/i_campaign_repository.dart';
 
-class GetLatestCampaignsUseCase {
+class GetLatestUrgentCampaignsUseCase {
   final ICampaignRepository repository;
 
-  GetLatestCampaignsUseCase({required this.repository});
+  GetLatestUrgentCampaignsUseCase({required this.repository});
 
   Stream<List<CampaignEntity>> call() {
-    return repository.getLatestCampaigns();
+    return repository.getLatestUrgentCampaigns();
   }
 }
