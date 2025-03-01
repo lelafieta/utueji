@@ -1,7 +1,10 @@
 import '../../../auth/domain/entities/user_entity.dart';
 import '../../../categories/domain/entities/category_entity.dart';
 import '../../../ongs/domain/entities/ong_entity.dart';
+import 'campaign_comment_entity.dart';
 import 'campaign_contributor_entity.dart';
+import 'campaign_document_entity.dart';
+import 'campaign_update_entity.dart';
 
 class CampaignEntity {
   String? id;
@@ -26,7 +29,10 @@ class CampaignEntity {
   CategoryEntity? category;
   OngEntity? ong;
   UserEntity? user;
-  List<CampaignContributorEntity>? campaignContributors;
+  List<CampaignContributorEntity>? contributors;
+  List<CampaignDocumentEntity>? documents;
+  List<CampaignUpdateEntity>? updates;
+  List<CampaignCommentEntity>? comments;
 
   CampaignEntity(
       {this.id,
@@ -51,5 +57,8 @@ class CampaignEntity {
       this.category,
       this.ong,
       this.user,
-      this.campaignContributors});
+      this.contributors,
+      this.documents,
+      this.updates,
+      this.comments});
 }

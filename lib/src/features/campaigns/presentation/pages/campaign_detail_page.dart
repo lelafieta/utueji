@@ -3,9 +3,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:pdf_render/pdf_render_widgets.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
 import 'package:utueji/src/features/campaigns/presentation/cubit/campaign_store_favorite_cubit/campaign_store_favorite_cubit.dart';
 import 'package:utueji/src/features/favorites/domain/entities/favorite_entity.dart';
@@ -356,8 +358,7 @@ class _CampaignDetailPageState extends State<CampaignDetailPage> {
                           Container(
                             child: Row(
                               children: [
-                                AppUtils.contributores(
-                                    campaign.campaignContributors),
+                                AppUtils.contributores(campaign.contributors),
                                 const Icon(
                                   Icons.timelapse_rounded,
                                   size: 16,
@@ -461,7 +462,7 @@ class _CampaignDetailPageState extends State<CampaignDetailPage> {
                         itemCount: menuList.length,
                       ),
                     ),
-                    _menuWidget()
+                    _menuWidget(state.campaign)
                   ],
                 ),
               ),
@@ -475,17 +476,16 @@ class _CampaignDetailPageState extends State<CampaignDetailPage> {
     );
   }
 
-  Widget _menuWidget() {
+  Widget _menuWidget(CampaignEntity campaign) {
     switch (selected) {
       case 0:
-        return AboutWidget(campaign: widget.campaign);
+        return AboutWidget(campaign: campaign);
       case 1:
-        return DocumentWidget();
+        return DocumentWidget(campaign: campaign);
       case 2:
-        return UpdateWidget();
+        return UpdateWidget(campaign: campaign);
       case 3:
-        return Text("data");
-        return Text("3");
+        return HelpWidget(campaign: campaign);
       default:
         return Text("4");
     }
@@ -493,60 +493,69 @@ class _CampaignDetailPageState extends State<CampaignDetailPage> {
 }
 
 class UpdateWidget extends StatelessWidget {
-  const UpdateWidget({
-    super.key,
-  });
+  const UpdateWidget({super.key, required this.campaign});
+
+  final CampaignEntity campaign;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10.0),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: (campaign.updates!.length == 0)
+          ? Center(
+              child: Text("Sem actualizações"),
+            )
+          : ListView.separated(
+              physics: ClampingScrollPhysics(),
+              shrinkWrap: true,
+              padding: EdgeInsets.zero,
+              itemBuilder: (context, index) {
+                final update = campaign.updates![index];
+                return Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Update #1"),
-                        Text("26 Março 2024"),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Update #${index + 1}"),
+                            Text(
+                                "${AppUtils.formatDate(data: update.createdAt!)}"),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          update.title!,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Text(update.description!)
                       ],
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      "Algum titulo do update",
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    const Text(
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea com")
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
+                  ),
+                );
+              },
+              separatorBuilder: (context, index) {
+                return const SizedBox(height: 10);
+              },
+              itemCount: campaign.updates!.length,
+            ),
     );
   }
 }
 
 class DocumentWidget extends StatelessWidget {
-  const DocumentWidget({
-    super.key,
-  });
+  final CampaignEntity campaign;
+  const DocumentWidget({super.key, required this.campaign});
 
   @override
   Widget build(BuildContext context) {
@@ -590,6 +599,28 @@ class DocumentWidget extends StatelessWidget {
                 width: 280,
                 height: 180,
                 color: Colors.black12,
+                child: (campaign.documents!.length < 1)
+                    ? Center(child: Text("Vazio"))
+                    : PDF(
+                        enableSwipe: false,
+                        swipeHorizontal: true,
+                        autoSpacing: false,
+                        pageFling: false,
+                        fitEachPage: false,
+                        fitPolicy: FitPolicy.HEIGHT,
+                        pageSnap: false,
+                        backgroundColor: Colors.grey,
+                        preventLinkNavigation: true,
+                        onError: (error) {
+                          print(error.toString());
+                        },
+                        onPageError: (page, error) {
+                          print('$page: ${error.toString()}');
+                        },
+                        onPageChanged: ((int? page, int? total) {
+                          print('page change: $page/$total');
+                        }),
+                      ).fromUrl(campaign.documents![0].documentPath!),
               ),
             ),
             const SizedBox(
@@ -597,38 +628,105 @@ class DocumentWidget extends StatelessWidget {
             ),
             Center(
               child: Container(
-                  width: 280,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          width: 50,
-                          height: 100,
-                          color: Colors.black12,
-                        ),
+                width: 280,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        width: 50,
+                        height: 100,
+                        color: Colors.black12,
+                        child: (campaign.documents!.length <= 1)
+                            ? Center(child: Text("Vazio"))
+                            : PDF(
+                                enableSwipe: false,
+                                swipeHorizontal: true,
+                                autoSpacing: false,
+                                pageFling: false,
+                                fitEachPage: false,
+                                fitPolicy: FitPolicy.HEIGHT,
+                                pageSnap: false,
+                                backgroundColor: Colors.grey,
+                                preventLinkNavigation: true,
+                                onError: (error) {
+                                  print(error.toString());
+                                },
+                                onPageError: (page, error) {
+                                  print('$page: ${error.toString()}');
+                                },
+                                onPageChanged: ((int? page, int? total) {
+                                  print('page change: $page/$total');
+                                }),
+                              ).fromUrl(campaign.documents![0].documentPath!),
                       ),
-                      const SizedBox(
-                        width: 10,
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Expanded(
+                      child: Container(
+                        width: 50,
+                        height: 100,
+                        color: Colors.black12,
+                        child: (campaign.documents!.length <= 2)
+                            ? Center(child: Text("Vazio"))
+                            : PDF(
+                                enableSwipe: false,
+                                swipeHorizontal: true,
+                                autoSpacing: false,
+                                pageFling: false,
+                                fitEachPage: false,
+                                fitPolicy: FitPolicy.HEIGHT,
+                                pageSnap: false,
+                                backgroundColor: Colors.grey,
+                                preventLinkNavigation: true,
+                                onError: (error) {
+                                  print(error.toString());
+                                },
+                                onPageError: (page, error) {
+                                  print('$page: ${error.toString()}');
+                                },
+                                onPageChanged: ((int? page, int? total) {
+                                  print('page change: $page/$total');
+                                }),
+                              ).fromUrl(campaign.documents![0].documentPath!),
                       ),
-                      Expanded(
-                        child: Container(
-                          width: 50,
-                          height: 100,
-                          color: Colors.black12,
-                        ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Expanded(
+                      child: Container(
+                        width: 50,
+                        height: 100,
+                        color: Colors.black12,
+                        child: (campaign.documents!.length < 4)
+                            ? Center(child: Text("Vazio"))
+                            : PDF(
+                                enableSwipe: false,
+                                swipeHorizontal: true,
+                                autoSpacing: false,
+                                pageFling: false,
+                                fitEachPage: false,
+                                fitPolicy: FitPolicy.HEIGHT,
+                                pageSnap: false,
+                                backgroundColor: Colors.grey,
+                                preventLinkNavigation: true,
+                                onError: (error) {
+                                  print(error.toString());
+                                },
+                                onPageError: (page, error) {
+                                  print('$page: ${error.toString()}');
+                                },
+                                onPageChanged: ((int? page, int? total) {
+                                  print('page change: $page/$total');
+                                }),
+                              ).fromUrl(campaign.documents![0].documentPath!),
                       ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Expanded(
-                        child: Container(
-                          width: 50,
-                          height: 100,
-                          color: Colors.black12,
-                        ),
-                      ),
-                    ],
-                  )),
+                    ),
+                  ],
+                ),
+              ),
             )
           ],
         ),
@@ -671,7 +769,10 @@ class AboutWidget extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Text(campaign.description!),
+                    child: Text(
+                      campaign.description!,
+                      style: TextStyle(color: Colors.black87),
+                    ),
                   )
                 ],
               ),
@@ -679,6 +780,181 @@ class AboutWidget extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class HelpWidget extends StatelessWidget {
+  const HelpWidget({super.key, required this.campaign});
+  final CampaignEntity campaign;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ExpansionTile(
+          title: Text('Comments [${campaign.comments!.length}]'),
+          children: [
+            Container(
+              height: 200, // Define a altura da lista de comentários
+              child: ListView.builder(
+                itemCount: campaign.comments!.length,
+                itemBuilder: (context, index) {
+                  final comment = campaign.comments![index];
+                  return ListTile(
+                    title: Text(comment.toString(),
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(comment.user!.fullName!,
+                            style: TextStyle(fontSize: 12, color: Colors.grey)),
+                        Text(comment.description!),
+                      ],
+                    ),
+                    isThreeLine: true,
+                  );
+                },
+              ),
+            )
+          ],
+        ),
+        ExpansionTile(
+          title: Text('Frequently asked questions'),
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                padding: EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('1. Qual é o objetivo desta campanha?',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black)),
+                    Text(
+                        '- Nosso objetivo é arrecadar fundos e itens para ajudar pessoas em situação de vulnerabilidade.'),
+                    SizedBox(height: 8),
+                    Text('2. Quem está organizando esta campanha?',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black)),
+                    Text(
+                        '- A campanha é organizada por um grupo de voluntários e apoiadores.'),
+                    SizedBox(height: 8),
+                    Text('3. Para onde vai o dinheiro ou os itens arrecadados?',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black)),
+                    Text(
+                        '- Todas as doações serão direcionadas para comunidades carentes e instituições beneficentes.'),
+                    SizedBox(height: 8),
+                    Text('4. Como posso contribuir?',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black)),
+                    Text(
+                        '- Você pode doar dinheiro, alimentos, roupas ou se voluntariar para ajudar na distribuição.'),
+                    SizedBox(height: 8),
+                    Text('5. Há um valor mínimo para doação?',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black)),
+                    Text(
+                        '- Não, qualquer contribuição é bem-vinda e fará a diferença!'),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+        ExpansionTile(
+          title: Text('Report this campaign'),
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Selecione um motivo:',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  SizedBox(height: 8),
+                  DropdownButtonFormField<String>(
+                    items: [
+                      DropdownMenuItem(value: 'Fraude', child: Text('Fraude')),
+                      DropdownMenuItem(
+                          value: 'Informações falsas',
+                          child: Text('Informações falsas')),
+                      DropdownMenuItem(
+                          value: 'Uso indevido',
+                          child: Text('Uso indevido dos fundos')),
+                      DropdownMenuItem(value: 'Outro', child: Text('Outro')),
+                    ],
+                    onChanged: (value) {},
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Escolha um motivo'),
+                  ),
+                  SizedBox(height: 12),
+                  Text('Descreva o problema:',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  SizedBox(height: 8),
+                  TextField(
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Descreva o motivo do seu relatório...',
+                    ),
+                  ),
+                  SizedBox(height: 12),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Aqui adicionamos a lógica para enviar o relatório
+                    },
+                    child: Text('Enviar denúncia'),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 20),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: Text(
+            'Para qualquer dúvida contacte o respetivo ativista',
+            style: TextStyle(fontStyle: FontStyle.italic),
+          ),
+        ),
+        SizedBox(height: 8),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: RichText(
+            text: TextSpan(
+              style: TextStyle(color: Colors.black, fontSize: 16),
+              children: [
+                TextSpan(
+                  text: 'Call: ',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                TextSpan(
+                  text: campaign.phoneNumber,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

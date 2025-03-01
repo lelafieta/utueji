@@ -95,6 +95,8 @@ dependencies:
   shared_preferences: ^2.2.3
   flutter_launcher_icons: ^0.14.3
   roundcheckbox: ^2.0.5
+  pdf_render: ^1.4.12
+  flutter_cached_pdfview: ^0.4.3
 
 dev_dependencies:
   flutter_test:

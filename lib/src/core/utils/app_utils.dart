@@ -323,6 +323,7 @@ class AppUtils {
                   padding: const EdgeInsets.all(8.0),
                   child: SvgPicture.asset(
                     AppIcons.heartBold,
+                    width: 24,
                   ));
             } else if (state is FavoriteLoaded) {
               bool isFavorite =

@@ -1,7 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/supabase/supabase_consts.dart';
 import '../../domain/entities/campaign_entity.dart';
-import '../models/campaign_contribuitor_model.dart';
 import '../models/campaign_model.dart';
 import 'i_campaign_datasource.dart';
 
@@ -26,14 +25,26 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
   Stream<CampaignEntity> fetchCampaignById(String id) {
     final campaign = supabase
         .from(SupabaseConsts.campaigns)
-        .select(
-            "*, user:profiles(*), ong:ongs(*), campaign_contributor:campaign_contributors(*, user:profiles(*))")
+        .select('''
+      *, 
+      user:profiles(*), 
+      ong:ongs(*), 
+      contributors:campaign_contributors(*, user:profiles(*)), 
+      documents:campaign_documents(*), 
+      updates:campaign_updates(*), 
+      comments:campaign_comments(*, user:profiles(*))
+    ''')
         .order('created_at')
         .limit(1)
         .asStream()
         .map((data) {
-      return data.map((event) => CampaignModel.fromJson(event)).toList()[0];
-    }).asBroadcastStream();
+          return data.map((event) {
+            print("COMENTARIOS ${event["comments"]}");
+            return CampaignModel.fromJson(event);
+          }).toList()[0];
+        })
+        .asBroadcastStream();
+
     return campaign;
   }
 
