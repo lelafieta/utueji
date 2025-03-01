@@ -37,7 +37,6 @@ class CampaignModel extends CampaignEntity {
       super.comments});
 
   factory CampaignModel.fromJson(Map<String, dynamic> map) {
-    print("COMMENTS ${map['comments']}");
     return CampaignModel(
       id: map['id'],
       createdAt:

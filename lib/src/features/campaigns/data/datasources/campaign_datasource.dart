@@ -39,7 +39,6 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
         .asStream()
         .map((data) {
           return data.map((event) {
-            print("COMENTARIOS ${event["comments"]}");
             return CampaignModel.fromJson(event);
           }).toList()[0];
         })
