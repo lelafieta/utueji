@@ -2,36 +2,42 @@ import '../../../auth/data/models/user_model.dart';
 import '../../../categories/data/models/category_model.dart';
 import '../../../ongs/data/models/ong_model.dart';
 import '../../domain/entities/campaign_entity.dart';
+import 'campaign_comment_model.dart';
 import 'campaign_contribuitor_model.dart';
+import 'campaign_document_model.dart';
+import 'campaign_update_model.dart';
 
 class CampaignModel extends CampaignEntity {
-  CampaignModel({
-    super.id,
-    super.createdAt,
-    super.updatedAt,
-    super.categoryId,
-    super.description,
-    super.fundraisingGoal,
-    super.fundsRaised,
-    super.imageCoverUrl,
-    super.institution,
-    super.location,
-    super.numberOfContributions,
-    super.ongId,
-    super.phoneNumber,
-    super.priority = 0,
-    super.endDate,
-    super.title,
-    super.isFavorited,
-    super.userId,
-    super.startDate,
-    super.category,
-    super.ong,
-    super.user,
-    super.campaignContributors,
-  });
+  CampaignModel(
+      {super.id,
+      super.createdAt,
+      super.updatedAt,
+      super.categoryId,
+      super.description,
+      super.fundraisingGoal,
+      super.fundsRaised,
+      super.imageCoverUrl,
+      super.institution,
+      super.location,
+      super.numberOfContributions,
+      super.ongId,
+      super.phoneNumber,
+      super.priority = 0,
+      super.endDate,
+      super.title,
+      super.isFavorited,
+      super.userId,
+      super.startDate,
+      super.category,
+      super.ong,
+      super.user,
+      super.contributors,
+      super.documents,
+      super.updates,
+      super.comments});
 
   factory CampaignModel.fromJson(Map<String, dynamic> map) {
+    print("COMMENTS ${map['comments']}");
     return CampaignModel(
       id: map['id'],
       createdAt:
@@ -63,9 +69,21 @@ class CampaignModel extends CampaignEntity {
           : null,
       ong: map['ong'] != null ? OngModel.fromMap(map['ong']) : null,
       user: map['user'] != null ? UserModel.fromJson(map['user']) : null,
-      campaignContributors: map['campaign_contributor'] != null
-          ? List<CampaignContributorModel>.from(map['campaign_contributor']
+      contributors: map['contributors'] != null
+          ? List<CampaignContributorModel>.from(map['contributors']
               .map((x) => CampaignContributorModel.fromJson(x)))
+          : [],
+      documents: map['documents'] != null
+          ? List<CampaignDocumentModel>.from(
+              map['documents'].map((x) => CampaignDocumentModel.fromJson(x)))
+          : [],
+      updates: map['updates'] != null
+          ? List<CampaignUpdateModel>.from(
+              map['updates'].map((x) => CampaignUpdateModel.fromJson(x)))
+          : [],
+      comments: map['comments'] != null
+          ? List<CampaignCommentModel>.from(
+              map['comments'].map((x) => CampaignCommentModel.fromJson(x)))
           : [],
     );
   }
@@ -117,7 +135,7 @@ class CampaignModel extends CampaignEntity {
       category: category ?? this.category!,
       ong: ong ?? this.ong!,
       user: user ?? this.user!,
-      campaignContributors: campaignContributors ?? this.campaignContributors!,
+      contributors: campaignContributors ?? this.contributors!,
     );
   }
 

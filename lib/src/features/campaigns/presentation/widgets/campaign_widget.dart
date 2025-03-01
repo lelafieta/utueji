@@ -280,7 +280,7 @@ class _CampaignWidgetState extends State<CampaignWidget> {
                               //   ),
                               // ),
                               AppUtils.contributores(
-                                  widget.campaign.campaignContributors),
+                                  widget.campaign.contributors),
 
                               const Icon(
                                 Icons.timelapse_rounded,
