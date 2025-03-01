@@ -8,6 +8,7 @@ class CampaignContributorModel extends CampaignContributorEntity {
     super.campaignId,
     super.userId,
     super.money,
+    super.isAnonymous,
     super.updatedAt,
     super.createdAt,
     super.user,
@@ -20,6 +21,7 @@ class CampaignContributorModel extends CampaignContributorEntity {
       campaignId: json['campaign_id'],
       userId: json['user_id'],
       money: json['money'],
+      isAnonymous: json['is_anonymous'],
       user: (json['user'] == null) ? null : UserModel.fromJson(json['user']),
       campaign: json['campaign'],
       updatedAt: json['updated_at'] != null

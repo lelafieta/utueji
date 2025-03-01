@@ -7,6 +7,7 @@ class CampaignContributorEntity {
   String? campaignId;
   String? userId;
   num? money;
+  bool? isAnonymous;
   DateTime? createdAt;
   DateTime? updatedAt;
   UserEntity? user;
@@ -17,6 +18,7 @@ class CampaignContributorEntity {
     this.campaignId,
     this.userId,
     this.money,
+    this.isAnonymous,
     this.createdAt,
     this.updatedAt,
     this.campaign,

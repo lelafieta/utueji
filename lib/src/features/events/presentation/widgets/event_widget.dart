@@ -148,16 +148,16 @@ class _EventWidgetState extends State<EventWidget> {
                             child: Stack(
                               children: [
                                 AppUtils.contributeUserItem(
-                                    0, 0, 0, AppImages.me, Colors.black),
+                                    0, 0, 0, null, Colors.black),
                                 AppUtils.contributeUserItem(
-                                    8, 0, 0, AppImages.me, Colors.red),
+                                    8, 0, 0, null, Colors.red),
                                 AppUtils.contributeUserItem(
-                                    16, 0, 0, AppImages.me, Colors.green),
-                                AppUtils.contributeUserItem(24, 0, 0,
-                                    AppImages.me, AppColors.primaryColor,
+                                    16, 0, 0, null, Colors.green),
+                                AppUtils.contributeUserItem(
+                                    24, 0, 0, null, AppColors.primaryColor,
                                     text: "+16"),
                                 AppUtils.contributeUserDescription(
-                                    60, 0, 0, AppImages.me, Colors.transparent,
+                                    60, 0, 0, null, Colors.transparent,
                                     text: "Contributos"),
                               ],
                             ),

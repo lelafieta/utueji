@@ -35,7 +35,7 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
       documents:campaign_documents(*), 
       updates:campaign_updates(*), 
       comments:campaign_comments(*, user:profiles(*))
-    ''').eq('user_id', userId).order('created_at');
+    ''').eq('user_id', userId).eq('is_activate', true).order('created_at');
 
     return response.map((event) => CampaignModel.fromJson(event)).toList();
   }
@@ -44,7 +44,9 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
   Future<List<CampaignEntity>> getAllUrgentCampaigns() async {
     final userId = supabase.auth.currentUser!.id;
 
-    final response = await supabase.from(SupabaseConsts.campaigns).select('''
+    final response = await supabase
+        .from(SupabaseConsts.campaigns)
+        .select('''
       *, 
       user:profiles(*), 
       ong:ongs(*), 
@@ -53,7 +55,11 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
       documents:campaign_documents(*), 
       updates:campaign_updates(*), 
       comments:campaign_comments(*, user:profiles(*))
-    ''').eq('is_urgent', true).eq('user_id', userId).order('created_at');
+    ''')
+        .eq('is_urgent', true)
+        .eq('is_activate', true)
+        .eq('user_id', userId)
+        .order('created_at');
 
     return response.map((event) => CampaignModel.fromJson(event)).toList();
   }
@@ -74,6 +80,7 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
       comments:campaign_comments(*, user:profiles(*))
     ''')
         .eq('id', id)
+        .eq('is_activate', true)
         .eq('user_id', userId)
         .order('created_at')
         .limit(10)
@@ -99,6 +106,7 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
       comments:campaign_comments(*, user:profiles(*))
     ''')
         .eq('is_urgent', true)
+        .eq('is_activate', true)
         .eq('user_id', userId)
         .order('created_at')
         .limit(10);

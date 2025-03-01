@@ -45,7 +45,7 @@ class AppUtils {
   }
 
   static Positioned contributeUserItem(
-      double left, double top, double bottom, String imagePath, Color color,
+      double left, double top, double bottom, String? imagePath, Color color,
       {String? text}) {
     return Positioned(
       left: left,
@@ -58,13 +58,16 @@ class AppUtils {
           height: 16,
           color: color,
           child: (text == null)
-              ? CachedNetworkImage(
-                  imageUrl: imagePath,
-                  progressIndicatorBuilder: (context, url, downloadProgress) =>
-                      CircularProgressIndicator(
-                          value: downloadProgress.progress),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                )
+              ? (imagePath == null)
+                  ? SizedBox.shrink()
+                  : CachedNetworkImage(
+                      imageUrl: imagePath,
+                      progressIndicatorBuilder:
+                          (context, url, downloadProgress) =>
+                              CircularProgressIndicator(
+                                  value: downloadProgress.progress),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    )
               : Center(
                   child: Text(
                     text,
@@ -81,7 +84,7 @@ class AppUtils {
   }
 
   static Positioned contributeUserDescription(
-      double left, double top, double bottom, String imagePath, Color color,
+      double left, double top, double bottom, String? imagePath, Color color,
       {String? text}) {
     return Positioned(
       left: left,
@@ -93,13 +96,16 @@ class AppUtils {
           height: 16,
           color: color,
           child: (text == null)
-              ? CachedNetworkImage(
-                  imageUrl: imagePath,
-                  progressIndicatorBuilder: (context, url, downloadProgress) =>
-                      CircularProgressIndicator(
-                          value: downloadProgress.progress),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                )
+              ? (imagePath == null)
+                  ? SizedBox.shrink()
+                  : CachedNetworkImage(
+                      imageUrl: imagePath,
+                      progressIndicatorBuilder:
+                          (context, url, downloadProgress) =>
+                              CircularProgressIndicator(
+                                  value: downloadProgress.progress),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    )
               : Center(
                   child: Text(
                     text,
@@ -222,6 +228,37 @@ class AppUtils {
         return SliverChildBuilderDelegate(
           (BuildContext context, int index) {
             final contributor = contributors[index];
+            if (contributor.isAnonymous!) {
+              return ListTile(
+                leading: ClipRRect(
+                  borderRadius: BorderRadius.circular(50),
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    color: Colors.black12,
+                  ),
+                ),
+                title: Text("Anónimo"),
+                subtitle: Text(
+                  formatDate(data: contributor.createdAt!, showTime: true),
+                  style: TextStyle(fontSize: 12),
+                ),
+                trailing: RichText(
+                  text: TextSpan(
+                    style: DefaultTextStyle.of(context)
+                        .style
+                        .copyWith(fontWeight: FontWeight.bold),
+                    children: [
+                      TextSpan(
+                        text: formatMoney(
+                            double.parse(contributor.money!.toString())),
+                        style: TextStyle(color: AppColors.primaryColor),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
             return ListTile(
               leading: ClipRRect(
                 borderRadius: BorderRadius.circular(50),
@@ -272,11 +309,10 @@ class AppUtils {
           height: 16,
           child: Stack(
             children: [
-              AppUtils.contributeUserItem(
-                  0, 0, 0, AppImages.me, AppColors.primaryColor,
+              AppUtils.contributeUserItem(0, 0, 0, null, AppColors.primaryColor,
                   text: "0"),
               AppUtils.contributeUserDescription(
-                  40, 0, 0, AppImages.me, Colors.transparent,
+                  40, 0, 0, null, Colors.transparent,
                   text: "Nenhuma Pessoa"),
             ],
           ),
