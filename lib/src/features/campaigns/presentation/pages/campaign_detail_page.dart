@@ -6,6 +6,7 @@ import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.da
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
 import 'package:intl/intl.dart';
 import '../../../../config/themes/app_colors.dart';
@@ -85,7 +86,9 @@ class _CampaignDetailPageState extends State<CampaignDetailPage> {
                         floating: false,
                         pinned: true,
                         leading: IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Get.back();
+                          },
                           icon: Icon(
                             Icons.arrow_back,
                             color: value,
@@ -219,13 +222,23 @@ class _CampaignDetailPageState extends State<CampaignDetailPage> {
                           "Criado por",
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
-                        subtitle: Text(
-                          campaign.ong!.name!,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium!
-                              .copyWith(fontWeight: FontWeight.bold),
-                          overflow: TextOverflow.ellipsis,
+                        subtitle: Row(
+                          children: [
+                            Text(
+                              campaign.ong!.name!,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium!
+                                  .copyWith(fontWeight: FontWeight.bold),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(width: 5),
+                            SvgPicture.asset(
+                              width: 16,
+                              AppIcons.shieldTrust,
+                              color: AppColors.blueColor,
+                            ),
+                          ],
                         ),
                         trailing: Container(
                           padding: const EdgeInsets.all(5),
@@ -658,7 +671,7 @@ class _DocumentWidgetState extends State<DocumentWidget> {
                     ? Center(child: Text("Vazio"))
                     : PDF(
                         enableSwipe: false,
-                        swipeHorizontal: true,
+                        swipeHorizontal: false,
                         autoSpacing: false,
                         pageFling: false,
                         fitEachPage: false,
@@ -695,7 +708,7 @@ class _DocumentWidgetState extends State<DocumentWidget> {
                             ? Center(child: Text("Vazio"))
                             : PDF(
                                 enableSwipe: false,
-                                swipeHorizontal: true,
+                                swipeHorizontal: false,
                                 autoSpacing: false,
                                 pageFling: false,
                                 fitEachPage: false,
@@ -713,7 +726,7 @@ class _DocumentWidgetState extends State<DocumentWidget> {
                                   print('page change: $page/$total');
                                 }),
                               ).fromUrl(
-                                widget.campaign.documents![0].documentPath!),
+                                widget.campaign.documents![1].documentPath!),
                       ),
                     ),
                     const SizedBox(
@@ -728,7 +741,7 @@ class _DocumentWidgetState extends State<DocumentWidget> {
                             ? Center(child: Text("Vazio"))
                             : PDF(
                                 enableSwipe: false,
-                                swipeHorizontal: true,
+                                swipeHorizontal: false,
                                 autoSpacing: false,
                                 pageFling: false,
                                 fitEachPage: false,
@@ -746,7 +759,7 @@ class _DocumentWidgetState extends State<DocumentWidget> {
                                   print('page change: $page/$total');
                                 }),
                               ).fromUrl(
-                                widget.campaign.documents![0].documentPath!),
+                                widget.campaign.documents![2].documentPath!),
                       ),
                     ),
                     const SizedBox(
@@ -761,12 +774,12 @@ class _DocumentWidgetState extends State<DocumentWidget> {
                             ? Center(child: Text("Vazio"))
                             : PDF(
                                 enableSwipe: false,
-                                swipeHorizontal: true,
+                                swipeHorizontal: false,
                                 autoSpacing: false,
                                 pageFling: false,
                                 fitEachPage: false,
                                 fitPolicy: FitPolicy.HEIGHT,
-                                pageSnap: false,
+                                pageSnap: true,
                                 backgroundColor: Colors.grey,
                                 preventLinkNavigation: true,
                                 onError: (error) {
@@ -779,7 +792,7 @@ class _DocumentWidgetState extends State<DocumentWidget> {
                                   print('page change: $page/$total');
                                 }),
                               ).fromUrl(
-                                widget.campaign.documents![0].documentPath!),
+                                widget.campaign.documents![3].documentPath!),
                       ),
                     ),
                   ],

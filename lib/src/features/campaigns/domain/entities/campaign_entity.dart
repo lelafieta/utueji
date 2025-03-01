@@ -23,6 +23,7 @@ class CampaignEntity {
   String? phoneNumber;
   int? priority;
   bool? isUrgent;
+  bool? isActivate;
   DateTime? endDate;
   String? title;
   String? userId;
@@ -48,6 +49,7 @@ class CampaignEntity {
       this.institution,
       this.location,
       this.isFavorited,
+      this.isActivate,
       this.numberOfContributions,
       this.ongId,
       this.phoneNumber,
