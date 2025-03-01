@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -254,30 +256,21 @@ class _CampaignWidgetState extends State<CampaignWidget> {
                         Container(
                           child: Row(
                             children: [
-                              // Expanded(
-                              //   child: SizedBox(
-                              //     height: 16,
-                              //     child: Stack(
-                              //       children: [
-                              //         AppUtils.contributeUserItem(
-                              //             0, 0, 0, AppImages.me, Colors.black),
-                              //         AppUtils.contributeUserItem(
-                              //             8, 0, 0, AppImages.me, Colors.red),
-                              //         AppUtils.contributeUserItem(
-                              //             16, 0, 0, AppImages.me, Colors.green),
-                              //         AppUtils.contributeUserItem(24, 0, 0,
-                              //             AppImages.me, AppColors.primaryColor,
-                              //             text: "+16"),
-                              //         AppUtils.contributeUserDescription(60, 0,
-                              //             0, AppImages.me, Colors.transparent,
-                              //             text: "Contributos"),
-                              //       ],
-                              //     ),
-                              //   ),
-                              // ),
-                              AppUtils.contributores(
-                                  widget.campaign.contributors),
-
+                              Expanded(
+                                child: InkWell(
+                                  onTap: () {
+                                    AppUtils.contributorUsers(
+                                        context, widget.campaign.contributors!);
+                                  },
+                                  child: Row(
+                                    children: [
+                                      AppUtils.contributores(
+                                        widget.campaign.contributors!,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                               const Icon(
                                 Icons.timelapse_rounded,
                                 size: 16,

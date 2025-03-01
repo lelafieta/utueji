@@ -348,7 +348,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   );
                 }
-                return const Text("ERRRO");
+                return Text("ERRRO ${state}");
               },
             ),
             // SizedBoxAppUtils.

@@ -1,9 +1,11 @@
+import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:intl/intl.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
 import 'package:utueji/src/app/app_entity.dart';
@@ -182,6 +184,84 @@ class AppUtils {
 
   static String formatMoney(double money) {
     return NumberFormat.currency(locale: 'pt_PT', symbol: 'AOA').format(money);
+  }
+
+  static void contributorUsers(
+      BuildContext context, List<CampaignContributorEntity> contributors) {
+    showStickyFlexibleBottomSheet(
+      minHeight: 0,
+      initHeight: 0.5,
+      maxHeight: 1,
+      isSafeArea: true,
+      headerHeight: 50,
+      bottomSheetColor: Theme.of(context).scaffoldBackgroundColor,
+      bottomSheetBorderRadius: BorderRadius.only(
+        topLeft: Radius.circular(16),
+        topRight: Radius.circular(16),
+      ),
+      context: context,
+      headerBuilder: (BuildContext context, double offset) {
+        return Container(
+          decoration: BoxDecoration(
+            color: AppColors.primaryColor,
+            borderRadius: BorderRadius.vertical(
+                top: Radius.circular(16)), // Bordas arredondadas no topo
+          ),
+          padding: EdgeInsets.symmetric(vertical: 16),
+          alignment: Alignment.center,
+          child: Text(
+            "[${contributors.length}] Doadores",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        );
+      },
+      bodyBuilder: (BuildContext context, double offset) {
+        return SliverChildBuilderDelegate(
+          (BuildContext context, int index) {
+            final contributor = contributors[index];
+            return ListTile(
+              leading: ClipRRect(
+                borderRadius: BorderRadius.circular(50),
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  child: CachedNetworkImage(
+                    imageUrl: contributor.user!.avatarUrl!,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                  ),
+                ),
+              ),
+              title: Text(contributor.user!.fullName!),
+              subtitle: Text(
+                formatDate(data: contributor.createdAt!, showTime: true),
+                style: TextStyle(fontSize: 12),
+              ),
+              trailing: RichText(
+                text: TextSpan(
+                  style: DefaultTextStyle.of(context)
+                      .style
+                      .copyWith(fontWeight: FontWeight.bold),
+                  children: [
+                    TextSpan(
+                      text: formatMoney(
+                          double.parse(contributor.money!.toString())),
+                      style: TextStyle(color: AppColors.primaryColor),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+          childCount: contributors.length,
+        );
+      },
+      anchors: [0, 0.5, 1],
+    );
   }
 
   static Widget contributores(

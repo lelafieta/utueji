@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
@@ -351,7 +352,21 @@ class _CampaignDetailPageState extends State<CampaignDetailPage> {
                           Container(
                             child: Row(
                               children: [
-                                AppUtils.contributores(campaign.contributors),
+                                Expanded(
+                                  child: InkWell(
+                                    onTap: () {
+                                      AppUtils.contributorUsers(context,
+                                          widget.campaign.contributors!);
+                                    },
+                                    child: Row(
+                                      children: [
+                                        AppUtils.contributores(
+                                          widget.campaign.contributors!,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                                 const Icon(
                                   Icons.timelapse_rounded,
                                   size: 16,
