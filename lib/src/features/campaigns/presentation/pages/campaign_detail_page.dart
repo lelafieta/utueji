@@ -366,12 +366,27 @@ class _CampaignDetailPageState extends State<CampaignDetailPage> {
                                 const SizedBox(
                                   width: 5,
                                 ),
-                                Text(
-                                  "Faltando $diasRestantes dias",
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                  ),
-                                )
+                                (diasRestantes == 0)
+                                    ? Text(
+                                        "Está acontecer",
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                        ),
+                                      )
+                                    : (diasRestantes < 0)
+                                        ? Text(
+                                            AppUtils.formatDate(
+                                                data: widget.campaign.endDate!),
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                            ),
+                                          )
+                                        : Text(
+                                            "Faltando $diasRestantes dias",
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                            ),
+                                          )
                               ],
                             ),
                           ),
@@ -553,9 +568,26 @@ class UpdateWidget extends StatelessWidget {
   }
 }
 
-class DocumentWidget extends StatelessWidget {
+class DocumentWidget extends StatefulWidget {
   final CampaignEntity campaign;
   const DocumentWidget({super.key, required this.campaign});
+
+  @override
+  State<DocumentWidget> createState() => _DocumentWidgetState();
+}
+
+class _DocumentWidgetState extends State<DocumentWidget> {
+  List<bool> counterApprovedDoc = [];
+
+  @override
+  void initState() {
+    super.initState();
+    widget.campaign.documents!.forEach((element) {
+      if (element.isApproved == true) {
+        counterApprovedDoc.add(true);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -571,25 +603,40 @@ class DocumentWidget extends StatelessWidget {
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: Colors.black12.withOpacity(.1),
+                color: Colors.white,
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SvgPicture.asset(
-                    AppIcons.shieldTrust,
-                    color: AppColors.primaryColor,
-                  ),
+                  (counterApprovedDoc.length ==
+                          widget.campaign.documents!.length)
+                      ? SvgPicture.asset(
+                          AppIcons.shieldTrust,
+                          color: AppColors.primaryColor,
+                        )
+                      : Icon(
+                          Icons.close,
+                          color: Colors.red,
+                        ),
                   const SizedBox(
                     width: 10,
                   ),
-                  const Text(
-                    "Documentos aprovados e verificados",
-                    style: TextStyle(
-                      color: AppColors.primaryColor,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  (counterApprovedDoc.length ==
+                          widget.campaign.documents!.length)
+                      ? Text(
+                          "Documentos aprovados e verificados",
+                          style: TextStyle(
+                            color: AppColors.primaryColor,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        )
+                      : Text(
+                          "Documentos não verificados",
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                 ],
               ),
             ),
@@ -599,7 +646,7 @@ class DocumentWidget extends StatelessWidget {
                 width: 280,
                 height: 180,
                 color: Colors.black12,
-                child: (campaign.documents!.length < 1)
+                child: (widget.campaign.documents!.length < 1)
                     ? Center(child: Text("Vazio"))
                     : PDF(
                         enableSwipe: false,
@@ -620,7 +667,7 @@ class DocumentWidget extends StatelessWidget {
                         onPageChanged: ((int? page, int? total) {
                           print('page change: $page/$total');
                         }),
-                      ).fromUrl(campaign.documents![0].documentPath!),
+                      ).fromUrl(widget.campaign.documents![0].documentPath!),
               ),
             ),
             const SizedBox(
@@ -636,7 +683,7 @@ class DocumentWidget extends StatelessWidget {
                         width: 50,
                         height: 100,
                         color: Colors.black12,
-                        child: (campaign.documents!.length <= 1)
+                        child: (widget.campaign.documents!.length <= 1)
                             ? Center(child: Text("Vazio"))
                             : PDF(
                                 enableSwipe: false,
@@ -657,7 +704,8 @@ class DocumentWidget extends StatelessWidget {
                                 onPageChanged: ((int? page, int? total) {
                                   print('page change: $page/$total');
                                 }),
-                              ).fromUrl(campaign.documents![0].documentPath!),
+                              ).fromUrl(
+                                widget.campaign.documents![0].documentPath!),
                       ),
                     ),
                     const SizedBox(
@@ -668,7 +716,7 @@ class DocumentWidget extends StatelessWidget {
                         width: 50,
                         height: 100,
                         color: Colors.black12,
-                        child: (campaign.documents!.length <= 2)
+                        child: (widget.campaign.documents!.length <= 2)
                             ? Center(child: Text("Vazio"))
                             : PDF(
                                 enableSwipe: false,
@@ -689,7 +737,8 @@ class DocumentWidget extends StatelessWidget {
                                 onPageChanged: ((int? page, int? total) {
                                   print('page change: $page/$total');
                                 }),
-                              ).fromUrl(campaign.documents![0].documentPath!),
+                              ).fromUrl(
+                                widget.campaign.documents![0].documentPath!),
                       ),
                     ),
                     const SizedBox(
@@ -700,7 +749,7 @@ class DocumentWidget extends StatelessWidget {
                         width: 50,
                         height: 100,
                         color: Colors.black12,
-                        child: (campaign.documents!.length < 4)
+                        child: (widget.campaign.documents!.length < 4)
                             ? Center(child: Text("Vazio"))
                             : PDF(
                                 enableSwipe: false,
@@ -721,7 +770,8 @@ class DocumentWidget extends StatelessWidget {
                                 onPageChanged: ((int? page, int? total) {
                                   print('page change: $page/$total');
                                 }),
-                              ).fromUrl(campaign.documents![0].documentPath!),
+                              ).fromUrl(
+                                widget.campaign.documents![0].documentPath!),
                       ),
                     ),
                   ],
@@ -794,23 +844,51 @@ class HelpWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ExpansionTile(
-          title: Text('Comments [${campaign.comments!.length}]'),
+          title: Text('Comentários [${campaign.comments!.length}]'),
           children: [
             Container(
               height: 200, // Define a altura da lista de comentários
               child: ListView.builder(
                 itemCount: campaign.comments!.length,
+                padding: EdgeInsets.zero,
                 itemBuilder: (context, index) {
                   final comment = campaign.comments![index];
                   return ListTile(
-                    title: Text(comment.toString(),
-                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    // titleAlignment: ListTileTitleAlignment.center,
+
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        child: CachedNetworkImage(
+                          imageUrl: comment.user!.avatarUrl!,
+                          fit: BoxFit.cover,
+                          progressIndicatorBuilder:
+                              (context, url, downloadProgress) =>
+                                  CircularProgressIndicator(
+                                      value: downloadProgress.progress),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error),
+                        ),
+                      ),
+                    ),
+                    title: Text(comment.user!.fullName!,
+                        style: TextStyle(color: Colors.black87)),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(comment.user!.fullName!,
-                            style: TextStyle(fontSize: 12, color: Colors.grey)),
-                        Text(comment.description!),
+                        Text(
+                          AppUtils.formatDate(
+                              data: comment.user!.createdAt!, showTime: true),
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                        Text(
+                          comment.description!,
+                          style: TextStyle(color: Colors.black),
+                        ),
                       ],
                     ),
                     isThreeLine: true,
@@ -821,7 +899,7 @@ class HelpWidget extends StatelessWidget {
           ],
         ),
         ExpansionTile(
-          title: Text('Frequently asked questions'),
+          title: Text('Perguntas frequentes'),
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -876,10 +954,10 @@ class HelpWidget extends StatelessWidget {
           ],
         ),
         ExpansionTile(
-          title: Text('Report this campaign'),
+          title: Text('Denunciar esta campanha'),
           children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -911,7 +989,8 @@ class HelpWidget extends StatelessWidget {
                   TextField(
                     maxLines: 3,
                     decoration: InputDecoration(
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
                       hintText: 'Descreva o motivo do seu relatório...',
                     ),
                   ),

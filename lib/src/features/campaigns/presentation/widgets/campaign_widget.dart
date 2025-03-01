@@ -289,12 +289,27 @@ class _CampaignWidgetState extends State<CampaignWidget> {
                               const SizedBox(
                                 width: 5,
                               ),
-                              Text(
-                                "Faltando $diasRestantes dias",
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                ),
-                              )
+                              (diasRestantes == 0)
+                                  ? Text(
+                                      "Está acontecer",
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                      ),
+                                    )
+                                  : (diasRestantes < 0)
+                                      ? Text(
+                                          AppUtils.formatDate(
+                                              data: widget.campaign.endDate!),
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                          ),
+                                        )
+                                      : Text(
+                                          "Faltando $diasRestantes dias",
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                          ),
+                                        )
                             ],
                           ),
                         ),
