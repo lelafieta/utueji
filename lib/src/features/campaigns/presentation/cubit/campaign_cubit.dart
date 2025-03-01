@@ -1,41 +1,23 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import '../../../../core/entities/no_params.dart';
-import '../../domain/usecases/get_campaigns_usecase.dart';
-import '../../domain/usecases/get_latest_urgent_campaigns_usecase.dart';
-import 'campaign_state.dart';
+import '../../domain/entities/campaign_entity.dart';
+import '../../domain/usecases/get_all_campaigns_usecase.dart';
+
+part 'campaign_state.dart';
 
 class CampaignCubit extends Cubit<CampaignState> {
-  final GetCampaignsUseCase getCampaignsUseCase;
-  final GetLatestUrgentCampaignsUseCase getLatestUrgentCampaignsUseCase;
-  CampaignCubit({
-    required this.getCampaignsUseCase,
-    required this.getLatestUrgentCampaignsUseCase,
-  }) : super(CampaignInitial());
+  final GetAllCampaignsUseCase getAllCampaignsUseCase;
 
-  Future<void> getCampaigns() async {
+  CampaignCubit({required this.getAllCampaignsUseCase})
+      : super(CampaignInitial());
+
+  Future<void> getAllCamapigns() async {
     emit(CampaignLoading());
+    final result = await getAllCampaignsUseCase.call(const NoParams());
 
-    final campaigns = getCampaignsUseCase.call(const NoParams());
-
-    campaigns.listen((event) {
-      emit(CampaignLoaded(campaigns: event));
-    });
-  }
-
-  Future<void> getLatestUrgentCampaigns() async {
-    emit(CampaignLoading());
-
-    final campaigns = getLatestUrgentCampaignsUseCase.call();
-
-    campaigns.listen((event) {
-      emit(CampaignLoaded(campaigns: event));
-    });
-    // SupabaseClient supabase = Supabase.instance.client;
-    // supabase.from('campaigns').stream(primaryKey: ['id']).listen((event) {
-    // print("ACTUALIZANDO...");
-    // print(CampaignModel.fromJson(event[0]).fundsRaised);
-    //   emit(CampaignLoaded(
-    //       campaigns: event.map((e) => CampaignModel.fromJson(e)).toList()));
-    // });
+    result.fold(
+        (failure) => emit(CampaignError(message: failure.message.toString())),
+        (campaigns) => emit(CampaignLoaded(campaigns: campaigns)));
   }
 }

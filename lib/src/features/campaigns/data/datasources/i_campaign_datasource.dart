@@ -1,10 +1,11 @@
 import '../../domain/entities/campaign_entity.dart';
 
 abstract class ICampaignRemoteDataSource {
-  Stream<List<CampaignEntity>> fetchCampaigns();
-  Stream<List<CampaignEntity>> fetchLatestUrgentCampaigns();
-  Stream<CampaignEntity> fetchCampaignById(String id);
-  Future<void> addCampaign(CampaignEntity campaign);
-  Future<void> editCampaign(CampaignEntity campaign);
-  Future<void> removeCampaign(String id);
+  Future<List<CampaignEntity>> getAllCampaigns();
+  Future<List<CampaignEntity>> getAllUrgentCampaigns();
+  Future<List<CampaignEntity>> getLatestUrgentCampaigns();
+  Future<CampaignEntity> getCampaignById(String id);
+  Future<void> createCampaign(CampaignEntity campaign);
+  Future<void> updateCampaign(CampaignEntity campaign);
+  Future<void> deleteCampaign(String id);
 }

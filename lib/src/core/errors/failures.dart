@@ -1,13 +1,13 @@
 import 'package:utueji/src/core/errors/error_messages.dart';
 
 abstract class Failure {
-  String? error;
+  String? message;
 
-  Failure(this.error);
+  Failure(this.message);
 }
 
 class ServerFailure extends Failure {
-  ServerFailure({String? error}) : super(error);
+  ServerFailure({String? message}) : super(message);
 }
 
 class NetworkFailure extends Failure {

@@ -25,7 +25,7 @@ class AuthCubit extends Cubit<AuthState> {
         .call(LoginParameters(email: email, password: password));
 
     response.fold(
-      (failure) => emit(AuthFailure(failure: failure.error.toString())),
+      (failure) => emit(AuthFailure(failure: failure.message.toString())),
       (user) {
         secureCacheHelper.saveData(key: "uid", value: user!.id!);
         emit(Authenticated(user: user));

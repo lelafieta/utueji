@@ -18,7 +18,7 @@ class AuthRespository extends IAuthRepository {
       final response = await datasource.isSignIn();
       return Right(response);
     } catch (e) {
-      return Left(ServerFailure(error: e.toString()));
+      return Left(ServerFailure(message: e.toString()));
     }
   }
 
@@ -30,7 +30,7 @@ class AuthRespository extends IAuthRepository {
       return Right(response!);
     } catch (e) {
       debugPrint("object ${e}");
-      return Left(ServerFailure(error: e.toString()));
+      return Left(ServerFailure(message: e.toString()));
     }
   }
 

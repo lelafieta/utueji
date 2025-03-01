@@ -1,19 +1,30 @@
-import '../../domain/entities/campaign_entity.dart';
+part of 'campaign_cubit.dart';
 
-abstract class CampaignState {}
+sealed class CampaignState extends Equatable {
+  const CampaignState();
 
-class CampaignInitial extends CampaignState {}
-
-class CampaignLoading extends CampaignState {}
-
-class CampaignLoaded extends CampaignState {
-  final List<CampaignEntity> campaigns;
-
-  CampaignLoaded({required this.campaigns});
+  @override
+  List<Object> get props => [];
 }
 
-class CampaignFailure extends CampaignState {
-  final String failure;
+final class CampaignInitial extends CampaignState {}
 
-  CampaignFailure({required this.failure});
+final class CampaignLoading extends CampaignState {}
+
+final class CampaignLoaded extends CampaignState {
+  final List<CampaignEntity> campaigns;
+
+  const CampaignLoaded({required this.campaigns});
+
+  @override
+  List<Object> get props => [campaigns];
+}
+
+final class CampaignError extends CampaignState {
+  final String message;
+
+  const CampaignError({required this.message});
+
+  @override
+  List<Object> get props => [message];
 }

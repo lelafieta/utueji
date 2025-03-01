@@ -1,6 +1,13 @@
+import 'package:equatable/equatable.dart';
+
 import '../../../domain/entities/campaign_entity.dart';
 
-abstract class CampaignDetailState {}
+sealed class CampaignDetailState extends Equatable {
+  const CampaignDetailState();
+
+  @override
+  List<Object> get props => [];
+}
 
 class CampaignDetailInitial extends CampaignDetailState {}
 
@@ -12,8 +19,8 @@ class CampaignDetailLoaded extends CampaignDetailState {
   CampaignDetailLoaded({required this.campaign});
 }
 
-class CampaignDetailFailure extends CampaignDetailState {
-  final String failure;
+class CampaignDetailError extends CampaignDetailState {
+  final String message;
 
-  CampaignDetailFailure({required this.failure});
+  CampaignDetailError({required this.message});
 }

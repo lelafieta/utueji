@@ -97,6 +97,7 @@ dependencies:
   roundcheckbox: ^2.0.5
   pdf_render: ^1.4.12
   flutter_cached_pdfview: ^0.4.3
+  internet_connection_checker_plus: ^2.7.0
 
 dev_dependencies:
   flutter_test:

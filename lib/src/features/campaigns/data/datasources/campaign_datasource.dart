@@ -12,18 +12,56 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
   });
 
   @override
-  Future<void> addCampaign(CampaignEntity campaign) {
+  Future<void> createCampaign(CampaignEntity campaign) {
+    // TODO: implement createCampaign
     throw UnimplementedError();
   }
 
   @override
-  Future<void> editCampaign(CampaignEntity need) {
+  Future<void> deleteCampaign(String id) {
+    // TODO: implement deleteCampaign
     throw UnimplementedError();
   }
 
   @override
-  Stream<CampaignEntity> fetchCampaignById(String id) {
-    final campaign = supabase
+  Future<List<CampaignEntity>> getAllCampaigns() async {
+    final userId = supabase.auth.currentUser!.id;
+    final response = await supabase.from(SupabaseConsts.campaigns).select('''
+      *, 
+      user:profiles(*), 
+      ong:ongs(*), 
+      category:categories(*), 
+      contributors:campaign_contributors(*, user:profiles(*)), 
+      documents:campaign_documents(*), 
+      updates:campaign_updates(*), 
+      comments:campaign_comments(*, user:profiles(*))
+    ''').eq('user_id', userId).order('created_at');
+
+    return response.map((event) => CampaignModel.fromJson(event)).toList();
+  }
+
+  @override
+  Future<List<CampaignEntity>> getAllUrgentCampaigns() async {
+    final userId = supabase.auth.currentUser!.id;
+
+    final response = await supabase.from(SupabaseConsts.campaigns).select('''
+      *, 
+      user:profiles(*), 
+      ong:ongs(*), 
+      category:categories(*), 
+      contributors:campaign_contributors(*, user:profiles(*)), 
+      documents:campaign_documents(*), 
+      updates:campaign_updates(*), 
+      comments:campaign_comments(*, user:profiles(*))
+    ''').eq('is_urgent', true).eq('user_id', userId).order('created_at');
+
+    return response.map((event) => CampaignModel.fromJson(event)).toList();
+  }
+
+  @override
+  Future<CampaignEntity> getCampaignById(String id) async {
+    final userId = supabase.auth.currentUser!.id;
+    final response = await supabase
         .from(SupabaseConsts.campaigns)
         .select('''
       *, 
@@ -35,42 +73,20 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
       updates:campaign_updates(*), 
       comments:campaign_comments(*, user:profiles(*))
     ''')
+        .eq('id', id)
+        .eq('user_id', userId)
         .order('created_at')
-        .limit(1)
-        .asStream()
-        .map((data) {
-          return data.map((event) {
-            return CampaignModel.fromJson(event);
-          }).toList()[0];
-        })
-        .asBroadcastStream();
+        .limit(10)
+        .single();
 
-    return campaign;
+    return CampaignModel.fromJson(response);
   }
 
   @override
-  Stream<List<CampaignEntity>> fetchCampaigns() {
-    final campaigns = supabase
-        .from(SupabaseConsts.campaigns)
-        .stream(primaryKey: ['id'])
-        .eq('id', 120)
-        .order('is')
-        .limit(10);
+  Future<List<CampaignEntity>> getLatestUrgentCampaigns() async {
+    final userId = supabase.auth.currentUser!.id;
 
-    // Mapear os dados para a lista de CampaignEntity
-    return campaigns.map((data) {
-      return data.map((campaign) => CampaignModel.fromJson(campaign)).toList();
-    });
-  }
-
-  @override
-  Future<void> removeCampaign(String id) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Stream<List<CampaignEntity>> fetchLatestCampaigns() {
-    final campaigns = supabase
+    final response = await supabase
         .from(SupabaseConsts.campaigns)
         .select('''
       *, 
@@ -83,16 +99,16 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
       comments:campaign_comments(*, user:profiles(*))
     ''')
         .eq('is_urgent', true)
+        .eq('user_id', userId)
         .order('created_at')
-        .limit(10)
-        .asStream()
-        .map((data) {
-          return data.map((event) {
-            return CampaignModel.fromJson(event);
-          }).toList();
-        })
-        .asBroadcastStream();
+        .limit(10);
 
-    return campaigns;
+    return response.map((event) => CampaignModel.fromJson(event)).toList();
+  }
+
+  @override
+  Future<void> updateCampaign(CampaignEntity campaign) {
+    // TODO: implement updateCampaign
+    throw UnimplementedError();
   }
 }

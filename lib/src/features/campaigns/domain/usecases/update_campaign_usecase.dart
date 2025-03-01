@@ -4,13 +4,13 @@ import '../../../../core/usecases/base_usecase.dart';
 import '../entities/campaign_entity.dart';
 import '../repositories/i_campaign_repository.dart';
 
-class GetCampaignByIdUseCase extends BaseUseCase<CampaignEntity, String> {
+class UpdateCampaignUseCase extends BaseUseCase<Unit, CampaignEntity> {
   final ICampaignRepository repository;
 
-  GetCampaignByIdUseCase({required this.repository});
+  UpdateCampaignUseCase({required this.repository});
 
   @override
-  Future<Either<Failure, CampaignEntity>> call(String params) async {
-    return await repository.getCampaignById(params);
+  Future<Either<Failure, Unit>> call(CampaignEntity params) async {
+    return await repository.updateCampaign(params);
   }
 }
