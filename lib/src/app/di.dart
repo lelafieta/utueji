@@ -44,6 +44,7 @@ import '../features/campaigns/presentation/cubit/campaign_detail_cubit/campaign_
 import '../features/campaigns/presentation/cubit/campaign_store_favorite_cubit/campaign_store_favorite_cubit.dart';
 import '../features/campaigns/presentation/cubit/campaign_urgent_cubit/campaign_urgent_cubit.dart';
 import '../features/campaigns/presentation/cubit/my_campaign_cubit/my_campaign_cubit.dart';
+import '../features/campaigns/presentation/cubit/my_campaign_detail_cubit/my_campaign_detail_cubit.dart';
 import '../features/events/data/datasources/event_datasource.dart';
 import '../features/events/data/datasources/i_event_datasource.dart';
 import '../features/events/data/repositories/event_repository.dart';
@@ -133,6 +134,8 @@ void _setUpCubits() {
       () => FavoriteCubit(getAllFavoritesByUseCase: instance()));
   instance.registerFactory(
       () => MyCampaignCubit(getAllMyCampaignsUseCase: instance()));
+  instance.registerFactory(
+      () => MyCampaignDetailCubit(getMyCampaignByIdUseCase: instance()));
 }
 
 void _setUpUsecases() {
