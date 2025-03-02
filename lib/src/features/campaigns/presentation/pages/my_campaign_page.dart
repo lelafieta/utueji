@@ -1,20 +1,17 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:dotted_dashed_line/dotted_dashed_line.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:utueji/src/features/campaigns/domain/entities/campaign_entity.dart';
+
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
 import '../../../../core/resources/images/app_images.dart';
-import '../../../../core/utils/app_utils.dart';
+
 import '../../../events/presentation/cubit/event_cubit.dart';
 import '../../../events/presentation/cubit/event_state.dart';
 import '../../../events/presentation/widgets/event_widget.dart';
-import '../cubit/campaign_cubit.dart';
-import '../cubit/campaign_urgent_cubit/campaign_urgent_cubit.dart';
-import '../cubit/campaign_urgent_cubit/campaign_urgent_state.dart';
+
 import '../cubit/my_campaign_cubit/my_campaign_cubit.dart';
 import '../cubit/my_campaign_cubit/my_campaign_state.dart';
 import '../widgets/my_campaign_widget.dart';
