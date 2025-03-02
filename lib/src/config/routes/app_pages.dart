@@ -123,6 +123,21 @@ class RouteManager {
           },
         );
 
+      case AppRoutes.myCampaignDetailRoute:
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return MyCampaignPage();
+          },
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return SharedAxisTransition(
+              animation: animation,
+              secondaryAnimation: secondaryAnimation,
+              transitionType: SharedAxisTransitionType.vertical,
+              child: child,
+            );
+          },
+        );
+
       case AppRoutes.chatRoute:
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) {
