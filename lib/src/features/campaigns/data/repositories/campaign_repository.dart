@@ -91,4 +91,18 @@ class CampaignRepository implements ICampaignRepository {
     // TODO: implement updateCampaign
     throw UnimplementedError();
   }
+
+  @override
+  Future<Either<Failure, List<CampaignEntity>>> getAllMyCampaigns() async {
+    if (await networkInfo.isConnected == true) {
+      try {
+        final response = await datasource.getAllMyCampaigns();
+        return right(response);
+      } catch (e) {
+        return left(ServerFailure(message: e.toString()));
+      }
+    } else {
+      return left(ServerFailure(message: "Sem conexão de internet"));
+    }
+  }
 }
