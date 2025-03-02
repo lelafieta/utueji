@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
-import '../../../campaigns/presentation/pages/campaign_page.dart';
+import '../../../campaigns/presentation/pages/my_campaign_page.dart';
 import '../../../chat/presentation/pages/chat_page.dart';
 import '../../../explore/presentation/pages/explore_page.dart';
 import '../../../home/presentation/pages/home_page.dart';
@@ -58,7 +58,7 @@ class _SolidaryPageState extends State<SolidaryPage> {
   final List<Widget> pages = [
     const HomePage(),
     const ExplorePage(),
-    const CampaignPage(),
+    const MyCampaignPage(),
     const ChatPage(),
   ];
 

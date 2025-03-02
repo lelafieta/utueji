@@ -35,6 +35,7 @@ import '../features/campaigns/domain/repositories/i_campaign_repository.dart';
 import '../features/campaigns/domain/usecases/create_campaign_usecase.dart';
 import '../features/campaigns/domain/usecases/delete_campaign_usecase.dart';
 import '../features/campaigns/domain/usecases/get_all_campaigns_usecase.dart';
+import '../features/campaigns/domain/usecases/get_all_my_campaigns_usecase.dart';
 import '../features/campaigns/domain/usecases/get_all_urgent_campaigns_usecase.dart';
 import '../features/campaigns/domain/usecases/get_campaign_by_id_usecase.dart';
 import '../features/campaigns/domain/usecases/get_latest_urgent_campaigns_usecase.dart';
@@ -42,6 +43,7 @@ import '../features/campaigns/domain/usecases/update_campaign_usecase.dart';
 import '../features/campaigns/presentation/cubit/campaign_detail_cubit/campaign_detail_cubit.dart';
 import '../features/campaigns/presentation/cubit/campaign_store_favorite_cubit/campaign_store_favorite_cubit.dart';
 import '../features/campaigns/presentation/cubit/campaign_urgent_cubit/campaign_urgent_cubit.dart';
+import '../features/campaigns/presentation/cubit/my_campaign_cubit/my_campaign_cubit.dart';
 import '../features/events/data/datasources/event_datasource.dart';
 import '../features/events/data/datasources/i_event_datasource.dart';
 import '../features/events/data/repositories/event_repository.dart';
@@ -129,6 +131,8 @@ void _setUpCubits() {
 
   instance.registerFactory(
       () => FavoriteCubit(getAllFavoritesByUseCase: instance()));
+  instance.registerFactory(
+      () => MyCampaignCubit(getAllMyCampaignsUseCase: instance()));
 }
 
 void _setUpUsecases() {
@@ -174,6 +178,8 @@ void _setUpUsecases() {
 
   instance.registerLazySingleton<GetCampaignByIdUseCase>(
       () => GetCampaignByIdUseCase(repository: instance()));
+  instance.registerLazySingleton<GetAllMyCampaignsUseCase>(
+      () => GetAllMyCampaignsUseCase(repository: instance()));
 
   instance.registerLazySingleton<AddFavoriteUseCase>(
       () => AddFavoriteUseCase(repository: instance()));

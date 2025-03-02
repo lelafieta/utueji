@@ -43,8 +43,7 @@ class _CampaignWidgetState extends State<CampaignWidget> {
     finishDate = widget.campaign.endDate!;
     fundraisingGoal = widget.campaign.fundraisingGoal!;
     fundsRaised = widget.campaign.fundsRaised!;
-    raisingGoals = NumberFormat.currency(locale: 'pt_PT', symbol: 'AOA')
-        .format(widget.campaign.fundraisingGoal);
+
     raising = NumberFormat.currency(locale: 'pt_PT', symbol: 'AOA')
         .format(widget.campaign.fundsRaised);
     if (widget.campaign.fundsRaised != null &&

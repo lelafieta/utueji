@@ -4,6 +4,7 @@ import 'package:dotted_dashed_line/dotted_dashed_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:utueji/src/features/campaigns/domain/entities/campaign_entity.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
 import '../../../../core/resources/images/app_images.dart';
@@ -14,15 +15,18 @@ import '../../../events/presentation/widgets/event_widget.dart';
 import '../cubit/campaign_cubit.dart';
 import '../cubit/campaign_urgent_cubit/campaign_urgent_cubit.dart';
 import '../cubit/campaign_urgent_cubit/campaign_urgent_state.dart';
+import '../cubit/my_campaign_cubit/my_campaign_cubit.dart';
+import '../cubit/my_campaign_cubit/my_campaign_state.dart';
+import '../widgets/my_campaign_widget.dart';
 
-class CampaignPage extends StatefulWidget {
-  const CampaignPage({super.key});
+class MyCampaignPage extends StatefulWidget {
+  const MyCampaignPage({super.key});
 
   @override
-  State<CampaignPage> createState() => _CampaignPageState();
+  State<MyCampaignPage> createState() => _MyCampaignPageState();
 }
 
-class _CampaignPageState extends State<CampaignPage> {
+class _MyCampaignPageState extends State<MyCampaignPage> {
   List<String> menus = ["Todas", "Pendentes", "Passado", "Pendentes"];
 
   int selectedIndex = 0;
@@ -31,6 +35,12 @@ class _CampaignPageState extends State<CampaignPage> {
     const BlogContainer(),
     const EventContainer(),
   ];
+
+  @override
+  void initState() {
+    context.read<MyCampaignCubit>().getAllMyCamapigns();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,116 +122,18 @@ class _CampaignPageState extends State<CampaignPage> {
           ),
           const SizedBox(height: 5),
           Expanded(
-            child: BlocBuilder<CampaignCubit, CampaignState>(
+            child: BlocBuilder<MyCampaignCubit, MyCampaignState>(
               builder: (context, state) {
-                if (state is CampaignLoading) {
+                if (state is MyCampaignLoading) {
                   return const Center(
                     child: CircularProgressIndicator(),
                   );
-                } else if (state is CampaignLoaded) {
+                } else if (state is MyCampaignLoaded) {
                   return ListView.separated(
                     padding: const EdgeInsets.all(16),
                     itemBuilder: (context, index) {
                       final campaign = state.campaigns[index];
-                      return Card(
-                        child: Container(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            children: [
-                              ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                titleAlignment: ListTileTitleAlignment.top,
-                                leading: ClipRRect(
-                                  borderRadius: BorderRadius.circular(5),
-                                  child: Container(
-                                    width: 60,
-                                    height: 70,
-                                    color: Colors.red,
-                                    child: CachedNetworkImage(
-                                      imageUrl: campaign.imageCoverUrl!,
-                                      fit: BoxFit.cover,
-                                      placeholder: (context, url) =>
-                                          const Center(
-                                        child: SizedBox(
-                                          width: 40,
-                                          height: 40,
-                                          child: CircularProgressIndicator(),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                title: Text(campaign.title!,
-                                    style:
-                                        Theme.of(context).textTheme.titleSmall,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis),
-                                subtitle: Text(
-                                    "Começa: ${AppUtils.formatDate(data: campaign.startDate!)}"),
-                                trailing: IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(Icons.share),
-                                ),
-                              ),
-                              const DottedDashedLine(
-                                height: 0,
-                                width: double.infinity,
-                                axis: Axis.horizontal,
-                                dashColor: Colors.black26,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 10),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      child: RichText(
-                                        text: TextSpan(
-                                          style: DefaultTextStyle.of(context)
-                                              .style
-                                              .copyWith(fontSize: 12),
-                                          children: [
-                                            // const TextSpan(text: "Objectivo: "),
-                                            TextSpan(
-                                              style: const TextStyle(
-                                                color: AppColors.primaryColor,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                              text:
-                                                  "${AppUtils.formatMoney(campaign.fundsRaised!)} /",
-                                            ),
-                                            TextSpan(
-                                              style: const TextStyle(
-                                                  color: Colors.black),
-                                              text:
-                                                  " ${AppUtils.formatMoney(campaign.fundraisingGoal!)}",
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    const Row(
-                                      children: [
-                                        Icon(
-                                          Icons.history,
-                                          color: AppColors.textColor,
-                                          size: 18,
-                                        ),
-                                        SizedBox(width: 5),
-                                        Text(
-                                          "a 2 dias",
-                                          style: TextStyle(fontSize: 12),
-                                        )
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
+                      return MyCampaignWidget(campaign: campaign);
                     },
                     separatorBuilder: (context, index) {
                       return const SizedBox(
