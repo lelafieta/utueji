@@ -24,12 +24,13 @@ class UtuejiApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (_) => di.instance<InitialCubit>()..appStarted()),
         BlocProvider(create: (_) => di.instance<AuthCubit>()),
         BlocProvider(create: (_) => di.instance<EventCubit>()),
         BlocProvider(create: (_) => di.instance<OngCubit>()),
         BlocProvider(create: (_) => di.instance<FeedCubit>()),
         BlocProvider(create: (_) => di.instance<BlogCubit>()),
-        BlocProvider(create: (_) => di.instance<InitialCubit>()..appStarted()),
+        // BlocProvider(create: (_) => di.instance<CampaignCubit>()),
         BlocProvider(create: (_) => di.instance<CampaignDetailCubit>()),
         BlocProvider(create: (_) => di.instance<HomeCampaignCubit>()),
         BlocProvider(create: (_) => di.instance<CampaignUrgentCubit>()),

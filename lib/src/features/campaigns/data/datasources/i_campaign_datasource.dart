@@ -2,6 +2,7 @@ import '../../domain/entities/campaign_entity.dart';
 
 abstract class ICampaignRemoteDataSource {
   Future<List<CampaignEntity>> getAllCampaigns();
+  Future<List<CampaignEntity>> getAllMyCampaigns();
   Future<List<CampaignEntity>> getAllUrgentCampaigns();
   Future<List<CampaignEntity>> getLatestUrgentCampaigns();
   Future<CampaignEntity> getCampaignById(String id);

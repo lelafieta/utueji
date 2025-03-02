@@ -119,4 +119,21 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
     // TODO: implement updateCampaign
     throw UnimplementedError();
   }
+
+  @override
+  Future<List<CampaignEntity>> getAllMyCampaigns() async {
+    final userId = supabase.auth.currentUser!.id;
+    final response = await supabase.from(SupabaseConsts.campaigns).select('''
+      *, 
+      user:profiles(*), 
+      ong:ongs(*), 
+      category:categories(*), 
+      contributors:campaign_contributors(*, user:profiles(*)), 
+      documents:campaign_documents(*), 
+      updates:campaign_updates(*), 
+      comments:campaign_comments(*, user:profiles(*))
+    ''').eq('user_id', userId).order('created_at');
+
+    return response.map((event) => CampaignModel.fromJson(event)).toList();
+  }
 }
