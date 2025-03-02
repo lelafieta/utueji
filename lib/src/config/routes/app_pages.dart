@@ -7,7 +7,7 @@ import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/blogs/presentation/pages/blog_page.dart';
 import '../../features/campaigns/domain/entities/campaign_entity.dart';
 import '../../features/campaigns/presentation/pages/campaign_detail_page.dart';
-import '../../features/campaigns/presentation/pages/campaign_page.dart';
+import '../../features/campaigns/presentation/pages/my_campaign_page.dart';
 import '../../features/campaigns/presentation/pages/campaign_urgent_page.dart';
 import '../../features/chat/presentation/pages/chat_page.dart';
 import '../../features/events/domain/entities/event_entity.dart';
@@ -108,10 +108,10 @@ class RouteManager {
           },
         );
 
-      case AppRoutes.campaignRoute:
+      case AppRoutes.myCampaignRoute:
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) {
-            return CampaignPage();
+            return MyCampaignPage();
           },
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return SharedAxisTransition(

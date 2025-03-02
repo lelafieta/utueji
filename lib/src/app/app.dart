@@ -11,6 +11,7 @@ import '../features/auth/presentation/cubit/initial_cubit/initial_cubit.dart';
 import '../features/campaigns/presentation/cubit/campaign_detail_cubit/campaign_detail_cubit.dart';
 import '../features/campaigns/presentation/cubit/campaign_store_favorite_cubit/campaign_store_favorite_cubit.dart';
 import '../features/campaigns/presentation/cubit/campaign_urgent_cubit/campaign_urgent_cubit.dart';
+import '../features/campaigns/presentation/cubit/my_campaign_cubit/my_campaign_cubit.dart';
 import '../features/events/presentation/cubit/event_cubit.dart';
 import '../features/favorites/presentation/cubit/favorite_cubit.dart';
 import '../features/feeds/presentation/cubit/feed_cubit.dart';
@@ -30,7 +31,7 @@ class UtuejiApp extends StatelessWidget {
         BlocProvider(create: (_) => di.instance<OngCubit>()),
         BlocProvider(create: (_) => di.instance<FeedCubit>()),
         BlocProvider(create: (_) => di.instance<BlogCubit>()),
-        // BlocProvider(create: (_) => di.instance<CampaignCubit>()),
+        BlocProvider(create: (_) => di.instance<MyCampaignCubit>()),
         BlocProvider(create: (_) => di.instance<CampaignDetailCubit>()),
         BlocProvider(create: (_) => di.instance<HomeCampaignCubit>()),
         BlocProvider(create: (_) => di.instance<CampaignUrgentCubit>()),
