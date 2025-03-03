@@ -588,48 +588,50 @@ class _DocumentWidgetState extends State<DocumentWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 20),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  (counterApprovedDoc.length ==
-                          widget.campaign.documents!.length)
-                      ? SvgPicture.asset(
-                          AppIcons.shieldTrust,
-                          color: AppColors.primaryColor,
-                        )
-                      : Icon(
-                          Icons.close,
-                          color: Colors.red,
+            (widget.campaign.documents!.length == 0)
+                ? SizedBox.shrink()
+                : Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        (counterApprovedDoc.length ==
+                                widget.campaign.documents!.length)
+                            ? SvgPicture.asset(
+                                AppIcons.shieldTrust,
+                                color: AppColors.primaryColor,
+                              )
+                            : Icon(
+                                Icons.close,
+                                color: Colors.red,
+                              ),
+                        const SizedBox(
+                          width: 10,
                         ),
-                  const SizedBox(
-                    width: 10,
+                        (counterApprovedDoc.length ==
+                                widget.campaign.documents!.length)
+                            ? Text(
+                                "Documentos aprovados e verificados",
+                                style: TextStyle(
+                                  color: AppColors.primaryColor,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              )
+                            : Text(
+                                "Documentos não verificados",
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                      ],
+                    ),
                   ),
-                  (counterApprovedDoc.length ==
-                          widget.campaign.documents!.length)
-                      ? Text(
-                          "Documentos aprovados e verificados",
-                          style: TextStyle(
-                            color: AppColors.primaryColor,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        )
-                      : Text(
-                          "Documentos não verificados",
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                ],
-              ),
-            ),
             const SizedBox(height: 20),
             Center(
               child: Container(
