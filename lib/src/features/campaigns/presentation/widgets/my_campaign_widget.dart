@@ -66,7 +66,8 @@ class _MyCampaignWidgetState extends State<MyCampaignWidget> {
             children: [
               ListTile(
                 contentPadding: EdgeInsets.zero,
-                titleAlignment: ListTileTitleAlignment.top,
+                titleAlignment: ListTileTitleAlignment.center,
+                minVerticalPadding: 0,
                 leading: ClipRRect(
                   borderRadius: BorderRadius.circular(5),
                   child: Container(
@@ -122,12 +123,12 @@ class _MyCampaignWidgetState extends State<MyCampaignWidget> {
                                 fontWeight: FontWeight.w600,
                               ),
                               text:
-                                  "${AppUtils.formatMoney(widget.campaign.fundsRaised!)} /",
+                                  "${AppUtils.formatCurrency(widget.campaign.fundsRaised!)} /",
                             ),
                             TextSpan(
                               style: const TextStyle(color: Colors.black),
                               text:
-                                  " ${AppUtils.formatMoney(widget.campaign.fundraisingGoal!)}",
+                                  " ${AppUtils.formatCurrency(widget.campaign.fundraisingGoal!)}",
                             ),
                           ],
                         ),

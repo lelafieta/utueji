@@ -1,14 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-
 import '../../../../config/routes/app_routes.dart';
 import '../../../../config/themes/app_colors.dart';
-
+import '../../../../core/utils/app_date_utils_helper.dart';
+import '../../../../core/utils/app_functions_utils_helper.dart';
 import '../../../../core/utils/app_utils.dart';
 import '../../../../core/utils/app_values.dart';
 import '../../domain/entities/campaign_entity.dart';
@@ -22,17 +19,6 @@ class CampaignWidget extends StatefulWidget {
 }
 
 class _CampaignWidgetState extends State<CampaignWidget> {
-  double fundraisingGoal = 0.0;
-  double fundsRaised = 0.0;
-  String raisingGoals = "";
-  String raising = "";
-  double percentage = 0.0;
-  String percentageText = "";
-  double progressBarWidth = 0.0;
-  DateTime now = DateTime.now();
-  DateTime finishDate = DateTime.now();
-  int diasRestantes = 0;
-
   @override
   void initState() {
     super.initState();
@@ -40,22 +26,6 @@ class _CampaignWidgetState extends State<CampaignWidget> {
 
   @override
   Widget build(BuildContext context) {
-    finishDate = widget.campaign.endDate!;
-    fundraisingGoal = widget.campaign.fundraisingGoal!;
-    fundsRaised = widget.campaign.fundsRaised!;
-
-    raising = NumberFormat.currency(locale: 'pt_PT', symbol: 'AOA')
-        .format(widget.campaign.fundsRaised);
-    if (widget.campaign.fundsRaised != null &&
-        widget.campaign.fundraisingGoal != null) {
-      percentage = (fundsRaised / fundraisingGoal) * 100;
-      percentageText = '${percentage.toStringAsFixed(2)}%';
-    }
-
-    Duration diferenca = finishDate.difference(now);
-    diasRestantes = diferenca.inDays;
-
-    progressBarWidth = MediaQuery.sizeOf(context).width * percentage;
     return InkWell(
       onTap: () {
         Get.toNamed(AppRoutes.campaignDetail, arguments: widget.campaign);
@@ -174,19 +144,8 @@ class _CampaignWidgetState extends State<CampaignWidget> {
                             style: DefaultTextStyle.of(context).style,
                             children: [
                               TextSpan(
-                                text: "\$ ",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleSmall!
-                                    .copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18),
-                              ),
-                              TextSpan(
-                                text: NumberFormat.currency(
-                                        locale: 'pt_PT', symbol: 'AOA')
-                                    .format(widget.campaign.fundsRaised)
-                                    .toString(),
+                                text: AppUtils.formatCurrency(
+                                    widget.campaign.fundsRaised!),
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall!
@@ -196,10 +155,8 @@ class _CampaignWidgetState extends State<CampaignWidget> {
                               ),
                               const TextSpan(text: " / "),
                               TextSpan(
-                                  text: NumberFormat.currency(
-                                          locale: 'pt_PT', symbol: 'AOA')
-                                      .format(widget.campaign.fundraisingGoal)
-                                      .toString())
+                                  text: AppUtils.formatCurrency(
+                                      widget.campaign.fundraisingGoal!))
                             ],
                           ),
                         ),
@@ -218,7 +175,10 @@ class _CampaignWidgetState extends State<CampaignWidget> {
                             ),
                             Positioned(
                               child: FAProgressBar(
-                                  currentValue: percentage,
+                                  currentValue: AppFuncionsUtilsHelper
+                                      .calculateFundraisingPercentage(
+                                          widget.campaign.fundsRaised,
+                                          widget.campaign.fundraisingGoal),
                                   backgroundColor: AppColors.strokeColor,
                                   progressColor: Colors.black,
                                   changeProgressColor: Colors.red,
@@ -260,14 +220,18 @@ class _CampaignWidgetState extends State<CampaignWidget> {
                               const SizedBox(
                                 width: 5,
                               ),
-                              (diasRestantes == 0)
+                              (AppDateUtilsHelper.daysRemainingUntil(
+                                          widget.campaign.endDate!) ==
+                                      0)
                                   ? Text(
                                       "Está acontecer",
                                       style: const TextStyle(
                                         fontSize: 12,
                                       ),
                                     )
-                                  : (diasRestantes < 0)
+                                  : (AppDateUtilsHelper.daysRemainingUntil(
+                                              widget.campaign.endDate!) <
+                                          0)
                                       ? Text(
                                           AppUtils.formatDate(
                                               data: widget.campaign.endDate!),
@@ -276,7 +240,7 @@ class _CampaignWidgetState extends State<CampaignWidget> {
                                           ),
                                         )
                                       : Text(
-                                          "Faltando $diasRestantes dias",
+                                          "Faltando ${AppDateUtilsHelper.daysRemainingUntil(widget.campaign.endDate!)} dias",
                                           style: const TextStyle(
                                             fontSize: 12,
                                           ),
