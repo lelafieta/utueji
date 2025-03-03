@@ -530,4 +530,15 @@ class AppUtils {
       return 'AOA $value';
     }
   }
+
+  static int daysBetweenToday(DateTime date) {
+    DateTime today = DateTime.now();
+    return date.difference(today).inDays;
+  }
+
+  /// Retorna quantos dias já se passaram desde a data até hoje (sempre positivo)
+  static int daysSinceDate(DateTime date) {
+    DateTime today = DateTime.now();
+    return today.difference(date).inDays.abs();
+  }
 }

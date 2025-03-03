@@ -301,19 +301,8 @@ class _CampaignDetailPageState extends State<CampaignDetailPage> {
                               style: DefaultTextStyle.of(context).style,
                               children: [
                                 TextSpan(
-                                  text: "\$ ",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleSmall!
-                                      .copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18),
-                                ),
-                                TextSpan(
-                                  text: NumberFormat.currency(
-                                          locale: 'pt_PT', symbol: 'AOA')
-                                      .format(widget.campaign.fundsRaised)
-                                      .toString(),
+                                  text: AppUtils.formatCurrency(
+                                      widget.campaign.fundsRaised!),
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleSmall!
@@ -323,10 +312,8 @@ class _CampaignDetailPageState extends State<CampaignDetailPage> {
                                 ),
                                 const TextSpan(text: " / "),
                                 TextSpan(
-                                    text: NumberFormat.currency(
-                                            locale: 'pt_PT', symbol: 'AOA')
-                                        .format(campaign.fundraisingGoal)
-                                        .toString())
+                                    text: AppUtils.formatCurrency(
+                                        widget.campaign.fundraisingGoal!))
                               ],
                             ),
                           ),
