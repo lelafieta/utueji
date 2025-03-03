@@ -36,7 +36,11 @@ class _CampaignCreateUpdatePageState extends State<CampaignCreateUpdatePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Título da actualização"),
+                Text(
+                  "Título da actualização",
+                  style: TextStyle(color: Colors.black),
+                ),
+                const SizedBox(height: 5),
                 FormBuilderTextField(
                   name: 'title',
                   decoration: const InputDecoration(
@@ -48,7 +52,9 @@ class _CampaignCreateUpdatePageState extends State<CampaignCreateUpdatePage> {
                   ]),
                 ),
                 const SizedBox(height: 20),
-                Text("Descrição da actualização"),
+                Text("Descrição da actualização",
+                    style: TextStyle(color: Colors.black)),
+                const SizedBox(height: 5),
                 FormBuilderTextField(
                   name: 'description',
                   decoration: InputDecoration(
