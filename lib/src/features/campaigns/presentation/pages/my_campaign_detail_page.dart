@@ -5,13 +5,18 @@ import 'package:dashed_circular_progress_bar/dashed_circular_progress_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:social_sharing_plus/social_sharing_plus.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:utueji/src/config/routes/app_routes.dart';
 import 'package:utueji/src/core/utils/app_utils.dart';
 import 'package:utueji/src/features/campaigns/domain/entities/campaign_entity.dart';
 
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
+import '../../../../core/resources/images/app_images.dart';
 import '../../../../core/utils/app_date_utils_helper.dart';
 import '../../../../core/utils/app_functions_utils_helper.dart';
 import '../../../../core/utils/app_values.dart';
@@ -84,6 +89,11 @@ class _MyCampaignDetailPageState extends State<MyCampaignDetailPage> {
       filteredData.value = List.from(allData.value);
       print(filteredData.value.length);
     }
+  }
+
+  void shareArticle() {
+    String textToShare = "title\n\ncontent";
+    Share.share(textToShare);
   }
 
   @override
@@ -300,7 +310,9 @@ class _MyCampaignDetailPageState extends State<MyCampaignDetailPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          shareArticle();
+                        },
                         icon: SvgPicture.asset(
                           AppIcons.link,
                           width: 25,
@@ -311,7 +323,24 @@ class _MyCampaignDetailPageState extends State<MyCampaignDetailPage> {
                         width: 10,
                       ),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          SocialPlatform platform = SocialPlatform.whatsapp;
+                          await SocialSharingPlus
+                              .shareToSocialMediaWithMultipleMedia(
+                            platform,
+                            media: ["_mediaPaths"],
+                            content: "content",
+                            isOpenBrowser: false,
+                            onAppNotInstalled: () {
+                              ScaffoldMessenger.of(context)
+                                ..hideCurrentSnackBar()
+                                ..showSnackBar(SnackBar(
+                                  content: Text(
+                                      '${platform.name.capitalize} is not installed.'),
+                                ));
+                            },
+                          );
+                        },
                         icon: SvgPicture.asset(
                           AppIcons.whatsapp,
                           width: 30,
@@ -368,55 +397,62 @@ class _MyCampaignDetailPageState extends State<MyCampaignDetailPage> {
                         ),
                       ),
                       onPressed: () {},
-                      child: Text("Retirar AOA 300,00"),
+                      child: Text(
+                          "Retirar ${NumberFormat.currency(locale: 'pt_AO', symbol: 'AOA').format(campaign.fundsRaised!)}"),
                     ),
                   ),
                   const SizedBox(height: 10),
                   const Divider(),
                   Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(15.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                        "Dê uma atualização",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium,
-                                      ),
-                                      const SizedBox(width: 5),
-                                      Icon(
-                                        Icons.info,
-                                        color: AppColors.primaryColor,
-                                      )
-                                    ],
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                      "Publique alguma actualização ou agradeça os teus doadores sinta-te conectado pela sua causa")
-                                ],
+                    child: InkWell(
+                      onTap: () {
+                        Get.toNamed(AppRoutes.campaignCreateUpdateRoute,
+                            arguments: widget.campaign);
+                      },
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Dê uma atualização",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium,
+                                        ),
+                                        const SizedBox(width: 5),
+                                        Icon(
+                                          Icons.info,
+                                          color: AppColors.primaryColor,
+                                        )
+                                      ],
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Text(
+                                        "Publique alguma actualização ou agradeça os teus doadores sinta-te conectado pela sua causa")
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.arrow_forward_ios_rounded,
-                              color: Colors.grey,
+                            IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                color: Colors.grey,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -464,8 +500,7 @@ class _MyCampaignDetailPageState extends State<MyCampaignDetailPage> {
                                       primaryXAxis: CategoryAxis(),
                                       primaryYAxis: NumericAxis(
                                         numberFormat: NumberFormat.compact(
-                                            locale:
-                                                'pt_PT'), // Formata 1000 → 1K, 1M, etc.
+                                            locale: 'pt_PT'),
                                       ),
                                       trackballBehavior: TrackballBehavior(
                                         enable: true,
@@ -475,24 +510,39 @@ class _MyCampaignDetailPageState extends State<MyCampaignDetailPage> {
                                             InteractiveTooltip(enable: true),
                                         builder: (context,
                                             TrackballDetails details) {
-                                          final value = details.point!.y as num;
-                                          final formattedValue =
+                                          final num value = details.point!.y;
+                                          final String date =
+                                              details.point!.x.toString();
+
+                                          final String formattedValue =
                                               NumberFormat.currency(
-                                                      locale: 'pt_AO',
-                                                      symbol: 'AOA')
-                                                  .format(value);
+                                            locale: 'pt_AO',
+                                            symbol: 'AOA',
+                                          ).format(value);
 
                                           return Container(
-                                            padding: EdgeInsets.all(6),
+                                            padding: const EdgeInsets.all(6),
                                             decoration: BoxDecoration(
                                               color: Colors.black,
                                               borderRadius:
                                                   BorderRadius.circular(6),
                                             ),
-                                            child: Text(
-                                              formattedValue, // Mostra o valor correto formatado
-                                              style: TextStyle(
-                                                  color: Colors.white),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  date, // Mostra a data correta
+                                                  style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Text(
+                                                  formattedValue, // Mostra o valor formatado
+                                                  style: const TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ],
                                             ),
                                           );
                                         },
@@ -508,8 +558,7 @@ class _MyCampaignDetailPageState extends State<MyCampaignDetailPage> {
                                           yValueMapper: (_ChartData data, _) =>
                                               data.amount,
                                           markerSettings: const MarkerSettings(
-                                              isVisible:
-                                                  true), // Mostra pontos nos valores reais
+                                              isVisible: true),
                                         ),
                                       ],
                                     ),
@@ -554,19 +603,24 @@ class _MyCampaignDetailPageState extends State<MyCampaignDetailPage> {
                           child: Container(
                             width: 50,
                             height: 50,
-                            child: CachedNetworkImage(
-                              imageUrl: campaign.user!.avatarUrl!,
-                              fit: BoxFit.cover,
-                              placeholder: (context, url) {
-                                return const CircularProgressIndicator();
-                              },
-                              errorWidget: (context, url, error) {
-                                return const Icon(Icons.error);
-                              },
-                            ),
+                            child: (donor.isAnonymous == true)
+                                ? Image.asset(AppImages.anonymousMask,
+                                    fit: BoxFit.cover)
+                                : CachedNetworkImage(
+                                    imageUrl: campaign.user!.avatarUrl!,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) {
+                                      return const CircularProgressIndicator();
+                                    },
+                                    errorWidget: (context, url, error) {
+                                      return const Icon(Icons.error);
+                                    },
+                                  ),
                           ),
                         ),
-                        title: Text(donor.user!.fullName!),
+                        title: (donor.isAnonymous == true)
+                            ? Text("Anónimo")
+                            : Text(donor.user!.fullName!),
                         subtitle: Text(AppDateUtilsHelper.formatDate(
                             data: donor.createdAt!, showTime: true)),
                         trailing: Text(

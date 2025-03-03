@@ -8,4 +8,5 @@ class AppImages {
   static const String child = "assets/images/child.png";
   static const String image1 = "assets/images/image1.jpg";
   static const String healthcare = "assets/images/healthcare.png";
+  static const String anonymousMask = "assets/images/anonymous-mask.jpg";
 }
