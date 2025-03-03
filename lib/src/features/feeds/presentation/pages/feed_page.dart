@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
+import '../../../../core/utils/app_date_utils_helper.dart';
 import '../../../../core/utils/app_utils.dart';
 import '../cubit/feed_cubit.dart';
 import '../cubit/feed_state.dart';
@@ -71,7 +72,7 @@ class _FeedPageState extends State<FeedPage> {
                         ),
                         title: Text(
                             "${feed.user!.firstName} ${feed.user!.lastName}"),
-                        subtitle: Text(AppUtils.formatDate(
+                        subtitle: Text(AppDateUtilsHelper.formatDate(
                             data: feed.createdAt!, showTime: true)),
                         trailing: const Icon(Icons.more_vert),
                       ),

@@ -7,6 +7,7 @@ import 'package:utueji/src/features/campaigns/presentation/widgets/campaign_skel
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
 import '../../../../core/resources/images/app_images.dart';
+import '../../../../core/utils/app_date_utils_helper.dart';
 import '../../../../core/utils/app_utils.dart';
 import '../../../campaigns/presentation/cubit/campaign_cubit.dart';
 import '../../../campaigns/presentation/cubit/campaign_urgent_cubit/campaign_urgent_cubit.dart';
@@ -635,7 +636,7 @@ class _OngProfilePageState extends State<OngProfilePage> {
                             ),
                             title: Text(
                                 "${feed.user!.firstName} ${feed.user!.lastName}"),
-                            subtitle: Text(AppUtils.formatDate(
+                            subtitle: Text(AppDateUtilsHelper.formatDate(
                                 data: feed.createdAt!, showTime: true)),
                             trailing: const Icon(Icons.more_vert),
                           ),

@@ -8,6 +8,7 @@ import '../../../../config/routes/app_routes.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
 import '../../../../core/resources/images/app_images.dart';
+import '../../../../core/utils/app_date_utils_helper.dart';
 import '../../../../core/utils/app_utils.dart';
 import '../../domain/entities/event_entity.dart';
 
@@ -111,7 +112,8 @@ class _EventWidgetState extends State<EventWidget> {
                           width: 5,
                         ),
                         Text(
-                          AppUtils.formatDate(data: widget.event.startDate!),
+                          AppDateUtilsHelper.formatDate(
+                              data: widget.event.startDate!),
                           style: const TextStyle(
                             fontSize: 12,
                           ),

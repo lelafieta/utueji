@@ -18,6 +18,7 @@ import '../../features/favorites/presentation/cubit/favorite_cubit.dart';
 import '../../features/favorites/presentation/cubit/favorite_state.dart';
 import '../resources/icons/app_icons.dart';
 import '../resources/images/app_images.dart';
+import 'app_date_utils_helper.dart';
 
 class AppUtils {
   AppUtils._();
@@ -120,80 +121,6 @@ class AppUtils {
     );
   }
 
-  // static String formatDateWithWeekend(DateTime data) {
-  //   // Formatar o dia da semana, dia, mês e hora
-  //   String diaSemana = DateFormat.EEEE('pt_BR').format(data); // Sábado
-  //   String dia = DateFormat.d().format(data); // 11
-  //   String mes = DateFormat.MMMM('pt_BR').format(data); // Abril
-  //   String horaMinuto = DateFormat('HH:mm').format(data); // 10:35
-
-  //   // Concatenar tudo no formato desejado
-  //   return '$diaSemana, $dia $mes $horaMinuto';
-  // }
-
-  // static String formatDateWithoutWeekend(DateTime data) {
-  //   // Formatar o dia da semana, dia, mês e hora
-  //   // String diaSemana = DateFormat.EEEE('pt_BR').format(data); // Sábado
-  //   String dia = DateFormat.d().format(data); // 11
-  //   String mes = DateFormat.MMMM('pt_BR').format(data); // Abril
-  //   String horaMinuto = DateFormat('HH:mm').format(data); // 10:35
-
-  //   // Concatenar tudo no formato desejado
-  //   return '$dia $mes $horaMinuto';
-  // }
-
-  // static String formatDateWithYear(DateTime data) {
-  //   // Formatar o dia da semana, dia, mês e hora
-  //   // String diaSemana = DateFormat.EEEE('pt_BR').format(data); // Sábado
-  //   String dia = DateFormat.d().format(data); // 11
-  //   String mes = DateFormat.MMMM('pt_BR').format(data); // Abril
-  //   String horaMinuto = DateFormat('HH:mm').format(data); // 10:35
-  //   String ano = DateFormat('yyyy').format(data);
-
-  //   // Concatenar tudo no formato desejado
-  //   return '$dia $mes $ano';
-  // }
-  static String formatDate({
-    required DateTime data,
-    bool showWeekday = false,
-    bool showDay = true,
-    bool showMonth = true,
-    bool abbreviatedMonth = true, // Novo parâmetro para abreviar o mês
-    bool showYear = true,
-    bool showTime = false,
-  }) {
-    List<String> parts = [];
-
-    if (showWeekday) {
-      parts.add(
-          DateFormat.EEEE('pt_BR').format(data).capitalize!); // Exemplo: Sábado
-    }
-    if (showDay) {
-      parts.add(DateFormat.d().format(data)); // Exemplo: 11
-    }
-    if (showMonth) {
-      String monthFormat = abbreviatedMonth ? 'MMM' : 'MMMM';
-      parts.add(DateFormat(monthFormat, 'pt_BR')
-          .format(data)); // Exemplo: Abr ou Abril
-    }
-    if (showYear) {
-      parts.add(DateFormat('yyyy').format(data)); // Exemplo: 2025
-    }
-
-    String dateString = parts.join(' de '); // Monta a data
-
-    if (showTime) {
-      String timeString = DateFormat('HH:mm').format(data); // Exemplo: 10:35
-      return '$dateString às $timeString';
-    }
-
-    return dateString;
-  }
-
-  static String formatMoney(double money) {
-    return NumberFormat.currency(locale: 'pt_PT', symbol: 'AOA').format(money);
-  }
-
   static void contributorUsers(
       BuildContext context, List<CampaignContributorEntity> contributors) {
     showStickyFlexibleBottomSheet(
@@ -242,7 +169,8 @@ class AppUtils {
                 ),
                 title: Text("Anónimo"),
                 subtitle: Text(
-                  formatDate(data: contributor.createdAt!, showTime: true),
+                  AppDateUtilsHelper.formatDate(
+                      data: contributor.createdAt!, showTime: true),
                   style: TextStyle(fontSize: 12),
                 ),
                 trailing: RichText(
@@ -252,7 +180,7 @@ class AppUtils {
                         .copyWith(fontWeight: FontWeight.bold),
                     children: [
                       TextSpan(
-                        text: formatMoney(
+                        text: AppUtils.formatCurrency(
                             double.parse(contributor.money!.toString())),
                         style: TextStyle(color: AppColors.primaryColor),
                       ),
@@ -277,7 +205,8 @@ class AppUtils {
               ),
               title: Text(contributor.user!.fullName!),
               subtitle: Text(
-                formatDate(data: contributor.createdAt!, showTime: true),
+                AppDateUtilsHelper.formatDate(
+                    data: contributor.createdAt!, showTime: true),
                 style: TextStyle(fontSize: 12),
               ),
               trailing: RichText(
@@ -287,7 +216,7 @@ class AppUtils {
                       .copyWith(fontWeight: FontWeight.bold),
                   children: [
                     TextSpan(
-                      text: formatMoney(
+                      text: AppUtils.formatCurrency(
                           double.parse(contributor.money!.toString())),
                       style: TextStyle(color: AppColors.primaryColor),
                     ),
@@ -506,29 +435,7 @@ class AppUtils {
   }
 
   static String formatCurrency(num value) {
-    if (value >= 1000000000000) {
-      // Trilhões
-      return (value % 1000000000000 == 0)
-          ? 'AOA ${(value ~/ 1000000000000)}T'
-          : 'AOA ${(value / 1000000000000).toStringAsFixed(1)}T';
-    } else if (value >= 1000000000) {
-      // Bilhões
-      return (value % 1000000000 == 0)
-          ? 'AOA ${(value ~/ 1000000000)}B'
-          : 'AOA ${(value / 1000000000).toStringAsFixed(1)}B';
-    } else if (value >= 1000000) {
-      // Milhões
-      return (value % 1000000 == 0)
-          ? 'AOA ${(value ~/ 1000000)}M'
-          : 'AOA ${(value / 1000000).toStringAsFixed(1)}M';
-    } else if (value >= 1000) {
-      // Milhares
-      return (value % 1000 == 0)
-          ? 'AOA ${(value ~/ 1000)}K'
-          : 'AOA ${(value / 1000).toStringAsFixed(1)}K';
-    } else {
-      return 'AOA $value';
-    }
+    return NumberFormat.compact(locale: 'pt_AO').format(value);
   }
 
   static int daysBetweenToday(DateTime date) {
