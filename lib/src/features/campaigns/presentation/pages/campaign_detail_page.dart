@@ -12,6 +12,8 @@ import 'package:intl/intl.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
 import '../../../../core/resources/images/app_images.dart';
+import '../../../../core/utils/app_date_utils_helper.dart';
+import '../../../../core/utils/app_functions_utils_helper.dart';
 import '../../../../core/utils/app_utils.dart';
 import '../../../../core/utils/app_values.dart';
 import '../../domain/entities/campaign_entity.dart';
@@ -27,16 +29,6 @@ class CampaignDetailPage extends StatefulWidget {
 }
 
 class _CampaignDetailPageState extends State<CampaignDetailPage> {
-  double fundraisingGoal = 0.0;
-  double fundsRaised = 0.0;
-  String raisingGoals = "";
-  String raising = "";
-  double percentage = 0.0;
-  String percentageText = "";
-  double progressBarWidth = 0.0;
-  DateTime now = DateTime.now();
-  DateTime finishDate = DateTime.now();
-  int diasRestantes = 0;
   ValueNotifier<Color> color = ValueNotifier(AppColors.whiteColor);
   List<String> menuList = ["Sobre", "Documentos", "Actualizações", "Ajuda"];
   int selected = 0;
@@ -49,23 +41,6 @@ class _CampaignDetailPageState extends State<CampaignDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    finishDate = widget.campaign.endDate!;
-    fundraisingGoal = widget.campaign.fundraisingGoal!;
-    fundsRaised = widget.campaign.fundsRaised!;
-    raisingGoals = NumberFormat.currency(locale: 'pt_PT', symbol: 'AOA')
-        .format(widget.campaign.fundraisingGoal);
-    raising = NumberFormat.currency(locale: 'pt_PT', symbol: 'AOA')
-        .format(widget.campaign.fundsRaised);
-    if (widget.campaign.fundsRaised != null &&
-        widget.campaign.fundraisingGoal != null) {
-      percentage = (fundsRaised / fundraisingGoal) * 100;
-      percentageText = '${percentage.toStringAsFixed(2)}%';
-    }
-
-    Duration diferenca = finishDate.difference(now);
-    diasRestantes = diferenca.inDays;
-
-    progressBarWidth = MediaQuery.sizeOf(context).width * percentage;
     return BlocBuilder<CampaignDetailCubit, CampaignDetailState>(
       builder: (context, state) {
         if (state is CampaignDetailLoaded) {
@@ -332,7 +307,10 @@ class _CampaignDetailPageState extends State<CampaignDetailPage> {
                               ),
                               Positioned(
                                 child: FAProgressBar(
-                                    currentValue: percentage,
+                                    currentValue: AppFuncionsUtilsHelper
+                                        .calculateFundraisingPercentage(
+                                            campaign.fundsRaised,
+                                            campaign.fundraisingGoal),
                                     backgroundColor: AppColors.strokeColor,
                                     progressColor: Colors.black,
                                     changeProgressColor: Colors.red,
@@ -374,23 +352,27 @@ class _CampaignDetailPageState extends State<CampaignDetailPage> {
                                 const SizedBox(
                                   width: 5,
                                 ),
-                                (diasRestantes == 0)
+                                (AppDateUtilsHelper.daysRemainingUntil(
+                                            campaign.endDate!) ==
+                                        0)
                                     ? Text(
                                         "Está acontecer",
                                         style: const TextStyle(
                                           fontSize: 12,
                                         ),
                                       )
-                                    : (diasRestantes < 0)
+                                    : (AppDateUtilsHelper.daysRemainingUntil(
+                                                campaign.endDate!) <
+                                            0)
                                         ? Text(
-                                            AppUtils.formatDate(
-                                                data: widget.campaign.endDate!),
+                                            AppDateUtilsHelper.formatDate(
+                                                data: campaign.endDate!),
                                             style: const TextStyle(
                                               fontSize: 12,
                                             ),
                                           )
                                         : Text(
-                                            "Faltando $diasRestantes dias",
+                                            "Faltando ${AppDateUtilsHelper.daysRemainingUntil(campaign.endDate!)} dias",
                                             style: const TextStyle(
                                               fontSize: 12,
                                             ),
@@ -548,7 +530,7 @@ class UpdateWidget extends StatelessWidget {
                           children: [
                             Text("Update #${index + 1}"),
                             Text(
-                                "${AppUtils.formatDate(data: update.createdAt!)}"),
+                                "${AppDateUtilsHelper.formatDate(data: update.createdAt!)}"),
                           ],
                         ),
                         const SizedBox(
@@ -887,7 +869,7 @@ class HelpWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          AppUtils.formatDate(
+                          AppDateUtilsHelper.formatDate(
                               data: comment.user!.createdAt!, showTime: true),
                           style: TextStyle(
                             fontSize: 14,

@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:utueji/src/config/routes/app_routes.dart';
 
 import '../../../../config/themes/app_colors.dart';
+import '../../../../core/utils/app_date_utils_helper.dart';
 import '../../../../core/utils/app_utils.dart';
 import '../../domain/entities/campaign_entity.dart';
 
@@ -92,7 +93,7 @@ class _MyCampaignWidgetState extends State<MyCampaignWidget> {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis),
                 subtitle: Text(
-                    "Começa: ${AppUtils.formatDate(data: widget.campaign.startDate!)}"),
+                    "Começa: ${AppDateUtilsHelper.formatDate(data: widget.campaign.startDate!)}"),
                 trailing: IconButton(
                   onPressed: () {},
                   icon: const Icon(Icons.share),
@@ -151,7 +152,7 @@ class _MyCampaignWidgetState extends State<MyCampaignWidget> {
                               )
                             : (diasRestantes < 0)
                                 ? Text(
-                                    AppUtils.formatDate(
+                                    AppDateUtilsHelper.formatDate(
                                         data: widget.campaign.endDate!),
                                     style: const TextStyle(
                                       fontSize: 12,

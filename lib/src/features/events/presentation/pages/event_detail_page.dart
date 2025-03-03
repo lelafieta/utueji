@@ -10,6 +10,7 @@ import 'package:parallax_animation/parallax_animation.dart';
 import 'package:utueji/src/core/resources/images/app_images.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
+import '../../../../core/utils/app_date_utils_helper.dart';
 import '../../../../core/utils/app_utils.dart';
 import '../../../../core/utils/app_values.dart';
 import '../../domain/entities/event_entity.dart';
@@ -184,7 +185,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
                     const Icon(Icons.access_time_sharp),
                     const SizedBox(width: 10),
                     Text(
-                        "${AppUtils.formatDate(data: widget.event.startDate!, showTime: true)}\n${AppUtils.formatDate(data: widget.event.startDate!, showTime: true)}"),
+                        "${AppDateUtilsHelper.formatDate(data: widget.event.startDate!, showTime: true)}\n${AppDateUtilsHelper.formatDate(data: widget.event.startDate!, showTime: true)}"),
                   ],
                 ),
               ),
