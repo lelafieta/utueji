@@ -32,4 +32,9 @@ class AppIcons {
   static const String shieldTrust = "assets/icons/shield-trust.svg";
   static const String lightbulbOn = "assets/icons/lightbulb-on.svg";
   static const String bullseyeArrow = "assets/icons/bullseye-arrow.svg";
+  static const String facebook = "assets/icons/facebook.svg";
+  static const String x = "assets/icons/x.svg";
+  static const String instagram = "assets/icons/instagram.svg";
+  static const String whatsapp = "assets/icons/whatsapp.svg";
+  static const String link = "assets/icons/link.svg";
 }

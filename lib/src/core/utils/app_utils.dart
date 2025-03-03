@@ -153,12 +153,12 @@ class AppUtils {
   //   // Concatenar tudo no formato desejado
   //   return '$dia $mes $ano';
   // }
-
   static String formatDate({
     required DateTime data,
     bool showWeekday = false,
     bool showDay = true,
     bool showMonth = true,
+    bool abbreviatedMonth = true, // Novo parâmetro para abreviar o mês
     bool showYear = true,
     bool showTime = false,
   }) {
@@ -172,7 +172,9 @@ class AppUtils {
       parts.add(DateFormat.d().format(data)); // Exemplo: 11
     }
     if (showMonth) {
-      parts.add(DateFormat.MMMM('pt_BR').format(data)); // Exemplo: Abril
+      String monthFormat = abbreviatedMonth ? 'MMM' : 'MMMM';
+      parts.add(DateFormat(monthFormat, 'pt_BR')
+          .format(data)); // Exemplo: Abr ou Abril
     }
     if (showYear) {
       parts.add(DateFormat('yyyy').format(data)); // Exemplo: 2025
@@ -501,5 +503,31 @@ class AppUtils {
         );
       }),
     );
+  }
+
+  static String formatCurrency(num value) {
+    if (value >= 1000000000000) {
+      // Trilhões
+      return (value % 1000000000000 == 0)
+          ? 'AOA ${(value ~/ 1000000000000)}T'
+          : 'AOA ${(value / 1000000000000).toStringAsFixed(1)}T';
+    } else if (value >= 1000000000) {
+      // Bilhões
+      return (value % 1000000000 == 0)
+          ? 'AOA ${(value ~/ 1000000000)}B'
+          : 'AOA ${(value / 1000000000).toStringAsFixed(1)}B';
+    } else if (value >= 1000000) {
+      // Milhões
+      return (value % 1000000 == 0)
+          ? 'AOA ${(value ~/ 1000000)}M'
+          : 'AOA ${(value / 1000000).toStringAsFixed(1)}M';
+    } else if (value >= 1000) {
+      // Milhares
+      return (value % 1000 == 0)
+          ? 'AOA ${(value ~/ 1000)}K'
+          : 'AOA ${(value / 1000).toStringAsFixed(1)}K';
+    } else {
+      return 'AOA $value';
+    }
   }
 }

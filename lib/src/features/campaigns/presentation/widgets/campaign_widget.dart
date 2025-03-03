@@ -217,23 +217,6 @@ class _CampaignWidgetState extends State<CampaignWidget> {
                               ),
                             ),
                             Positioned(
-                              // child: Container(
-                              //   width: progressBarWidth,
-                              //   height: 15,
-                              //   decoration: BoxDecoration(
-                              //     color: Colors.black87,
-                              //     borderRadius: BorderRadius.circular(100),
-                              //   ),
-                              //   child: Center(
-                              //     child: Text(
-                              //       percentageText,
-                              //       style: const TextStyle(
-                              //           color: Colors.white,
-                              //           fontSize: 10,
-                              //           fontWeight: FontWeight.w600),
-                              //     ),
-                              //   ),
-                              // ),
                               child: FAProgressBar(
                                   currentValue: percentage,
                                   backgroundColor: AppColors.strokeColor,
