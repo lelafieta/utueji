@@ -15,4 +15,5 @@ class AppRoutes {
   static const String favoriteRoute = "/favorite";
   static const String campaignUrgentsRoute = "/campaignUrgents";
   static const String myCampaignDetailRoute = "/myCampaignDetail";
+  static const String campaignCreateUpdateRoute = "/campaignCreateUpdate";
 }
