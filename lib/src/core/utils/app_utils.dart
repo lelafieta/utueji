@@ -435,7 +435,7 @@ class AppUtils {
   }
 
   static String formatCurrency(num value) {
-    return NumberFormat.compact(locale: 'pt_AO').format(value);
+    return "AOA ${NumberFormat.compact(locale: 'pt_AO').format(value)}";
   }
 
   static int daysBetweenToday(DateTime date) {

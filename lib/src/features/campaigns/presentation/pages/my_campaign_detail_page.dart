@@ -28,15 +28,23 @@ class MyCampaignDetailPage extends StatefulWidget {
 
 class _MyCampaignDetailPageState extends State<MyCampaignDetailPage> {
   final List<String> filterOptions = [
-    "Hoje",
-    "Esta Semana",
-    "Este Mês",
-    "Todos"
+    "Últimos 7 dias",
+    "Últimos 30 dias",
+    "Tudo"
   ];
-  String selectedFilter = "Hoje";
-  List<_ChartData> filteredData = [];
+  String selectedFilter = "Tudo";
 
-  ValueNotifier<List<_ChartData>> allData = ValueNotifier<List<_ChartData>>([]);
+  ValueNotifier<List<_ChartData>> filteredData =
+      ValueNotifier<List<_ChartData>>([]);
+
+  ValueNotifier<List<_ChartData>> allData = ValueNotifier<List<_ChartData>>([
+    // _ChartData(DateTime(2024, 3, 1), 5000),
+    // _ChartData(DateTime(2024, 3, 5), 7000),
+    // _ChartData(DateTime(2024, 3, 10), 3000),
+    // _ChartData(DateTime(2025, 3, 20), 8000),
+    // _ChartData(DateTime(2025, 2, 15), 4000),
+    // _ChartData(DateTime(2025, 1, 10), 9000),
+  ]);
 
   final List<Map<String, dynamic>> donations = List.generate(
     3,
@@ -48,58 +56,34 @@ class _MyCampaignDetailPageState extends State<MyCampaignDetailPage> {
     },
   );
 
-  void _filterChartData() {
-    DateTime now = DateTime.now();
-    DateTime today = DateTime(now.year, now.month, now.day);
-
-    setState(() {
-      if (selectedFilter == "Hoje") {
-        filteredData = allData.value
-            .where((data) => _isSameDay(data.date, today))
-            .toList();
-      } else if (selectedFilter == "Esta Semana") {
-        filteredData = allData.value
-            .where((data) => _isSameWeek(data.date, today))
-            .toList();
-      } else if (selectedFilter == "Este Mês") {
-        filteredData = allData.value
-            .where((data) => _isSameMonth(data.date, today))
-            .toList();
-      } else {
-        filteredData = List.from(allData.value);
-      }
-    });
-  }
-
-  bool _isSameDay(String dateStr, DateTime referenceDate) {
-    DateTime date = DateFormat("dd/MM").parse(dateStr);
-    return date.day == referenceDate.day && date.month == referenceDate.month;
-  }
-
-  bool _isSameWeek(String dateStr, DateTime referenceDate) {
-    DateTime date = DateFormat("dd/MM").parse(dateStr);
-    int currentWeek = _getWeekOfYear(referenceDate);
-    int dateWeek = _getWeekOfYear(date);
-    return currentWeek == dateWeek && date.year == referenceDate.year;
-  }
-
-  bool _isSameMonth(String dateStr, DateTime referenceDate) {
-    DateTime date = DateFormat("dd/MM").parse(dateStr);
-    return date.month == referenceDate.month && date.year == referenceDate.year;
-  }
-
-  int _getWeekOfYear(DateTime date) {
-    int dayOfYear = int.parse(DateFormat("D").format(date));
-    return ((dayOfYear - date.weekday + 10) / 7).floor();
-  }
-
   @override
   void initState() {
-    _filterChartData();
+    selectedFilter == "Tudo";
     context
         .read<MyCampaignDetailCubit>()
         .getMyCampaignById(widget.campaign.id!);
+
+    // _filterData();
     super.initState();
+  }
+
+  void _filterData() {
+    DateTime now = DateTime.now();
+    if (selectedFilter == "Últimos 7 dias") {
+      filteredData.value = allData.value
+          .where((data) => data.date.isAfter(now.subtract(Duration(days: 7))))
+          .toList();
+
+      print(filteredData.value.length);
+    } else if (selectedFilter == "Últimos 30 dias") {
+      filteredData.value = allData.value
+          .where((data) => data.date.isAfter(now.subtract(Duration(days: 30))))
+          .toList();
+      print(filteredData.value.length);
+    } else {
+      filteredData.value = List.from(allData.value);
+      print(filteredData.value.length);
+    }
   }
 
   @override
@@ -128,12 +112,17 @@ class _MyCampaignDetailPageState extends State<MyCampaignDetailPage> {
 
             for (var i = 0; i < campaign.contributors!.length; i++) {
               final contribution = campaign.contributors![i];
-              chartData.add(_ChartData(
-                  "${contribution.createdAt!.day}/${contribution.createdAt!.month}",
+              chartData.add(_ChartData(contribution.createdAt!,
                   double.parse(contribution.money!.toString())));
             }
 
-            allData.value = chartData;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              allData.value = chartData;
+              _filterData();
+            });
+
+            // selectedFilter == "Tudo";
+            // filteredData.value = chartData;
 
             return SingleChildScrollView(
               child: Column(
@@ -457,10 +446,9 @@ class _MyCampaignDetailPageState extends State<MyCampaignDetailPage> {
                                     );
                                   }).toList(),
                                   onChanged: (newValue) {
-                                    print(newValue);
                                     setState(() {
                                       selectedFilter = newValue!;
-                                      _filterChartData();
+                                      _filterData();
                                     });
                                   },
                                 ),
@@ -468,7 +456,7 @@ class _MyCampaignDetailPageState extends State<MyCampaignDetailPage> {
                             ),
                             const SizedBox(height: 16),
                             ValueListenableBuilder(
-                                valueListenable: allData,
+                                valueListenable: filteredData,
                                 builder: (context, value, _) {
                                   return SizedBox(
                                     height: 200,
@@ -516,7 +504,7 @@ class _MyCampaignDetailPageState extends State<MyCampaignDetailPage> {
                                                   (data) => data.amount != null)
                                               .toList(),
                                           xValueMapper: (_ChartData data, _) =>
-                                              data.date,
+                                              "${data.date.day}/${data.date.month}",
                                           yValueMapper: (_ChartData data, _) =>
                                               data.amount,
                                           markerSettings: const MarkerSettings(
@@ -609,6 +597,6 @@ class _MyCampaignDetailPageState extends State<MyCampaignDetailPage> {
 
 class _ChartData {
   _ChartData(this.date, this.amount);
-  final String date;
+  final DateTime date;
   final double amount;
 }
