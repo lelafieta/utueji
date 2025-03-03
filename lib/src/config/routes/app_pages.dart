@@ -1,6 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:utueji/src/features/campaigns/presentation/pages/my_campaign_detail_page.dart';
 import '../../features/auth/presentation/cubit/initial_cubit/initial_cubit.dart';
 import '../../features/auth/presentation/cubit/initial_cubit/initial_state.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
@@ -124,9 +125,10 @@ class RouteManager {
         );
 
       case AppRoutes.myCampaignDetailRoute:
+        final campaign = routeSettings.arguments as CampaignEntity;
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) {
-            return MyCampaignPage();
+            return MyCampaignDetailPage(campaign: campaign);
           },
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return SharedAxisTransition(
