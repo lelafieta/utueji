@@ -106,6 +106,8 @@ class _CampaignDetailPageState extends State<CampaignDetailPage> {
                                         .textTheme
                                         .titleLarge!
                                         .copyWith(fontWeight: FontWeight.bold),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                   trailing: ClipRRect(
                                     borderRadius: BorderRadius.circular(50),
@@ -811,9 +813,20 @@ class AboutWidget extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      campaign.description!,
-                      style: TextStyle(color: Colors.black87),
+                    child: Column(
+                      children: [
+                        Text(
+                          campaign.title!,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          campaign.description!,
+                          style: TextStyle(color: Colors.black87),
+                        ),
+                      ],
                     ),
                   )
                 ],
