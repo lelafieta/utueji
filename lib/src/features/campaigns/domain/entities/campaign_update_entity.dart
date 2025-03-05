@@ -4,14 +4,15 @@ class CampaignUpdateEntity {
   final DateTime? updatedAt;
   final String? title;
   final String? description;
+  final String? userId;
 
-  CampaignUpdateEntity({
-    this.id,
-    this.createdAt,
-    this.updatedAt,
-    this.title,
-    this.description,
-  });
+  CampaignUpdateEntity(
+      {this.id,
+      this.createdAt,
+      this.updatedAt,
+      this.title,
+      this.description,
+      this.userId});
 
   factory CampaignUpdateEntity.fromJson(Map<String, dynamic> json) {
     return CampaignUpdateEntity(
@@ -24,6 +25,7 @@ class CampaignUpdateEntity {
           : null,
       title: json['title'] as String?,
       description: json['description'] as String?,
+      userId: json['user_id'] as String?,
     );
   }
 
@@ -34,6 +36,7 @@ class CampaignUpdateEntity {
       'updated_at': updatedAt?.toIso8601String(),
       'title': title,
       'description': description,
+      'user_id': userId
     };
   }
 }
