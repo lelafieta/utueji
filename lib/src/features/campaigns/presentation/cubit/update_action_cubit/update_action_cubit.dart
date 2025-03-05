@@ -17,6 +17,7 @@ class UpdateActionCubit extends Cubit<UpdateActionState> {
   }) : super(UpdateActionInitial());
 
   Future<void> create(CampaignUpdateEntity params) async {
+    emit(UpdateActionLoading());
     final result = await createCampaignUpdateUseCase.call(params);
 
     result.fold((l) => emit(UpdateActionFailure(message: l.message.toString())),

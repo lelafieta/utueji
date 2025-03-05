@@ -13,11 +13,11 @@ class UpdateDataSource extends IUpdateDataSource {
   @override
   Future<Unit> create(CampaignUpdateModel update) async {
     try {
-      final response =
-          await supabase.from(SupabaseConsts.updates).insert(update.toJson());
+      await supabase.from(SupabaseConsts.updates).insert(update.toJson());
 
-      return response;
+      return unit;
     } catch (e) {
+      print(e);
       throw e;
     }
   }
