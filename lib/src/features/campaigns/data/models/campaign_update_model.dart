@@ -23,6 +23,16 @@ class CampaignUpdateModel extends CampaignUpdateEntity {
     );
   }
 
+  factory CampaignUpdateModel.fromEntity(CampaignUpdateEntity entity) {
+    return CampaignUpdateModel(
+      id: entity.id,
+      createdAt: entity.createdAt,
+      updatedAt: entity.updatedAt,
+      title: entity.title,
+      description: entity.description,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

@@ -30,21 +30,29 @@ import '../features/blogs/domain/usecases/fetch_latest_blogs_usecase.dart';
 import '../features/blogs/presentation/cubit/blog_cubit.dart';
 import '../features/campaigns/data/datasources/i_campaign_datasource.dart';
 import '../features/campaigns/data/datasources/campaign_datasource.dart';
+import '../features/campaigns/data/datasources/i_update_datasource.dart';
+import '../features/campaigns/data/datasources/update_datasource.dart';
 import '../features/campaigns/data/repositories/campaign_repository.dart';
+import '../features/campaigns/data/repositories/update_repository.dart';
 import '../features/campaigns/domain/repositories/i_campaign_repository.dart';
+import '../features/campaigns/domain/repositories/i_update_repository.dart';
+import '../features/campaigns/domain/usecases/create_campaign_update_usecase.dart';
 import '../features/campaigns/domain/usecases/create_campaign_usecase.dart';
+import '../features/campaigns/domain/usecases/delete_campaign_update_usecase.dart';
 import '../features/campaigns/domain/usecases/delete_campaign_usecase.dart';
 import '../features/campaigns/domain/usecases/get_all_campaigns_usecase.dart';
 import '../features/campaigns/domain/usecases/get_all_my_campaigns_usecase.dart';
 import '../features/campaigns/domain/usecases/get_all_urgent_campaigns_usecase.dart';
 import '../features/campaigns/domain/usecases/get_campaign_by_id_usecase.dart';
 import '../features/campaigns/domain/usecases/get_latest_urgent_campaigns_usecase.dart';
+import '../features/campaigns/domain/usecases/update_campaign_update_usecase.dart';
 import '../features/campaigns/domain/usecases/update_campaign_usecase.dart';
 import '../features/campaigns/presentation/cubit/campaign_detail_cubit/campaign_detail_cubit.dart';
 import '../features/campaigns/presentation/cubit/campaign_store_favorite_cubit/campaign_store_favorite_cubit.dart';
 import '../features/campaigns/presentation/cubit/campaign_urgent_cubit/campaign_urgent_cubit.dart';
 import '../features/campaigns/presentation/cubit/my_campaign_cubit/my_campaign_cubit.dart';
 import '../features/campaigns/presentation/cubit/my_campaign_detail_cubit/my_campaign_detail_cubit.dart';
+import '../features/campaigns/presentation/cubit/update_action_cubit/update_action_cubit.dart';
 import '../features/events/data/datasources/event_datasource.dart';
 import '../features/events/data/datasources/i_event_datasource.dart';
 import '../features/events/data/repositories/event_repository.dart';
@@ -136,6 +144,10 @@ void _setUpCubits() {
       () => MyCampaignCubit(getAllMyCampaignsUseCase: instance()));
   instance.registerFactory(
       () => MyCampaignDetailCubit(getMyCampaignByIdUseCase: instance()));
+  instance.registerFactory(() => UpdateActionCubit(
+      createCampaignUpdateUseCase: instance(),
+      updateCampaignUpdateUseCase: instance(),
+      deleteCampaignUpdateUseCase: instance()));
 }
 
 void _setUpUsecases() {
@@ -188,6 +200,13 @@ void _setUpUsecases() {
       () => AddFavoriteUseCase(repository: instance()));
   instance.registerLazySingleton<RemoveFavoriteUseCase>(
       () => RemoveFavoriteUseCase(repository: instance()));
+
+  instance.registerLazySingleton<CreateCampaignUpdateUseCase>(
+      () => CreateCampaignUpdateUseCase(repository: instance()));
+  instance.registerLazySingleton<UpdateCampaignUpdateUseCase>(
+      () => UpdateCampaignUpdateUseCase(repository: instance()));
+  instance.registerLazySingleton<DeleteCampaignUpdateUseCase>(
+      () => DeleteCampaignUpdateUseCase(repository: instance()));
 }
 
 void _setUpRepositories() {
@@ -205,6 +224,8 @@ void _setUpRepositories() {
       () => BlogRepository(datasource: instance()));
   instance.registerLazySingleton<IFavoriteRepository>(
       () => FavoriteRepository(datasource: instance()));
+  instance.registerLazySingleton<IUpdateRepository>(
+      () => UpdateRepository(datasource: instance(), netWorkInfo: instance()));
 }
 
 void _setUpDatasources() {
@@ -224,4 +245,7 @@ void _setUpDatasources() {
 
   instance.registerLazySingleton<IFavoriteDataSource>(
       () => FavoriteDataSource(supabase: instance()));
+
+  instance.registerLazySingleton<IUpdateDataSource>(
+      () => UpdateDataSource(supabase: instance()));
 }
