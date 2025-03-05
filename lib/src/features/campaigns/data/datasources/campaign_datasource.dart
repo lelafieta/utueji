@@ -19,7 +19,6 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
 
   @override
   Future<void> deleteCampaign(String id) {
-    // TODO: implement deleteCampaign
     throw UnimplementedError();
   }
 
@@ -116,7 +115,6 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
 
   @override
   Future<void> updateCampaign(CampaignEntity campaign) {
-    // TODO: implement updateCampaign
     throw UnimplementedError();
   }
 
