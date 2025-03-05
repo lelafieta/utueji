@@ -102,6 +102,7 @@ dependencies:
   syncfusion_flutter_charts: ^22.1.38
   social_sharing_plus: ^1.2.3
   share_plus: ^10.0.0
+  rounded_loading_button_plus: ^3.0.1
 
 dev_dependencies:
   flutter_test:

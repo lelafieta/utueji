@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:rounded_loading_button_plus/rounded_loading_button.dart';
 
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/utils/app_values.dart';
@@ -17,6 +18,8 @@ class CampaignCreateUpdatePage extends StatefulWidget {
 
 class _CampaignCreateUpdatePageState extends State<CampaignCreateUpdatePage> {
   final _formKey = GlobalKey<FormBuilderState>();
+  final RoundedLoadingButtonController _btnController =
+      RoundedLoadingButtonController();
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +71,10 @@ class _CampaignCreateUpdatePageState extends State<CampaignCreateUpdatePage> {
                       borderSide: BorderSide(color: AppColors.strokeColor),
                       borderRadius: BorderRadius.circular(10),
                     ),
+                    errorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.red),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                   maxLines: 5,
                   validator: FormBuilderValidators.compose([
@@ -75,23 +82,32 @@ class _CampaignCreateUpdatePageState extends State<CampaignCreateUpdatePage> {
                   ]),
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          AppValues.s10,
-                        ),
-                      ),
-                    ),
-                  ),
-                  onPressed: () {
-                    if (_formKey.currentState!.saveAndValidate()) {
-                      print(_formKey.currentState!.value);
-                    }
-                  },
-                  child: const Text('Atualizar'),
-                ),
+                // ElevatedButton(
+                //   style: ButtonStyle(
+                //     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                //       RoundedRectangleBorder(
+                //         borderRadius: BorderRadius.circular(
+                //           AppValues.s10,
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                //   onPressed: () {
+                //     if (_formKey.currentState!.saveAndValidate()) {
+                //       print(_formKey.currentState!.value);
+                //     }
+                //   },
+                //   child: const Text('Atualizar'),
+                // ),
+                RoundedLoadingButton(
+                  color: AppColors.primaryColor,
+                  child: Text('Criar Actualização',
+                      style: TextStyle(color: Colors.white)),
+                  borderRadius: 10,
+                  controller: _btnController,
+                  width: double.infinity,
+                  onPressed: () {},
+                )
               ],
             ),
           ),
