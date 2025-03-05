@@ -7,11 +7,12 @@ class CampaignUpdateModel extends CampaignUpdateEntity {
     super.updatedAt,
     super.title,
     super.description,
+    super.campaignId,
+    super.userId,
   });
 
   factory CampaignUpdateModel.fromJson(Map<String, dynamic> json) {
     return CampaignUpdateModel(
-      id: json['id'] as String?,
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'])
           : null,
@@ -20,6 +21,8 @@ class CampaignUpdateModel extends CampaignUpdateEntity {
           : null,
       title: json['title'] as String?,
       description: json['description'] as String?,
+      campaignId: json['campaign_id'] as String?,
+      userId: json['user_id'] as String?,
     );
   }
 
@@ -30,16 +33,17 @@ class CampaignUpdateModel extends CampaignUpdateEntity {
       updatedAt: entity.updatedAt,
       title: entity.title,
       description: entity.description,
+      campaignId: entity.campaignId,
+      userId: entity.userId,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'created_at': createdAt?.toIso8601String(),
-      'updated_at': updatedAt?.toIso8601String(),
       'title': title,
       'description': description,
+      'campaign_id': campaignId,
+      'user_id': userId,
     };
   }
 }

@@ -5,6 +5,7 @@ class CampaignUpdateEntity {
   final String? title;
   final String? description;
   final String? userId;
+  final String? campaignId;
 
   CampaignUpdateEntity(
       {this.id,
@@ -12,6 +13,7 @@ class CampaignUpdateEntity {
       this.updatedAt,
       this.title,
       this.description,
+      this.campaignId,
       this.userId});
 
   factory CampaignUpdateEntity.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,7 @@ class CampaignUpdateEntity {
       title: json['title'] as String?,
       description: json['description'] as String?,
       userId: json['user_id'] as String?,
+      campaignId: json['campaign_id'] as String?,
     );
   }
 
