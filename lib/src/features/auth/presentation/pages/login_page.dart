@@ -4,8 +4,10 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:phone_form_field/phone_form_field.dart';
 import 'package:utueji/src/app/app_entity.dart';
+import 'package:utueji/src/config/routes/app_routes.dart';
 
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
@@ -30,7 +32,7 @@ class LoginPage extends StatelessWidget {
           } else if (state is Authenticated) {
             AppEntity.uid = state.user!.id;
             EasyLoading.dismiss();
-            AppUtils.successToast("SUCESSO.");
+            Get.toNamed(AppRoutes.solidaryRoute);
           }
         }, builder: (context, state) {
           return Center(
@@ -40,7 +42,7 @@ class LoginPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const Text(
-                    'SOLIDARY',
+                    'Ajuda-me',
                     style: TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
@@ -128,6 +130,7 @@ class LoginPage extends StatelessWidget {
                   const SizedBox(height: 16),
                   FormBuilderTextField(
                     name: "password",
+                    obscureText: true,
                     decoration: InputDecoration(
                       hintText: "Password",
                       contentPadding: const EdgeInsets.symmetric(
