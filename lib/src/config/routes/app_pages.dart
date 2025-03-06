@@ -2,6 +2,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:utueji/src/features/campaigns/presentation/pages/campaign_create_update_page.dart';
+import 'package:utueji/src/features/campaigns/presentation/pages/create_campaign_page.dart';
 import 'package:utueji/src/features/campaigns/presentation/pages/my_campaign_detail_page.dart';
 import '../../features/auth/presentation/cubit/initial_cubit/initial_cubit.dart';
 import '../../features/auth/presentation/cubit/initial_cubit/initial_state.dart';
@@ -284,6 +285,21 @@ class RouteManager {
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) {
             return CampaignCreateUpdatePage(campaign: campaign);
+          },
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return SharedAxisTransition(
+              animation: animation,
+              secondaryAnimation: secondaryAnimation,
+              transitionType: SharedAxisTransitionType.vertical,
+              child: child,
+            );
+          },
+        );
+
+      case AppRoutes.createCampaignRoute:
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return CreateCampaignPage();
           },
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return SharedAxisTransition(
