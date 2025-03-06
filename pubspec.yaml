@@ -104,6 +104,8 @@ dependencies:
   share_plus: ^10.0.0
   rounded_loading_button_plus: ^3.0.1
   floating_action_bubble: ^1.1.4
+  easy_stepper: ^0.8.5+1
+  group_button: ^5.3.4
 
 dev_dependencies:
   flutter_test:
