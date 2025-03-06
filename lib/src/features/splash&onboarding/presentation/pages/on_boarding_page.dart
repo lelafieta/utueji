@@ -57,8 +57,10 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                   valueNotifier.value = 30;
                 } else if (value == 1) {
                   valueNotifier.value = 75;
-                } else {
+                } else if (value == 2) {
                   valueNotifier.value = 100;
+                } else {
+                  Get.toNamed(AppRoutes.loginRoute);
                 }
               });
             },

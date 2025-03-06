@@ -31,7 +31,7 @@ class RouteManager {
       case AppRoutes.loginRoute:
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) {
-            return const OnBoardingPage();
+            return const LoginPage();
           },
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return SharedAxisTransition(
@@ -51,7 +51,7 @@ class RouteManager {
                 if (authState is Initialized) {
                   return SolidaryPage();
                 } else {
-                  return const LoginPage();
+                  return const OnBoardingPage();
                 }
               },
             );
