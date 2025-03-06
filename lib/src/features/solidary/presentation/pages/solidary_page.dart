@@ -66,10 +66,10 @@ class _SolidaryPageState extends State<SolidaryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: pages[_currentIndex], // Alterna entre as páginas
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {},
+      //   child: const Icon(Icons.add),
+      // ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: AnimatedBottomNavigationBar.builder(
         itemCount: menuItems.length,

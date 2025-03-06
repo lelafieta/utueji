@@ -93,7 +93,7 @@ class _MyCampaignWidgetState extends State<MyCampaignWidget> {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis),
                 subtitle: Text(
-                    "Começa: ${AppDateUtilsHelper.formatDate(data: widget.campaign.startDate!)}"),
+                    "${AppDateUtilsHelper.formatDate(data: widget.campaign.endDate!)}"),
                 trailing: IconButton(
                   onPressed: () {},
                   icon: const Icon(Icons.share),
