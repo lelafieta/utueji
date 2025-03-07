@@ -66,7 +66,11 @@ class AppTheme {
           ),
         ),
         inputDecorationTheme: const InputDecorationTheme(
-          border: InputBorder.none,
+          border: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: AppColors.primaryColor,
+            ),
+          ),
           fillColor: Colors.white,
           filled: true,
           contentPadding: EdgeInsets.symmetric(
@@ -78,21 +82,21 @@ class AppTheme {
               color: AppColors.strokeColor,
               width: AppValues.s1,
             ),
-            borderRadius: BorderRadius.all(Radius.circular(AppValues.s50)),
+            borderRadius: BorderRadius.all(Radius.circular(AppValues.s10)),
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: AppColors.primaryColor,
               width: AppValues.s1,
             ),
-            borderRadius: BorderRadius.all(Radius.circular(AppValues.s50)),
+            borderRadius: BorderRadius.all(Radius.circular(AppValues.s10)),
           ),
           errorBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: AppColors.error,
               width: AppValues.s1,
             ),
-            borderRadius: BorderRadius.all(Radius.circular(AppValues.s50)),
+            borderRadius: BorderRadius.all(Radius.circular(AppValues.s10)),
             //borderRadius: BorderRadius.circular(10),
           ),
           focusedErrorBorder: OutlineInputBorder(
@@ -100,7 +104,7 @@ class AppTheme {
               color: AppColors.error,
               width: AppValues.s1,
             ),
-            borderRadius: BorderRadius.all(Radius.circular(AppValues.s50)),
+            borderRadius: BorderRadius.all(Radius.circular(AppValues.s10)),
           ),
           prefixIconColor: AppColors.secondaryColor,
           suffixIconColor: AppColors.secondaryColor,
