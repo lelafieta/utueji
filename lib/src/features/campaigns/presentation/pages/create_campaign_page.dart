@@ -160,65 +160,92 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 10,
-                    ),
-                    child: FormBuilderDropdown<String>(
-                      name: 'gender',
-                      initialValue: 'Mãe',
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    child: FormBuilderDropdown(
+                      name: 'member',
+                      isDense: false,
                       decoration: InputDecoration(
-                        // contentPadding: const EdgeInsets.symmetric(
-                        //     vertical: 0, horizontal: 12),
-                        suffix: IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () {
-                            // _formKey.currentState!.fields['gender']?.reset();
-                          },
-                        ),
-                        hintText: 'Select Gender',
+                        label: Text("Pessoa"),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                       ),
-                      items: ["Mãe", "Pai", "Avô", "Irmão/a", "Outros"]
-                          .map((gender) => DropdownMenuItem(
-                                alignment: AlignmentDirectional.centerStart,
-                                value: gender,
-                                enabled: false,
-                                child: Text(gender),
-                              ))
+                      validator: FormBuilderValidators.required(
+                        errorText: 'Selecione SITE',
+                      ),
+                      items: [
+                        'Mãe',
+                        'Pai',
+                        'Irmão',
+                        'Filho',
+                        'Outros',
+                      ]
+                          .map(
+                            (member) => DropdownMenuItem(
+                                value: member, child: Text("$member")),
+                          )
                           .toList(),
                     ),
+                  ),
+                  const SizedBox(
+                    height: 15,
                   ),
                   Padding(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                    child: DropdownSearch<String>(
-                      selectedItem: "Menu",
-                      items: ["Menu", "Dialog", "Modal", "BottomSheet"],
-                      dropdownButtonProps: DropdownButtonProps(
-                        padding: EdgeInsets.all(16),
-                        style: ButtonStyle(
-                          shape: MaterialStatePropertyAll(
-                            RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(8), // Borda arredondada
-                            ),
+                    child: RichText(
+                      text: TextSpan(
+                        style: DefaultTextStyle.of(context).style,
+                        children: [
+                          TextSpan(
+                            text: "Entre com os respectivos dados a pessoa ",
                           ),
-                        ),
+                          TextSpan(
+                              text: "*",
+                              style: TextStyle(color: Colors.red, fontSize: 16))
+                        ],
                       ),
-                      dropdownDecoratorProps: DropDownDecoratorProps(
-                        baseStyle: TextStyle(fontSize: 16),
-                        dropdownSearchDecoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.blue, // Cor da borda
-                              width: 1.5, // Espessura da borda
-                            ),
-                          ),
-                        ),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: FormBuilderTextField(
+                      name: "name",
+                      decoration: InputDecoration(
+                        label: Text("Nome"),
                       ),
-                      popupProps: PopupProps.modalBottomSheet(
-                        fit: FlexFit.loose,
-                        constraints: BoxConstraints(),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: FormBuilderDateTimePicker(
+                      name: "nascimento",
+                      decoration: InputDecoration(
+                        hintText: "DD-MM-YYYY",
+                        suffixIcon: Icon(Icons.calendar_month_rounded),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: FormBuilderTextField(
+                      name: "name",
+                      decoration: InputDecoration(
+                        label: Text("Localização"),
+                        suffixIcon: Icon(Icons.search),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: FormBuilderTextField(
+                      name: "name",
+                      decoration: InputDecoration(
+                        label: Text("Telefone"),
                       ),
                     ),
                   ),

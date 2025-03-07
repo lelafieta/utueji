@@ -13,7 +13,7 @@ class AppTheme {
         colorScheme: const ColorScheme(
           brightness: Brightness.light,
           primary: AppColors.primaryColor,
-          onPrimary: AppColors.primaryColor,
+          onPrimary: AppColors.whiteColor,
           secondary: AppColors.secondColor,
           onSecondary: AppColors.secondColor,
           error: AppColors.error,
@@ -73,10 +73,7 @@ class AppTheme {
           ),
           fillColor: Colors.white,
           filled: true,
-          contentPadding: EdgeInsets.symmetric(
-            horizontal: 10,
-            vertical: 10,
-          ),
+          contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 16),
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: AppColors.strokeColor,
@@ -110,7 +107,12 @@ class AppTheme {
           suffixIconColor: AppColors.secondaryColor,
           hintStyle: TextStyle(
             fontFamily: AppStrings.fontFamily,
-            fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.w300,
+            color: AppColors.secondaryTextColor,
+          ),
+          labelStyle: TextStyle(
+            fontFamily: AppStrings.fontFamily,
+            fontWeight: FontWeight.w300,
             color: AppColors.secondaryTextColor,
           ),
         ),
