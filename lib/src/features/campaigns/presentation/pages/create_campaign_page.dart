@@ -1,6 +1,8 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:easy_stepper/easy_stepper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_extra_fields/form_builder_extra_fields.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:group_button/group_button.dart';
 
@@ -157,26 +159,68 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                       ),
                     ),
                   ),
-                  FormBuilderDropdown<String>(
-                    name: 'gender',
-                    initialValue: 'Mãe',
-                    decoration: InputDecoration(
-                      labelText: 'Gender',
-                      suffix: IconButton(
-                        icon: const Icon(Icons.close),
-                        onPressed: () {
-                          // _formKey.currentState!.fields['gender']?.reset();
-                        },
-                      ),
-                      hintText: 'Select Gender',
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 10,
                     ),
-                    items: ["Mãe", "Pai", "Avô", "Irmão/a"]
-                        .map((gender) => DropdownMenuItem(
-                              alignment: AlignmentDirectional.center,
-                              value: gender,
-                              child: Text(gender),
-                            ))
-                        .toList(),
+                    child: FormBuilderDropdown<String>(
+                      name: 'gender',
+                      initialValue: 'Mãe',
+                      decoration: InputDecoration(
+                        // contentPadding: const EdgeInsets.symmetric(
+                        //     vertical: 0, horizontal: 12),
+                        suffix: IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            // _formKey.currentState!.fields['gender']?.reset();
+                          },
+                        ),
+                        hintText: 'Select Gender',
+                      ),
+                      items: ["Mãe", "Pai", "Avô", "Irmão/a", "Outros"]
+                          .map((gender) => DropdownMenuItem(
+                                alignment: AlignmentDirectional.centerStart,
+                                value: gender,
+                                enabled: false,
+                                child: Text(gender),
+                              ))
+                          .toList(),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    child: DropdownSearch<String>(
+                      selectedItem: "Menu",
+                      items: ["Menu", "Dialog", "Modal", "BottomSheet"],
+                      dropdownButtonProps: DropdownButtonProps(
+                        padding: EdgeInsets.all(16),
+                        style: ButtonStyle(
+                          shape: MaterialStatePropertyAll(
+                            RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(8), // Borda arredondada
+                            ),
+                          ),
+                        ),
+                      ),
+                      dropdownDecoratorProps: DropDownDecoratorProps(
+                        baseStyle: TextStyle(fontSize: 16),
+                        dropdownSearchDecoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.blue, // Cor da borda
+                              width: 1.5, // Espessura da borda
+                            ),
+                          ),
+                        ),
+                      ),
+                      popupProps: PopupProps.modalBottomSheet(
+                        fit: FlexFit.loose,
+                        constraints: BoxConstraints(),
+                      ),
+                    ),
                   ),
                 ],
               ),
