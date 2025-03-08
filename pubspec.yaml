@@ -107,6 +107,7 @@ dependencies:
   easy_stepper: ^0.8.5+1
   group_button: ^5.3.4
   dropdown_search: ^5.0.6
+  form_builder_file_picker: ^4.1.0
 
 dev_dependencies:
   flutter_test:

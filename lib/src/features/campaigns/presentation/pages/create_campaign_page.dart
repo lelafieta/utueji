@@ -3,6 +3,7 @@ import 'package:easy_stepper/easy_stepper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_extra_fields/form_builder_extra_fields.dart';
+import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:group_button/group_button.dart';
 
@@ -247,6 +248,55 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                       decoration: InputDecoration(
                         label: Text("Telefone"),
                       ),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    child: RichText(
+                      text: TextSpan(
+                        style: DefaultTextStyle.of(context).style,
+                        children: [
+                          TextSpan(
+                            text: "Carregar imagem de capa",
+                          ),
+                          TextSpan(
+                            text: " (Opcional)",
+                            style: TextStyle(
+                              color: Colors.black45,
+                              fontSize: 14,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: FormBuilderFilePicker(
+                      name: "images",
+                      decoration: InputDecoration(labelText: "Imagem"),
+                      maxFiles: null,
+                      previewImages: true,
+                      onChanged: (val) => print(val),
+                      typeSelectors: [
+                        TypeSelector(
+                          type: FileType.any,
+                          selector: Row(
+                            children: <Widget>[
+                              Icon(Icons.add_circle),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Text("Adicionar imagem"),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                      onFileLoading: (val) {
+                        print(val);
+                      },
                     ),
                   ),
                 ],
