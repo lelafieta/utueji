@@ -33,7 +33,8 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
       contributors:campaign_contributors(*, user:profiles(*)), 
       documents:campaign_documents(*), 
       updates:campaign_updates(*), 
-      comments:campaign_comments(*, user:profiles(*))
+      comments:campaign_comments(*, user:profiles(*)),
+      midias:campaign_midias(*)
     ''').eq('user_id', userId).eq('is_activate', true).order('created_at');
 
     return response.map((event) => CampaignModel.fromJson(event)).toList();
@@ -53,7 +54,8 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
       contributors:campaign_contributors(*, user:profiles(*)), 
       documents:campaign_documents(*), 
       updates:campaign_updates(*), 
-      comments:campaign_comments(*, user:profiles(*))
+      comments:campaign_comments(*, user:profiles(*)),
+      midias:campaign_midias(*)
     ''')
         .eq('is_urgent', true)
         .eq('is_activate', true)
@@ -76,7 +78,8 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
       contributors:campaign_contributors(*, user:profiles(*)), 
       documents:campaign_documents(*), 
       updates:campaign_updates(*), 
-      comments:campaign_comments(*, user:profiles(*))
+      comments:campaign_comments(*, user:profiles(*)),
+      midias:campaign_midias(*)
     ''')
         .eq('id', id)
         .eq('is_activate', true)
@@ -102,7 +105,8 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
       contributors:campaign_contributors(*, user:profiles(*)), 
       documents:campaign_documents(*), 
       updates:campaign_updates(*), 
-      comments:campaign_comments(*, user:profiles(*))
+      comments:campaign_comments(*, user:profiles(*)),
+      midias:campaign_midias(*)
     ''')
         .eq('is_urgent', true)
         .eq('is_activate', true)
@@ -129,7 +133,8 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
       contributors:campaign_contributors(*, user:profiles(*)), 
       documents:campaign_documents(*), 
       updates:campaign_updates(*), 
-      comments:campaign_comments(*, user:profiles(*))
+      comments:campaign_comments(*, user:profiles(*)),
+      midias:campaign_midias(*)
     ''').eq('user_id', userId).order('created_at');
 
     return response.map((event) => CampaignModel.fromJson(event)).toList();

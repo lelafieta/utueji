@@ -4,6 +4,7 @@ import '../../../ongs/domain/entities/ong_entity.dart';
 import 'campaign_comment_entity.dart';
 import 'campaign_contributor_entity.dart';
 import 'campaign_document_entity.dart';
+import 'campaign_midia_entity.dart';
 import 'campaign_update_entity.dart';
 
 class CampaignEntity {
@@ -35,6 +36,7 @@ class CampaignEntity {
   List<CampaignDocumentEntity>? documents;
   List<CampaignUpdateEntity>? updates;
   List<CampaignCommentEntity>? comments;
+  List<CampaignMidiaEntity>? midias;
 
   CampaignEntity(
       {this.id,
@@ -64,5 +66,6 @@ class CampaignEntity {
       this.contributors,
       this.documents,
       this.updates,
-      this.comments});
+      this.comments,
+      this.midias});
 }
