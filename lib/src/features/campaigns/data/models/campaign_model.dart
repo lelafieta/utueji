@@ -5,6 +5,7 @@ import '../../domain/entities/campaign_entity.dart';
 import 'campaign_comment_model.dart';
 import 'campaign_contribuitor_model.dart';
 import 'campaign_document_model.dart';
+import 'campaign_midia_model.dart';
 import 'campaign_update_model.dart';
 
 class CampaignModel extends CampaignEntity {
@@ -36,7 +37,8 @@ class CampaignModel extends CampaignEntity {
       super.contributors,
       super.documents,
       super.updates,
-      super.comments});
+      super.comments,
+      super.midias});
 
   factory CampaignModel.fromJson(Map<String, dynamic> map) {
     print(map["category"]);
@@ -88,6 +90,10 @@ class CampaignModel extends CampaignEntity {
       comments: map['comments'] != null
           ? List<CampaignCommentModel>.from(
               map['comments'].map((x) => CampaignCommentModel.fromJson(x)))
+          : [],
+      midias: map['midias'] != null
+          ? List<CampaignMidiaModel>.from(
+              map['midias'].map((x) => CampaignMidiaModel.fromJson(x)))
           : [],
     );
   }

@@ -8,6 +8,7 @@ import 'package:form_builder_extra_fields/form_builder_extra_fields.dart';
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:group_button/group_button.dart';
+import 'package:utueji/src/core/resources/images/app_images.dart';
 
 import '../../../../config/themes/app_colors.dart';
 
@@ -77,7 +78,10 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                   leading: Container(
                     width: 45,
                     height: 45,
-                    color: Colors.black12,
+                    child: Image.asset(
+                      fit: BoxFit.cover,
+                      AppImages.charity,
+                    ),
                   ),
                   title: Text(
                     "Passo 1/3",
@@ -94,191 +98,240 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
           const SizedBox(height: 20),
           Expanded(
             child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                    child: RichText(
-                      text: TextSpan(
-                        style: DefaultTextStyle.of(context)
-                            .style
-                            .copyWith(color: Colors.black),
-                        children: [
-                          TextSpan(
-                            text: "Documento de identidade",
-                          ),
-                          TextSpan(
-                              text: " *",
-                              style: TextStyle(color: Colors.red, fontSize: 16))
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 16, right: 16, top: 10, bottom: 20),
-                    child: Text(
-                        "Carregue um documento que identifique o beneficiário"),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: FormBuilderFilePicker(
-                      name: "images",
-                      decoration: InputDecoration(labelText: "Imagem"),
-                      maxFiles: null,
-                      previewImages: true,
-                      onChanged: (val) => print(val),
-                      typeSelectors: [
-                        TypeSelector(
-                          type: FileType.any,
-                          selector: Row(
-                            children: <Widget>[
-                              Icon(Icons.add_circle),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Text("Adicionar imagem"),
-                              ),
-                            ],
-                          ),
+              child: Container(
+                width: double.infinity,
+                child: EasyStepper(
+                  activeStep: activeStep,
+                  activeStepTextColor: Colors.black87,
+                  finishedStepTextColor: Colors.black87,
+                  internalPadding: 0,
+                  showLoadingAnimation: false,
+                  stepRadius: 8,
+                  showStepBorder: true,
+                  steps: [
+                    EasyStep(
+                      customStep: CircleAvatar(
+                        radius: 8,
+                        backgroundColor: Colors.white,
+                        child: CircleAvatar(
+                          radius: 7,
+                          backgroundColor:
+                              activeStep >= 0 ? Colors.orange : Colors.white,
                         ),
-                      ],
-                      onFileLoading: (val) {
-                        print(val);
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                    child: RichText(
-                      text: TextSpan(
-                        style: DefaultTextStyle.of(context)
-                            .style
-                            .copyWith(color: Colors.black),
-                        children: [
-                          TextSpan(
-                            text: "Documentos",
-                          ),
-                        ],
                       ),
+                      title: 'Waiting',
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 16, right: 16, top: 10, bottom: 20),
-                    child: RichText(
-                      text: TextSpan(
-                        style: DefaultTextStyle.of(context).style,
-                        children: [
-                          TextSpan(
-                            text:
-                                "Carregue os documentos de suporte para se conectar diretamente com os doadores",
-                          ),
-                          TextSpan(
-                              text: " *",
-                              style: TextStyle(color: Colors.red, fontSize: 16))
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: FormBuilderFilePicker(
-                      name: "images",
-                      decoration: InputDecoration(labelText: "Imagem"),
-                      maxFiles: null,
-                      previewImages: true,
-                      onChanged: (val) => print(val),
-                      typeSelectors: [
-                        TypeSelector(
-                          type: FileType.any,
-                          selector: Row(
-                            children: <Widget>[
-                              Icon(Icons.add_circle),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Text("Adicionar imagem"),
-                              ),
-                            ],
-                          ),
+                    EasyStep(
+                      customStep: CircleAvatar(
+                        radius: 8,
+                        backgroundColor: Colors.white,
+                        child: CircleAvatar(
+                          radius: 7,
+                          backgroundColor:
+                              activeStep >= 1 ? Colors.orange : Colors.white,
                         ),
-                      ],
-                      onFileLoading: (val) {
-                        print(val);
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                    child: RichText(
-                      text: TextSpan(
-                        style: DefaultTextStyle.of(context)
-                            .style
-                            .copyWith(color: Colors.black),
-                        children: [
-                          TextSpan(
-                            text: "Mídia",
-                          ),
-                        ],
                       ),
+                      title: 'Order Received',
+                      topTitle: true,
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 16, right: 16, top: 10, bottom: 20),
-                    child: RichText(
-                      text: TextSpan(
-                        style: DefaultTextStyle.of(context).style,
-                        children: [
-                          TextSpan(
-                            text: "Carregue vídeos de até 100mb e formato mp4",
-                          ),
-                          TextSpan(
-                              text: " *",
-                              style: TextStyle(color: Colors.red, fontSize: 16))
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: FormBuilderFilePicker(
-                      name: "images",
-                      decoration: InputDecoration(labelText: "Imagem"),
-                      maxFiles: null,
-                      previewImages: true,
-                      onChanged: (val) => print(val),
-                      typeSelectors: [
-                        TypeSelector(
-                          type: FileType.any,
-                          selector: Row(
-                            children: <Widget>[
-                              Icon(Icons.add_circle),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Text("Adicionar imagem"),
-                              ),
-                            ],
-                          ),
+                    EasyStep(
+                      customStep: CircleAvatar(
+                        radius: 8,
+                        backgroundColor: Colors.white,
+                        child: CircleAvatar(
+                          radius: 7,
+                          backgroundColor:
+                              activeStep >= 3 ? Colors.orange : Colors.white,
                         ),
-                      ],
-                      onFileLoading: (val) {
-                        print(val);
-                      },
+                      ),
+                      title: 'On Way',
+                      topTitle: true,
                     ),
-                  ),
-                ],
+                  ],
+                  onStepReached: (index) => setState(() => activeStep = index),
+                ),
               ),
             ),
           )
         ],
       ),
+    );
+  }
+
+  Column stepThree(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          child: RichText(
+            text: TextSpan(
+              style: DefaultTextStyle.of(context)
+                  .style
+                  .copyWith(color: Colors.black),
+              children: [
+                TextSpan(
+                  text: "Documento de identidade",
+                ),
+                TextSpan(
+                    text: " *",
+                    style: TextStyle(color: Colors.red, fontSize: 16))
+              ],
+            ),
+          ),
+        ),
+        Padding(
+          padding:
+              const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 20),
+          child: Text("Carregue um documento que identifique o beneficiário"),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: FormBuilderFilePicker(
+            name: "images",
+            decoration: InputDecoration(labelText: "Imagem"),
+            maxFiles: null,
+            previewImages: true,
+            onChanged: (val) => print(val),
+            typeSelectors: [
+              TypeSelector(
+                type: FileType.any,
+                selector: Row(
+                  children: <Widget>[
+                    Icon(Icons.add_circle),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text("Adicionar imagem"),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+            onFileLoading: (val) {
+              print(val);
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          child: RichText(
+            text: TextSpan(
+              style: DefaultTextStyle.of(context)
+                  .style
+                  .copyWith(color: Colors.black),
+              children: [
+                TextSpan(
+                  text: "Documentos",
+                ),
+              ],
+            ),
+          ),
+        ),
+        Padding(
+          padding:
+              const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 20),
+          child: RichText(
+            text: TextSpan(
+              style: DefaultTextStyle.of(context).style,
+              children: [
+                TextSpan(
+                  text:
+                      "Carregue os documentos de suporte para se conectar diretamente com os doadores",
+                ),
+                TextSpan(
+                    text: " *",
+                    style: TextStyle(color: Colors.red, fontSize: 16))
+              ],
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: FormBuilderFilePicker(
+            name: "images",
+            decoration: InputDecoration(labelText: "Imagem"),
+            maxFiles: null,
+            previewImages: true,
+            onChanged: (val) => print(val),
+            typeSelectors: [
+              TypeSelector(
+                type: FileType.any,
+                selector: Row(
+                  children: <Widget>[
+                    Icon(Icons.add_circle),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text("Adicionar imagem"),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+            onFileLoading: (val) {
+              print(val);
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          child: RichText(
+            text: TextSpan(
+              style: DefaultTextStyle.of(context)
+                  .style
+                  .copyWith(color: Colors.black),
+              children: [
+                TextSpan(
+                  text: "Mídia",
+                ),
+              ],
+            ),
+          ),
+        ),
+        Padding(
+          padding:
+              const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 20),
+          child: RichText(
+            text: TextSpan(
+              style: DefaultTextStyle.of(context).style,
+              children: [
+                TextSpan(
+                  text: "Carregue vídeos de até 100mb e formato mp4",
+                ),
+                TextSpan(
+                    text: " *",
+                    style: TextStyle(color: Colors.red, fontSize: 16))
+              ],
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: FormBuilderFilePicker(
+            name: "images",
+            decoration: InputDecoration(labelText: "Imagem"),
+            maxFiles: null,
+            previewImages: true,
+            onChanged: (val) => print(val),
+            typeSelectors: [
+              TypeSelector(
+                type: FileType.any,
+                selector: Row(
+                  children: <Widget>[
+                    Icon(Icons.add_circle),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text("Adicionar imagem"),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+            onFileLoading: (val) {
+              print(val);
+            },
+          ),
+        ),
+      ],
     );
   }
 

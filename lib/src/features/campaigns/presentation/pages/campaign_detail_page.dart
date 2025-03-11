@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 import 'package:intl/intl.dart';
+import 'package:video_player/video_player.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
 import '../../../../core/resources/images/app_images.dart';
@@ -779,10 +781,15 @@ class _DocumentWidgetState extends State<DocumentWidget> {
   }
 }
 
-class AboutWidget extends StatelessWidget {
+class AboutWidget extends StatefulWidget {
   final CampaignEntity campaign;
   const AboutWidget({super.key, required this.campaign});
 
+  @override
+  State<AboutWidget> createState() => _AboutWidgetState();
+}
+
+class _AboutWidgetState extends State<AboutWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -800,31 +807,62 @@ class AboutWidget extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     height: 200,
-                    child: CachedNetworkImage(
-                      imageUrl: campaign.imageCoverUrl!,
-                      fit: BoxFit.cover,
-                      progressIndicatorBuilder:
-                          (context, url, downloadProgress) =>
-                              CircularProgressIndicator(
-                                  value: downloadProgress.progress),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
-                    ),
+                    child: (widget.campaign.midias!.isEmpty)
+                        ? const Center(child: Text("FOTO DE CAPA"))
+                        : CarouselSlider.builder(
+                            itemCount: widget.campaign.midias!.length,
+                            itemBuilder:
+                                (BuildContext context, int itemIndex, int _) {
+                              final campaignMidia =
+                                  widget.campaign.midias![itemIndex];
+
+                              return GestureDetector(
+                                onTap: () => _openPreview(
+                                  context,
+                                  campaignMidia.midiaType!,
+                                  campaignMidia.midiaUrl!,
+                                ),
+                                child: Container(
+                                  color: AppColors.primaryColor,
+                                  width: double.infinity,
+                                  height: 200,
+                                  child: campaignMidia.midiaType == "video"
+                                      ? VideoThumbnail(
+                                          videoUrl: campaignMidia.midiaUrl!,
+                                        )
+                                      : CachedNetworkImage(
+                                          width: double.infinity,
+                                          height: 200,
+                                          fit: BoxFit.cover,
+                                          imageUrl: campaignMidia.midiaUrl!,
+                                        ),
+                                ),
+                              );
+                            },
+                            options: CarouselOptions(
+                              height: 200,
+                              aspectRatio: 16 / 9,
+                              viewportFraction: 0.95,
+                              initialPage: 0,
+                              enableInfiniteScroll: true,
+                              animateToClosest: true,
+                              autoPlay: false,
+                              scrollDirection: Axis.horizontal,
+                            ),
+                          ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
                       children: [
                         Text(
-                          campaign.title!,
+                          widget.campaign.title!,
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
+                        const SizedBox(height: 10),
                         Text(
-                          campaign.description!,
-                          style: TextStyle(color: Colors.black87),
+                          widget.campaign.description!,
+                          style: const TextStyle(color: Colors.black87),
                         ),
                       ],
                     ),
@@ -834,6 +872,122 @@ class AboutWidget extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _openPreview(BuildContext context, String mediaType, String mediaUrl) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FullScreenPreview(
+          mediaType: mediaType,
+          mediaUrl: mediaUrl,
+        ),
+      ),
+    );
+  }
+}
+
+class VideoThumbnail extends StatefulWidget {
+  final String videoUrl;
+
+  const VideoThumbnail({Key? key, required this.videoUrl}) : super(key: key);
+
+  @override
+  _VideoThumbnailState createState() => _VideoThumbnailState();
+}
+
+class _VideoThumbnailState extends State<VideoThumbnail> {
+  late VideoPlayerController _videoController;
+
+  @override
+  void initState() {
+    super.initState();
+    _videoController = VideoPlayerController.network(widget.videoUrl)
+      ..initialize().then((_) {
+        setState(() {});
+      });
+  }
+
+  @override
+  void dispose() {
+    _videoController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        _videoController.value.isInitialized
+            ? AspectRatio(
+                aspectRatio: _videoController.value.aspectRatio,
+                child: VideoPlayer(_videoController),
+              )
+            : const Center(child: CircularProgressIndicator()),
+        const Icon(Icons.play_circle_fill, size: 50, color: Colors.white),
+      ],
+    );
+  }
+}
+
+class FullScreenPreview extends StatefulWidget {
+  final String mediaType;
+  final String mediaUrl;
+
+  const FullScreenPreview({
+    Key? key,
+    required this.mediaType,
+    required this.mediaUrl,
+  }) : super(key: key);
+
+  @override
+  _FullScreenPreviewState createState() => _FullScreenPreviewState();
+}
+
+class _FullScreenPreviewState extends State<FullScreenPreview> {
+  late VideoPlayerController? _videoController;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.mediaType == 'video') {
+      _videoController = VideoPlayerController.network(widget.mediaUrl)
+        ..initialize().then((_) {
+          setState(() {
+            _videoController!.play();
+          });
+        });
+    }
+  }
+
+  @override
+  void dispose() {
+    _videoController?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(backgroundColor: Colors.black),
+      body: Center(
+        child: widget.mediaType == 'video'
+            ? _videoController != null && _videoController!.value.isInitialized
+                ? AspectRatio(
+                    aspectRatio: _videoController!.value.aspectRatio,
+                    child: VideoPlayer(_videoController!),
+                  )
+                : const Center(child: CircularProgressIndicator())
+            : CachedNetworkImage(
+                width: double.infinity,
+                height: double.infinity,
+                fit: BoxFit.contain,
+                imageUrl: widget.mediaUrl,
+              ),
       ),
     );
   }
