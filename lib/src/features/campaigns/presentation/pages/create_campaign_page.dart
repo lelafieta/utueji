@@ -55,6 +55,19 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
     }
   }
 
+  Widget getStepContent(int step) {
+    switch (step) {
+      case 0:
+        return stepOne(context);
+      case 1:
+        return stepTwo(context);
+      case 2:
+        return stepThree(context);
+      default:
+        return stepOne(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,9 +77,38 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
       ),
       bottomNavigationBar: Container(
         padding: EdgeInsets.all(16),
-        child: ElevatedButton(
-          onPressed: () {},
-          child: Text("Guardar & Continuar"),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            if (activeStep > 0)
+              IconButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStatePropertyAll(AppColors.primaryColor),
+                ),
+                onPressed: () {
+                  setState(() {
+                    activeStep--;
+                  });
+                },
+                icon: Icon(Icons.arrow_back),
+              ),
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () {
+                  if (activeStep < 2) {
+                    setState(() {
+                      activeStep++;
+                    });
+                  } else {
+                    // Handle form submission
+                  }
+                },
+                child:
+                    Text(activeStep < 2 ? "Guardar & Continuar" : "Finalizar"),
+              ),
+            ),
+          ],
         ),
       ),
       body: Column(
@@ -84,11 +126,15 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                     ),
                   ),
                   title: Text(
-                    "Passo 1/3",
+                    "Passo ${activeStep + 1}/3",
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   subtitle: Text(
-                    "Detalhes do Beneficiário",
+                    activeStep == 0
+                        ? "Detalhes do Beneficiário"
+                        : activeStep == 1
+                            ? "Informações Médicas"
+                            : "Documentos e Mídia",
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                 )
@@ -98,59 +144,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
           const SizedBox(height: 20),
           Expanded(
             child: SingleChildScrollView(
-              child: Container(
-                width: double.infinity,
-                child: EasyStepper(
-                  activeStep: activeStep,
-                  activeStepTextColor: Colors.black87,
-                  finishedStepTextColor: Colors.black87,
-                  internalPadding: 0,
-                  showLoadingAnimation: false,
-                  stepRadius: 8,
-                  showStepBorder: true,
-                  steps: [
-                    EasyStep(
-                      customStep: CircleAvatar(
-                        radius: 8,
-                        backgroundColor: Colors.white,
-                        child: CircleAvatar(
-                          radius: 7,
-                          backgroundColor:
-                              activeStep >= 0 ? Colors.orange : Colors.white,
-                        ),
-                      ),
-                      title: 'Waiting',
-                    ),
-                    EasyStep(
-                      customStep: CircleAvatar(
-                        radius: 8,
-                        backgroundColor: Colors.white,
-                        child: CircleAvatar(
-                          radius: 7,
-                          backgroundColor:
-                              activeStep >= 1 ? Colors.orange : Colors.white,
-                        ),
-                      ),
-                      title: 'Order Received',
-                      topTitle: true,
-                    ),
-                    EasyStep(
-                      customStep: CircleAvatar(
-                        radius: 8,
-                        backgroundColor: Colors.white,
-                        child: CircleAvatar(
-                          radius: 7,
-                          backgroundColor:
-                              activeStep >= 3 ? Colors.orange : Colors.white,
-                        ),
-                      ),
-                      title: 'On Way',
-                      topTitle: true,
-                    ),
-                  ],
-                  onStepReached: (index) => setState(() => activeStep = index),
-                ),
-              ),
+              child: getStepContent(activeStep),
             ),
           )
         ],
