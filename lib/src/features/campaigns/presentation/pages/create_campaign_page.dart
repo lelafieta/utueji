@@ -27,6 +27,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
   double progress = 0.2;
   final _formKey = GlobalKey<FormState>();
   String? _selectedOption;
+  String? _selectedOptionType;
 
   List<String> titles = [
     "Médico",
@@ -37,6 +38,14 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
     "Desporto",
     "Desastre",
     "Outros",
+  ];
+  List<String> types = [
+    "Um Individuo",
+    "Uma Família",
+    "Instituição ONG",
+    "Comunitária(Coletiva)",
+    "Projecto Específico",
+    "Outro"
   ];
   Set<int> reachedSteps = <int>{0, 2, 4, 5};
   final dashImages = [
@@ -682,7 +691,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                   .copyWith(color: Colors.black),
               children: [
                 TextSpan(
-                  text: "Para quem você arrecada fundos? ",
+                  text: "Informe o titulo da campanha ",
                 ),
                 TextSpan(
                     text: "*",
@@ -691,32 +700,42 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
             ),
           ),
         ),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        //   child: FormBuilderDropdown(
+        //     name: 'member',
+        //     isDense: false,
+        //     decoration: InputDecoration(
+        //       label: Text("Pessoa"),
+        //       contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        //     ),
+        //     validator: FormBuilderValidators.required(
+        //       errorText: 'Selecione SITE',
+        //     ),
+        //     items: [
+        //       'Mãe',
+        //       'Pai',
+        //       'Irmão',
+        //       'Filho',
+        //       'Outros',
+        //     ]
+        //         .map(
+        //           (member) =>
+        //               DropdownMenuItem(value: member, child: Text("$member")),
+        //         )
+        //         .toList(),
+        //   ),
+        // ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: FormBuilderDropdown(
-            name: 'member',
-            isDense: false,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: FormBuilderTextField(
+            name: "title",
             decoration: InputDecoration(
-              label: Text("Pessoa"),
-              contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              label: Text("Título"),
             ),
-            validator: FormBuilderValidators.required(
-              errorText: 'Selecione SITE',
-            ),
-            items: [
-              'Mãe',
-              'Pai',
-              'Irmão',
-              'Filho',
-              'Outros',
-            ]
-                .map(
-                  (member) =>
-                      DropdownMenuItem(value: member, child: Text("$member")),
-                )
-                .toList(),
           ),
         ),
+
         const SizedBox(
           height: 15,
         ),
@@ -729,7 +748,35 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                   .copyWith(color: Colors.black),
               children: [
                 TextSpan(
-                  text: "Entre com os respectivos dados a pessoa ",
+                  text: "Adicione um descrição",
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          child: FormBuilderTextField(
+            name: "name",
+            decoration: InputDecoration(
+              // label: Text("Descrição"),
+              hintMaxLines: 1,
+            ),
+            maxLines: 3,
+          ),
+        ),
+
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          child: RichText(
+            text: TextSpan(
+              style: DefaultTextStyle.of(context)
+                  .style
+                  .copyWith(color: Colors.black),
+              children: [
+                TextSpan(
+                  text: "Quem será beneficiado? ",
                 ),
                 TextSpan(
                     text: "*",
@@ -739,6 +786,49 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
           ),
         ),
         Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: GridView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              childAspectRatio: 4,
+            ),
+            itemCount: types.length,
+            itemBuilder: (context, index) {
+              bool isSelected = _selectedOptionType == types[index];
+
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _selectedOptionType = types[index];
+                  });
+                },
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    color: isSelected ? AppColors.primaryColor : Colors.white,
+                    border: Border.all(
+                      color: AppColors.primaryColor,
+                      width: 1,
+                    ),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    types[index],
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: isSelected ? Colors.white : Colors.black),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+
+        Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: FormBuilderTextField(
             name: "name",
@@ -747,6 +837,26 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
             ),
           ),
         ),
+
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          child: RichText(
+            text: TextSpan(
+              style: DefaultTextStyle.of(context)
+                  .style
+                  .copyWith(color: Colors.black),
+              children: [
+                TextSpan(
+                  text: "Data de nascimento ",
+                ),
+                TextSpan(
+                    text: "*",
+                    style: TextStyle(color: Colors.red, fontSize: 16))
+              ],
+            ),
+          ),
+        ),
+
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: FormBuilderDateTimePicker(
