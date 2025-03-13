@@ -109,6 +109,8 @@ dependencies:
   dropdown_search: ^5.0.6
   form_builder_file_picker: ^4.1.0
   video_player: ^2.9.2  
+  google_places_flutter: ^2.1.0
+  awesome_place_search: ^2.1.0
 
 dev_dependencies:
   flutter_test:
