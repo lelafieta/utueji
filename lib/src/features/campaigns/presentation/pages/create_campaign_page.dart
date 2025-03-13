@@ -140,10 +140,10 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                   ),
                   subtitle: Text(
                     activeStep == 0
-                        ? "Detalhes do Beneficiário"
+                        ? "Informações básicas"
                         : activeStep == 1
-                            ? "Informações Médicas"
-                            : "Documentos e Mídia",
+                            ? "Meta e Beneficiários"
+                            : "Contato e Publicação",
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                 )
@@ -351,74 +351,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                   .copyWith(color: Colors.black),
               children: [
                 TextSpan(
-                  text: "Doença / condição médica",
-                ),
-                TextSpan(
-                    text: "*",
-                    style: TextStyle(color: Colors.red, fontSize: 16))
-              ],
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: FormBuilderDropdown(
-            name: 'member',
-            isDense: false,
-            decoration: InputDecoration(
-              label: Text("Selecionar"),
-              contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            ),
-            validator: FormBuilderValidators.required(
-              errorText: 'Selecione SITE',
-            ),
-            items: [
-              'Dor de cabeça',
-              'Gripe',
-              'Resfriado',
-              'Asma',
-              'Diabetes',
-              'Hipertensão',
-              'Enxaqueca',
-              'Artrite',
-              'Bronquite',
-              'Sinusite',
-              'Alergia',
-              'Infecção urinária',
-              'Anemia',
-              'Gastrite',
-              'Úlcera',
-              'Covid-19',
-              'Depressão',
-              'Ansiedade',
-              'Insônia',
-              'Dermatite',
-              'Hipotireoidismo',
-              'Hipertireoidismo',
-              'Obesidade',
-              'Osteoporose',
-              'Otite',
-              'Pneumonia',
-              'Problemas cardíacos',
-            ]
-                .map(
-                  (member) =>
-                      DropdownMenuItem(value: member, child: Text("$member")),
-                )
-                .toList(),
-          ),
-        ),
-        const SizedBox(height: 15),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: RichText(
-            text: TextSpan(
-              style: DefaultTextStyle.of(context)
-                  .style
-                  .copyWith(color: Colors.black),
-              children: [
-                TextSpan(
-                  text: "Doença / condição médica",
+                  text: "Meta de Arrecadação",
                 ),
                 TextSpan(
                     text: "*",
@@ -471,7 +404,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
             ],
           ),
         ),
-        const SizedBox(height: 15),
+
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           child: RichText(
@@ -481,7 +414,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                   .copyWith(color: Colors.black),
               children: [
                 TextSpan(
-                  text: "Estado de hospitalização",
+                  text: "Quem será beneficiado? ",
                 ),
                 TextSpan(
                     text: "*",
@@ -491,31 +424,48 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: FormBuilderDropdown(
-            name: 'member',
-            isDense: false,
-            decoration: InputDecoration(
-              label: Text("Selecione"),
-              contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          padding: const EdgeInsets.all(8.0),
+          child: GridView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              childAspectRatio: 4,
             ),
-            validator: FormBuilderValidators.required(
-              errorText: 'Selecione SITE',
-            ),
-            items: [
-              'Internado',
-              'Recebeu alta',
-              'Em observação',
-              'Não hospitalizado',
-            ]
-                .map(
-                  (member) =>
-                      DropdownMenuItem(value: member, child: Text("$member")),
-                )
-                .toList(),
+            itemCount: types.length,
+            itemBuilder: (context, index) {
+              bool isSelected = _selectedOptionType == types[index];
+
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _selectedOptionType = types[index];
+                  });
+                },
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    color: isSelected ? AppColors.primaryColor : Colors.white,
+                    border: Border.all(
+                      color: AppColors.primaryColor,
+                      width: 1,
+                    ),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    types[index],
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: isSelected ? Colors.white : Colors.black),
+                  ),
+                ),
+              );
+            },
           ),
         ),
-        const SizedBox(height: 15),
+
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           child: RichText(
@@ -525,7 +475,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                   .copyWith(color: Colors.black),
               children: [
                 TextSpan(
-                  text: "Hospitais",
+                  text: "Quem será beneficiado? ",
                 ),
                 TextSpan(
                     text: "*",
@@ -535,15 +485,69 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: FormBuilderTextField(
             name: "name",
             decoration: InputDecoration(
-              label: Text("Selecione hospital"),
-              suffixIcon: Icon(Icons.search),
+              label: Text("Nome"),
             ),
           ),
         ),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        //   child: FormBuilderDropdown(
+        //     name: 'member',
+        //     isDense: false,
+        //     decoration: InputDecoration(
+        //       label: Text("Selecione"),
+        //       contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        //     ),
+        //     validator: FormBuilderValidators.required(
+        //       errorText: 'Selecione SITE',
+        //     ),
+        //     items: [
+        //       'Internado',
+        //       'Recebeu alta',
+        //       'Em observação',
+        //       'Não hospitalizado',
+        //     ]
+        //         .map(
+        //           (member) =>
+        //               DropdownMenuItem(value: member, child: Text("$member")),
+        //         )
+        //         .toList(),
+        //   ),
+        // ),
+
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          child: RichText(
+            text: TextSpan(
+              style: DefaultTextStyle.of(context)
+                  .style
+                  .copyWith(color: Colors.black),
+              children: [
+                TextSpan(
+                  text: "Data do início",
+                ),
+                TextSpan(
+                    text: "*",
+                    style: TextStyle(color: Colors.red, fontSize: 16))
+              ],
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: FormBuilderDateTimePicker(
+            name: "nascimento",
+            decoration: InputDecoration(
+              hintText: "DD-MM-YYYY",
+              suffixIcon: Icon(Icons.calendar_month_rounded),
+            ),
+          ),
+        ),
+
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           child: RichText(
@@ -572,6 +576,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
             ),
           ),
         ),
+
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           child: RichText(
@@ -581,57 +586,57 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                   .copyWith(color: Colors.black),
               children: [
                 TextSpan(
-                  text: "Adicione um descrição",
+                  text: "Tem urgência?",
                 ),
+                TextSpan(
+                    text: "*",
+                    style: TextStyle(color: Colors.red, fontSize: 16))
               ],
             ),
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: FormBuilderTextField(
-            name: "name",
-            decoration: InputDecoration(
-              // label: Text("Descrição"),
-              hintMaxLines: 1,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: GridView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              childAspectRatio: 4,
             ),
-            maxLines: 3,
-          ),
-        ),
-        const SizedBox(height: 15),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Colaboração"),
-              Icon(
-                Icons.info,
-                color: Colors.black26,
-              )
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: Row(
-            children: [
-              Icon(
-                Icons.add,
-                color: AppColors.primaryColor,
-              ),
-              const SizedBox(width: 5),
-              Text(
-                "Adicionar Caridade",
-                style: TextStyle(
-                  color: AppColors.primaryColor,
-                  fontWeight: FontWeight.w600,
+            itemCount: 2,
+            itemBuilder: (context, index) {
+              bool isSelected = _selectedOptionType == types[index];
+
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _selectedOptionType = types[index];
+                  });
+                },
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    color: isSelected ? AppColors.primaryColor : Colors.white,
+                    border: Border.all(
+                      color: AppColors.primaryColor,
+                      width: 1,
+                    ),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    ["SIM", "NÃO"][index],
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: isSelected ? Colors.white : Colors.black),
+                  ),
                 ),
-              )
-            ],
+              );
+            },
           ),
         ),
-        const SizedBox(height: 15),
       ],
     );
   }
@@ -640,6 +645,25 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          child: RichText(
+            text: TextSpan(
+              style: DefaultTextStyle.of(context)
+                  .style
+                  .copyWith(color: Colors.black),
+              children: [
+                TextSpan(
+                  text: "Objetivo de arrecadar fundos ",
+                ),
+                TextSpan(
+                    text: "*",
+                    style: TextStyle(color: Colors.red, fontSize: 16))
+              ],
+            ),
+          ),
+        ),
+
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: GridView.builder(
@@ -735,10 +759,6 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
             ),
           ),
         ),
-
-        const SizedBox(
-          height: 15,
-        ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           child: RichText(
@@ -776,65 +796,45 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                   .copyWith(color: Colors.black),
               children: [
                 TextSpan(
-                  text: "Quem será beneficiado? ",
+                  text: "Carregar imagem de capa",
                 ),
                 TextSpan(
-                    text: "*",
-                    style: TextStyle(color: Colors.red, fontSize: 16))
+                  text: " (Opcional)",
+                  style: TextStyle(
+                    color: Colors.black45,
+                    fontSize: 14,
+                  ),
+                )
               ],
             ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: GridView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: 4,
-            ),
-            itemCount: types.length,
-            itemBuilder: (context, index) {
-              bool isSelected = _selectedOptionType == types[index];
-
-              return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _selectedOptionType = types[index];
-                  });
-                },
-                child: Container(
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    color: isSelected ? AppColors.primaryColor : Colors.white,
-                    border: Border.all(
-                      color: AppColors.primaryColor,
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    types[index],
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: isSelected ? Colors.white : Colors.black),
-                  ),
-                ),
-              );
-            },
           ),
         ),
 
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: FormBuilderTextField(
-            name: "name",
-            decoration: InputDecoration(
-              label: Text("Nome"),
-            ),
+          child: FormBuilderFilePicker(
+            name: "images",
+            decoration: InputDecoration(labelText: "Imagem"),
+            maxFiles: null,
+            previewImages: true,
+            onChanged: (val) => print(val),
+            typeSelectors: [
+              TypeSelector(
+                type: FileType.any,
+                selector: Row(
+                  children: <Widget>[
+                    Icon(Icons.add_circle),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text("Adicionar imagem"),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+            onFileLoading: (val) {
+              print(val);
+            },
           ),
         ),
 
@@ -867,25 +867,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: FormBuilderTextField(
-            name: "name",
-            decoration: InputDecoration(
-              label: Text("Localização"),
-              suffixIcon: Icon(Icons.search),
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: FormBuilderTextField(
-            name: "name",
-            decoration: InputDecoration(
-              label: Text("Telefone"),
-            ),
-          ),
-        ),
+
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           child: RichText(
@@ -895,44 +877,24 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                   .copyWith(color: Colors.black),
               children: [
                 TextSpan(
-                  text: "Carregar imagem de capa",
+                  text: "Localização ",
                 ),
                 TextSpan(
-                  text: " (Opcional)",
-                  style: TextStyle(
-                    color: Colors.black45,
-                    fontSize: 14,
-                  ),
-                )
+                    text: "*",
+                    style: TextStyle(color: Colors.red, fontSize: 16))
               ],
             ),
           ),
         ),
+
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: FormBuilderFilePicker(
-            name: "images",
-            decoration: InputDecoration(labelText: "Imagem"),
-            maxFiles: null,
-            previewImages: true,
-            onChanged: (val) => print(val),
-            typeSelectors: [
-              TypeSelector(
-                type: FileType.any,
-                selector: Row(
-                  children: <Widget>[
-                    Icon(Icons.add_circle),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Text("Adicionar imagem"),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-            onFileLoading: (val) {
-              print(val);
-            },
+          child: FormBuilderTextField(
+            name: "name",
+            decoration: InputDecoration(
+              label: Text("Localização"),
+              suffixIcon: Icon(Icons.search),
+            ),
           ),
         ),
       ],
