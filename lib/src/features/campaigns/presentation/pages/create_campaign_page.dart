@@ -1,16 +1,13 @@
-import 'package:dropdown_search/dropdown_search.dart';
-import 'package:easy_stepper/easy_stepper.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:awesome_place_search/awesome_place_search.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_extra_fields/form_builder_extra_fields.dart';
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:group_button/group_button.dart';
-import 'package:utueji/src/core/resources/images/app_images.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../../../config/themes/app_colors.dart';
+import '../../../../core/resources/images/app_images.dart';
 
 class CreateCampaignPage extends StatefulWidget {
   const CreateCampaignPage({super.key});
@@ -25,20 +22,65 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
   int reachedStep = 0;
   int upperBound = 5;
   double progress = 0.2;
-  final _formKey = GlobalKey<FormState>();
-  String? _selectedOption;
+  final googleApiKey = dotenv.env["GOOGLE_API_KEY"];
+  PredictionModel? prediction;
+  final _formKey = GlobalKey<FormBuilderState>();
+
+  TextEditingController controllerLocation = TextEditingController();
+  Category? _selectedOption;
   String? _selectedOptionType;
 
-  List<String> titles = [
-    "Médico",
-    "Educação",
-    "Olfã",
-    "Animal",
-    "Idosos",
-    "Desporto",
-    "Desastre",
-    "Outros",
+  List<Category> categories = [
+    Category(
+      id: "0279de80-27c5-4ddf-81ca-f4b5f12ec0dd",
+      name: "Animal",
+      description: null,
+      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
+    ),
+    Category(
+      id: "278d5de0-7b6d-4aab-9453-b587c7911aef",
+      name: "Desporto",
+      description: null,
+      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
+    ),
+    Category(
+      id: "a7408d26-8e08-49b2-b404-4855a00020b8",
+      name: "Idosos",
+      description: null,
+      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
+    ),
+    Category(
+      id: "e3198b7-6be3-43b4-a8fe-ec0ac9c0fcc",
+      name: "Médico",
+      description: null,
+      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
+    ),
+    Category(
+      id: "e949f3bd-5a94-44e0-bfd6-4728f0e9ea91",
+      name: "Educação",
+      description: null,
+      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
+    ),
+    Category(
+      id: "ebe15c90-13d7-4ec9-8fa5-d5900cc6dc4c",
+      name: "Olfá",
+      description: null,
+      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
+    ),
+    Category(
+      id: "f2b24c2a-9771-4162-aa5d-8fa8a05d3cd2",
+      name: "Desastre",
+      description: null,
+      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
+    ),
+    Category(
+      id: "d822573c-14e5-4eca-99b4-52a35e5889b3",
+      name: "Outros",
+      description: null,
+      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
+    ),
   ];
+
   List<String> types = [
     "Um Individuo",
     "Uma Família",
@@ -56,11 +98,44 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
     'assets/5.png',
   ];
 
+  void _searchPlaces() {
+    AwesomePlaceSearch(
+      context: context,
+      apiKey: googleApiKey!,
+      countries: ["ao"],
+      errorText: "Alguma coisa correu mal",
+      hint: "Pesquisar uma localização",
+      dividerItemColor: Colors.grey.withOpacity(.5),
+      dividerItemWidth: .5,
+      elevation: 5,
+      indicatorColor: Colors.blue,
+      modalBorderRadius: 50.0,
+      onTap: (value) async {
+        final result = await value;
+        controllerLocation.text = result.description!;
+        // setState(() {
+        //   prediction = result;
+
+        // });
+      },
+    ).show();
+  }
+
   void increaseProgress() {
     if (progress < 1) {
       setState(() => progress += 0.2);
     } else {
       setState(() => progress = 0);
+    }
+  }
+
+  void _handleBack() {
+    if (activeStep > 0) {
+      setState(() {
+        activeStep--;
+      });
+    } else {
+      Navigator.pop(context);
     }
   }
 
@@ -83,25 +158,30 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
       appBar: AppBar(
         centerTitle: false,
         title: const Text('Criar Nova Campanha'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: _handleBack,
+        ),
       ),
       bottomNavigationBar: Container(
         padding: EdgeInsets.all(16),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            if (activeStep > 0)
-              IconButton(
-                style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStatePropertyAll(AppColors.primaryColor),
-                ),
-                onPressed: () {
-                  setState(() {
-                    activeStep--;
-                  });
-                },
-                icon: Icon(Icons.arrow_back),
-              ),
+            // if (activeStep > 0)
+            //   IconButton(
+            //     style: ButtonStyle(
+            //       backgroundColor:
+            //           MaterialStatePropertyAll(AppColors.primaryColor),
+            //     ),
+            //     onPressed: () {
+            //       setState(() {
+            //         activeStep--;
+            //       });
+            //     },
+            //     icon: Icon(Icons.arrow_back),
+            //   ),
+
             Expanded(
               child: ElevatedButton(
                 onPressed: () {
@@ -368,9 +448,9 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: FormBuilderTextField(
-            name: "name",
+            name: "beneficiary_name",
             decoration: InputDecoration(
-              label: Text("Nome"),
+              label: Text("Nome do Beneficiário"),
             ),
           ),
         ),
@@ -421,7 +501,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: FormBuilderDateTimePicker(
-            name: "nascimento",
+            name: "birth",
             decoration: InputDecoration(
               hintText: "DD-MM-YYYY",
               suffixIcon: Icon(Icons.calendar_month_rounded),
@@ -527,14 +607,14 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
               mainAxisSpacing: 10,
               childAspectRatio: 4,
             ),
-            itemCount: titles.length,
+            itemCount: categories.length,
             itemBuilder: (context, index) {
-              bool isSelected = _selectedOption == titles[index];
+              bool isSelected = _selectedOption == categories[index];
 
               return GestureDetector(
                 onTap: () {
                   setState(() {
-                    _selectedOption = titles[index];
+                    _selectedOption = categories[index];
                   });
                 },
                 child: Container(
@@ -549,7 +629,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                   ),
                   alignment: Alignment.center,
                   child: Text(
-                    titles[index],
+                    categories[index].name,
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         color: isSelected ? Colors.white : Colors.black),
                   ),
@@ -630,7 +710,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           child: FormBuilderTextField(
-            name: "name",
+            name: "description",
             decoration: InputDecoration(
               // label: Text("Descrição"),
               hintMaxLines: 1,
@@ -665,7 +745,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: FormBuilderFilePicker(
-            name: "images",
+            name: "image_cover_url",
             decoration: InputDecoration(labelText: "Imagem"),
             maxFiles: null,
             previewImages: true,
@@ -739,7 +819,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     FormBuilderTextField(
-                      name: "name",
+                      name: "fundraising_goal",
                       decoration: InputDecoration(
                         label: Text("Entra com montante"),
                       ),
@@ -773,7 +853,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: FormBuilderDateTimePicker(
-            name: "nascimento",
+            name: "start_date",
             decoration: InputDecoration(
               hintText: "DD-MM-YYYY",
               suffixIcon: Icon(Icons.calendar_month_rounded),
@@ -802,7 +882,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: FormBuilderDateTimePicker(
-            name: "nascimento",
+            name: "end_date",
             decoration: InputDecoration(
               hintText: "DD-MM-YYYY",
               suffixIcon: Icon(Icons.calendar_month_rounded),
@@ -832,9 +912,14 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: FormBuilderTextField(
-            name: "name",
+            name: "location",
+            controller: controllerLocation,
+            readOnly: true,
+            onTap: () {
+              _searchPlaces();
+            },
             decoration: InputDecoration(
-              label: Text("Localização"),
+              hintText: "Localização",
               suffixIcon: Icon(Icons.search),
             ),
           ),
@@ -842,4 +927,18 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
       ],
     );
   }
+}
+
+class Category {
+  final String id;
+  final String name;
+  final String? description;
+  final DateTime createdAt;
+
+  Category({
+    required this.id,
+    required this.name,
+    this.description,
+    required this.createdAt,
+  });
 }
