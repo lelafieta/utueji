@@ -140,10 +140,10 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                   ),
                   subtitle: Text(
                     activeStep == 0
-                        ? "Informações básicas"
+                        ? "Informações da Campanha"
                         : activeStep == 1
-                            ? "Meta e Beneficiários"
-                            : "Contato e Publicação",
+                            ? "Beneficiário e Organização"
+                            : "Mídias e Documentos",
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                 )
@@ -174,7 +174,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                   .copyWith(color: Colors.black),
               children: [
                 TextSpan(
-                  text: "Documento de identidade",
+                  text: "Documentos relacionado a causa",
                 ),
                 TextSpan(
                     text: " *",
@@ -186,85 +186,27 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
         Padding(
           padding:
               const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 20),
-          child: Text("Carregue um documento que identifique o beneficiário"),
+          child: Text(
+              "Carregue os documentos de suporte para se conectar diretamente com os doadores"),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: FormBuilderFilePicker(
-            name: "images",
-            decoration: InputDecoration(labelText: "Imagem"),
-            maxFiles: null,
+            name: "documentos",
+            decoration: InputDecoration(labelText: "Documentos"),
+            maxFiles: 4,
+            allowedExtensions: ['pdf', 'doc', 'docx'],
             previewImages: true,
             onChanged: (val) => print(val),
             typeSelectors: [
               TypeSelector(
-                type: FileType.any,
+                type: FileType.custom,
                 selector: Row(
                   children: <Widget>[
                     Icon(Icons.add_circle),
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: Text("Adicionar imagem"),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-            onFileLoading: (val) {
-              print(val);
-            },
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: RichText(
-            text: TextSpan(
-              style: DefaultTextStyle.of(context)
-                  .style
-                  .copyWith(color: Colors.black),
-              children: [
-                TextSpan(
-                  text: "Documentos",
-                ),
-              ],
-            ),
-          ),
-        ),
-        Padding(
-          padding:
-              const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 20),
-          child: RichText(
-            text: TextSpan(
-              style: DefaultTextStyle.of(context).style,
-              children: [
-                TextSpan(
-                  text:
-                      "Carregue os documentos de suporte para se conectar diretamente com os doadores",
-                ),
-                TextSpan(
-                    text: " *",
-                    style: TextStyle(color: Colors.red, fontSize: 16))
-              ],
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: FormBuilderFilePicker(
-            name: "images",
-            decoration: InputDecoration(labelText: "Imagem"),
-            maxFiles: null,
-            previewImages: true,
-            onChanged: (val) => print(val),
-            typeSelectors: [
-              TypeSelector(
-                type: FileType.any,
-                selector: Row(
-                  children: <Widget>[
-                    Icon(Icons.add_circle),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Text("Adicionar imagem"),
+                      child: Text("Adicionar documentos"),
                     ),
                   ],
                 ),
@@ -298,7 +240,8 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
               style: DefaultTextStyle.of(context).style,
               children: [
                 TextSpan(
-                  text: "Carregue vídeos de até 100mb e formato mp4",
+                  text:
+                      "Carregue imagens ou vídeos de até 100mb e formato mp4, jpg, jpeg, png",
                 ),
                 TextSpan(
                     text: " *",
@@ -308,12 +251,13 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           child: FormBuilderFilePicker(
             name: "images",
-            decoration: InputDecoration(labelText: "Imagem"),
-            maxFiles: null,
+            decoration: InputDecoration(labelText: "Mídia"),
             previewImages: true,
+            maxFiles: 8,
+            allowedExtensions: ['pdf', 'doc', 'docx'],
             onChanged: (val) => print(val),
             typeSelectors: [
               TypeSelector(
@@ -323,7 +267,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                     Icon(Icons.add_circle),
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: Text("Adicionar imagem"),
+                      child: Text("Adicionar Imagens/Videos"),
                     ),
                   ],
                 ),
@@ -342,69 +286,6 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: RichText(
-            text: TextSpan(
-              style: DefaultTextStyle.of(context)
-                  .style
-                  .copyWith(color: Colors.black),
-              children: [
-                TextSpan(
-                  text: "Meta de Arrecadação",
-                ),
-                TextSpan(
-                    text: "*",
-                    style: TextStyle(color: Colors.red, fontSize: 16))
-              ],
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: FormBuilderDropdown(
-                  name: 'member',
-                  isDense: false,
-                  decoration: InputDecoration(
-                    label: Text("AOA"),
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                  ),
-                  validator: FormBuilderValidators.required(
-                    errorText: 'Selecione SITE',
-                  ),
-                  items: ['USD', 'EUR', 'GBP', 'JPY', 'AUD']
-                      .map(
-                        (member) => DropdownMenuItem(
-                            value: member, child: Text("$member")),
-                      )
-                      .toList(),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                flex: 2,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    FormBuilderTextField(
-                      name: "name",
-                      decoration: InputDecoration(
-                        label: Text("Entra com montante"),
-                      ),
-                    ),
-                    Text("Deveria ser mínimo 1.000.000Kz")
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           child: RichText(
@@ -475,7 +356,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                   .copyWith(color: Colors.black),
               children: [
                 TextSpan(
-                  text: "Quem será beneficiado? ",
+                  text: "Nome do beneficiário ",
                 ),
                 TextSpan(
                     text: "*",
@@ -518,7 +399,6 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
         //         .toList(),
         //   ),
         // ),
-
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           child: RichText(
@@ -528,44 +408,16 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                   .copyWith(color: Colors.black),
               children: [
                 TextSpan(
-                  text: "Data do início",
+                  text: "Data de nascimento ",
                 ),
                 TextSpan(
                     text: "*",
                     style: TextStyle(color: Colors.red, fontSize: 16))
               ],
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: FormBuilderDateTimePicker(
-            name: "nascimento",
-            decoration: InputDecoration(
-              hintText: "DD-MM-YYYY",
-              suffixIcon: Icon(Icons.calendar_month_rounded),
             ),
           ),
         ),
 
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: RichText(
-            text: TextSpan(
-              style: DefaultTextStyle.of(context)
-                  .style
-                  .copyWith(color: Colors.black),
-              children: [
-                TextSpan(
-                  text: "Data do fim",
-                ),
-                TextSpan(
-                    text: "*",
-                    style: TextStyle(color: Colors.red, fontSize: 16))
-              ],
-            ),
-          ),
-        ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: FormBuilderDateTimePicker(
@@ -837,6 +689,68 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
             },
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          child: RichText(
+            text: TextSpan(
+              style: DefaultTextStyle.of(context)
+                  .style
+                  .copyWith(color: Colors.black),
+              children: [
+                TextSpan(
+                  text: "Meta de Arrecadação",
+                ),
+                TextSpan(
+                    text: "*",
+                    style: TextStyle(color: Colors.red, fontSize: 16))
+              ],
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: FormBuilderDropdown(
+                  name: 'member',
+                  isDense: false,
+                  decoration: InputDecoration(
+                    label: Text("AOA"),
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  ),
+                  validator: FormBuilderValidators.required(
+                    errorText: 'Selecione SITE',
+                  ),
+                  items: ['USD', 'EUR', 'GBP', 'JPY', 'AUD']
+                      .map(
+                        (member) => DropdownMenuItem(
+                            value: member, child: Text("$member")),
+                      )
+                      .toList(),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                flex: 2,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    FormBuilderTextField(
+                      name: "name",
+                      decoration: InputDecoration(
+                        label: Text("Entra com montante"),
+                      ),
+                    ),
+                    Text("Deveria ser mínimo 1.000.000Kz")
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
 
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -847,7 +761,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                   .copyWith(color: Colors.black),
               children: [
                 TextSpan(
-                  text: "Data de nascimento ",
+                  text: "Data do início",
                 ),
                 TextSpan(
                     text: "*",
@@ -856,7 +770,35 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
             ),
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: FormBuilderDateTimePicker(
+            name: "nascimento",
+            decoration: InputDecoration(
+              hintText: "DD-MM-YYYY",
+              suffixIcon: Icon(Icons.calendar_month_rounded),
+            ),
+          ),
+        ),
 
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          child: RichText(
+            text: TextSpan(
+              style: DefaultTextStyle.of(context)
+                  .style
+                  .copyWith(color: Colors.black),
+              children: [
+                TextSpan(
+                  text: "Data do fim",
+                ),
+                TextSpan(
+                    text: "*",
+                    style: TextStyle(color: Colors.red, fontSize: 16))
+              ],
+            ),
+          ),
+        ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: FormBuilderDateTimePicker(
