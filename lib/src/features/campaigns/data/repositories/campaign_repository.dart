@@ -14,8 +14,17 @@ class CampaignRepository implements ICampaignRepository {
   CampaignRepository({required this.datasource, required this.networkInfo});
 
   @override
-  Future<Either<Failure, Unit>> createCampaign(CampaignEntity campaign) {
-    throw UnimplementedError();
+  Future<Either<Failure, Unit>> createCampaign(CampaignEntity campaign) async {
+    if (await networkInfo.isConnected == true) {
+      try {
+        await datasource.createCampaign(campaign);
+        return right(unit);
+      } catch (e) {
+        return left(ServerFailure(message: e.toString()));
+      }
+    } else {
+      return left(ServerFailure(message: "Sem conexão de internet"));
+    }
   }
 
   @override

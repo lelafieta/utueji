@@ -1,14 +1,20 @@
 import 'package:awesome_place_search/awesome_place_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
+import 'package:utueji/src/app/app_entity.dart';
+import 'package:utueji/src/features/campaigns/domain/entities/campaign_midia_entity.dart';
 
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/images/app_images.dart';
+import '../../domain/entities/campaign_document_entity.dart';
+import '../../domain/entities/campaign_entity.dart';
+import '../cubit/campaign_action_cubit/campaign_action_cubit.dart';
 
 class CreateCampaignPage extends StatefulWidget {
   const CreateCampaignPage({super.key});
@@ -25,7 +31,9 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
   double progress = 0.2;
   final googleApiKey = dotenv.env["GOOGLE_API_KEY"];
   PredictionModel? prediction;
-  final _formKey = GlobalKey<FormBuilderState>();
+  List<PlatformFile> selectedMidias = [];
+  List<PlatformFile> selectedDocments = [];
+  List<PlatformFile> selectedCoverImage = [];
   final _formStepOneKey = GlobalKey<FormBuilderState>();
   final _formStepTwoKey = GlobalKey<FormBuilderState>();
   final _formStepThreeKey = GlobalKey<FormBuilderState>();
@@ -43,6 +51,10 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
   TextEditingController location = TextEditingController();
   TextEditingController birth = TextEditingController();
   TextEditingController beneficiaryName = TextEditingController();
+  TextEditingController phoneNumber = TextEditingController();
+  Map<String, dynamic> formDataStepOne = {};
+  Map<String, dynamic> formDataStepTwo = {};
+  Map<String, dynamic> formDataStepThree = {};
 
   List<Category> categories = [
     Category(
@@ -166,6 +178,162 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
     }
   }
 
+  void _submitStepOneForm() {
+    if (_formStepOneKey.currentState?.saveAndValidate() ?? false) {
+      formDataStepOne = _formStepOneKey.currentState!.value;
+
+      print(_formStepOneKey.currentState);
+
+      String titulo = formDataStepOne["title"];
+      String descricao = formDataStepOne["description"];
+      String moeda = formDataStepOne["currency"];
+      String objetivo = formDataStepOne["fundraising_goal"];
+      String dataInicio = formDataStepOne["start_date"].toString();
+      String dataFim = formDataStepOne["end_date"].toString();
+      String localizacao = formDataStepOne["location"];
+
+      print("Categoria: ${_selectedOptionCategory!.id}");
+      print("Título: $titulo");
+      print("Descrição: $descricao");
+      print("Moeda: $moeda");
+      print("Objetivo: $objetivo");
+      print("Data de Início: $dataInicio");
+      print("Data de Fim: $dataFim");
+      print("Localização: $localizacao");
+
+      // Agora você pode enviar esses dados para o backend ou salvar no banco de dados
+    } else {
+      print("Formulário inválido!");
+    }
+  }
+
+  void _submitStepTwoForm() {
+    if (_formStepTwoKey.currentState?.saveAndValidate() ?? false) {
+      formDataStepTwo = _formStepTwoKey.currentState!.value;
+
+      // Recuperando os valores específicos
+      String beneficiaryName = formDataStepOne['beneficiary_name'] ?? '';
+      String phoneNumber = formDataStepOne['phone_number'] ?? '';
+      String birthDate = formDataStepOne['birth'] != null
+          ? DateFormat("dd-MM-yyyy").format(formDataStepOne['birth'])
+          : '';
+      String? beneficiaryType = _selectedOptionType;
+      bool? isUrgent = _selectedOptionUrgent;
+
+      print("Nome do Beneficiário: $beneficiaryName");
+      print("Data de Nascimento: $birthDate");
+      print("Tipo de Beneficiário: $beneficiaryType");
+      print("Urgente: $isUrgent");
+      print("Urgente: $phoneNumber");
+
+      // Aqui você pode salvar os dados, enviar para API, etc.
+    } else {
+      print("Formulário inválido");
+    }
+  }
+
+  void _submitStepThreeForm() {
+    if (_formStepThreeKey.currentState?.saveAndValidate() ?? false) {
+      formDataStepThree = _formStepThreeKey.currentState!.value;
+
+      // Recuperando os arquivos
+      List<dynamic>? images = formDataStepThree['images'];
+      List<dynamic>? documents = formDataStepThree['documents'];
+      List<CampaignDocumentEntity> docs = [];
+      List<CampaignMidiaEntity> mids = [];
+
+      // Processando as imagens
+      List<Map<String, dynamic>> uploadedImages = [];
+      if (images != null) {
+        for (var file in images) {
+          if (file is PlatformFile) {
+            final midia = CampaignMidiaEntity(
+                midiaType: "image", userId: AppEntity.uid, midiaUrl: file.path);
+            mids.add(midia);
+            // uploadedImages.add({
+            //   'name': file.name,
+            //   'bytes': file.bytes,
+            //   'size': file.size,
+            // });
+          }
+        }
+      }
+
+      // Processando os documentos
+      List<Map<String, dynamic>> uploadedDocuments = [];
+      if (documents != null) {
+        for (var file in documents) {
+          if (file is PlatformFile) {
+            final doc = CampaignDocumentEntity(
+                isApproved: false,
+                userId: AppEntity.uid,
+                documentPath: file.path);
+
+            docs.add(doc);
+            // uploadedDocuments.add({
+            //   'name': file.name,
+            //   'bytes': file.bytes,
+            //   'size': file.size,
+            // });
+          }
+        }
+      }
+
+      // Exibir os dados no console
+      print("Imagens carregadas: $uploadedImages");
+      print("Documentos carregados: $uploadedDocuments");
+      print("CATEGORIA ID ${_selectedOptionCategory!.id}");
+
+      String categoriaSelecionada = _selectedOptionCategory?.name ?? "";
+      String titulo = formDataStepOne["title"];
+      String descricao = formDataStepOne["description"];
+      String moeda = formDataStepOne["currency"];
+      String objetivo = formDataStepOne["fundraising_goal"];
+      String dataInicio = formDataStepOne["start_date"].toString();
+      String dataFim = formDataStepOne["end_date"].toString();
+      String localizacao = formDataStepOne["location"];
+
+      // Recuperando os valores específicos
+      String beneficiaryName = formDataStepTwo['beneficiary_name'] ?? '';
+      String phoneNumber = formDataStepTwo['phone_number'] ?? '';
+      String? birthDate = formDataStepTwo['birth'] != null
+          ? DateFormat("dd-MM-yyyy").format(formDataStepTwo['birth'])
+          : null;
+      String? beneficiaryType = _selectedOptionType;
+      bool? isUrgent = _selectedOptionUrgent;
+
+      print("VIRTH");
+      print(_selectedOptionCategory!.id);
+
+      final campaign = CampaignEntity(
+          title: titulo,
+          description: descricao,
+          fundraisingGoal: double.parse(objetivo),
+          fundsRaised: 0.0,
+          currency: moeda,
+          imageCoverUrl: selectedCoverImage[0].path,
+          categoryId: _selectedOptionCategory!.id,
+          ongId: "32ca60fa-9c02-4d58-a5b8-8e8968141965",
+          location: localizacao,
+          userId: AppEntity.uid,
+          campaignType: beneficiaryType,
+          phoneNumber: phoneNumber,
+          priority: 0,
+          isUrgent: isUrgent,
+          isActivate: true,
+          numberOfContributions: 0,
+          beneficiaryName: beneficiaryName,
+          birth: birthDate != null ? DateTime.parse(birthDate) : null,
+          endDate: dataFim != null ? DateTime.parse(dataFim) : null,
+          startDate: dataInicio != null ? DateTime.parse(dataInicio) : null,
+          documents: docs,
+          midias: mids);
+      context.read<CampaignActionCubit>().create(campaign);
+    } else {
+      print("Formulário inválido");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -187,6 +355,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                 onPressed: () {
                   if (activeStep == 0) {
                     if (_formStepOneKey.currentState!.validate()) {
+                      _submitStepOneForm();
                       setState(() {
                         activeStep++;
                       });
@@ -200,9 +369,11 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                           _selectedOptionCategory = category;
                         });
                       }
+                      print(_formStepOneKey.currentState!.value);
                     }
                   } else if (activeStep == 1) {
                     if (_formStepTwoKey.currentState!.validate()) {
+                      _submitStepTwoForm();
                       setState(() {
                         activeStep++;
                       });
@@ -215,9 +386,10 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                       }
                     }
                   } else {
-                    if (_formStepThreeKey.currentState!.validate()) {
-                      print(_formKey.currentState!.fields.keys);
-                    }
+                    // setState(() {
+                    //   activeStep++;
+                    // });
+                    _submitStepThreeForm();
                   }
                 },
                 child:
@@ -227,43 +399,50 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
           ],
         ),
       ),
-      body: Column(
-        children: [
-          Container(
-            child: Column(
-              children: [
-                ListTile(
-                  leading: Container(
-                    width: 45,
-                    height: 45,
-                    child: Image.asset(
-                      fit: BoxFit.cover,
-                      AppImages.charity,
-                    ),
-                  ),
-                  title: Text(
-                    "Passo ${activeStep + 1}/3",
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  subtitle: Text(
-                    activeStep == 0
-                        ? "Informações da Campanha"
-                        : activeStep == 1
-                            ? "Beneficiário e Organização"
-                            : "Mídias e Documentos",
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                )
-              ],
-            ),
-          ),
-          const SizedBox(height: 20),
-          Expanded(
-            child: SingleChildScrollView(
-              child: getStepContent(activeStep),
-            ),
-          )
-        ],
+      body: BlocConsumer<CampaignActionCubit, CampaignActionState>(
+        listener: (context, state) {
+          print("MOSTRAR O ESTADO $state");
+        },
+        builder: (context, state) {
+          return Column(
+            children: [
+              Container(
+                child: Column(
+                  children: [
+                    ListTile(
+                      leading: Container(
+                        width: 45,
+                        height: 45,
+                        child: Image.asset(
+                          fit: BoxFit.cover,
+                          AppImages.charity,
+                        ),
+                      ),
+                      title: Text(
+                        "Passo ${activeStep + 1}/3",
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      subtitle: Text(
+                        activeStep == 0
+                            ? "Informações da Campanha"
+                            : activeStep == 1
+                                ? "Beneficiário e Organização"
+                                : "Mídias e Documentos",
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: getStepContent(activeStep),
+                ),
+              )
+            ],
+          );
+        },
       ),
     );
   }
@@ -315,14 +494,19 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: FormBuilderFilePicker(
               name: "images",
+              initialValue: selectedMidias,
               decoration: InputDecoration(labelText: "Mídia"),
               previewImages: true,
               maxFiles: 8,
-              allowedExtensions: ['pdf', 'doc', 'docx'],
-              onChanged: (val) => print(val),
+              allowedExtensions: ['jpg', 'jpeg', 'png'],
+              onChanged: (val) {
+                setState(() {
+                  selectedMidias = List<PlatformFile>.from(val ?? []);
+                });
+              },
               typeSelectors: [
                 TypeSelector(
-                  type: FileType.any,
+                  type: FileType.custom,
                   selector: Row(
                     children: <Widget>[
                       Icon(Icons.add_circle),
@@ -371,11 +555,16 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: FormBuilderFilePicker(
               name: "documents",
+              initialValue: selectedDocments,
               decoration: InputDecoration(labelText: "Documentos"),
               maxFiles: 4,
               allowedExtensions: ['pdf', 'doc', 'docx'],
               previewImages: true,
-              onChanged: (val) => print(val),
+              onChanged: (val) {
+                setState(() {
+                  selectedDocments = List<PlatformFile>.from(val ?? []);
+                });
+              },
               typeSelectors: [
                 TypeSelector(
                   type: FileType.custom,
@@ -497,6 +686,38 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
               ),
               decoration: InputDecoration(
                 label: Text("Nome do Beneficiário"),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: RichText(
+              text: TextSpan(
+                style: DefaultTextStyle.of(context)
+                    .style
+                    .copyWith(color: Colors.black),
+                children: [
+                  TextSpan(
+                    text: "Contacto do beneficiário ",
+                  ),
+                  TextSpan(
+                      text: "*",
+                      style: TextStyle(color: Colors.red, fontSize: 16))
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: FormBuilderTextField(
+              name: "phone_number",
+              controller: phoneNumber,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: FormBuilderValidators.required(
+                errorText: 'Número para entrar em contacto',
+              ),
+              decoration: InputDecoration(
+                label: Text("Contacto"),
               ),
             ),
           ),
@@ -782,17 +1003,22 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: FormBuilderFilePicker(
               name: "image_cover_url",
+              onChanged: (val) {
+                setState(() {
+                  selectedCoverImage = List<PlatformFile>.from(val ?? []);
+                });
+              },
               decoration: InputDecoration(labelText: "Imagem"),
               maxFiles: 1,
+              initialValue: selectedCoverImage,
               allowedExtensions: [
                 'jpeg',
                 "jpg",
               ],
               previewImages: true,
-              onChanged: (val) => print(val),
               typeSelectors: [
                 TypeSelector(
-                  type: FileType.any,
+                  type: FileType.custom,
                   selector: Row(
                     children: <Widget>[
                       Icon(Icons.add_circle),

@@ -111,6 +111,9 @@ dependencies:
   video_player: ^2.9.2  
   google_places_flutter: ^2.1.0
   awesome_place_search: ^2.1.0
+  uuid: ^4.5.1
+  image_picker: ^1.1.2
+  path_provider: ^2.1.4
 
 dev_dependencies:
   flutter_test:

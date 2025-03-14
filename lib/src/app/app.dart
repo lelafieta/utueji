@@ -8,6 +8,7 @@ import '../app/di.dart' as di;
 import '../features/blogs/presentation/cubit/blog_cubit.dart';
 import '../features/auth/presentation/cubit/auth_cubit.dart';
 import '../features/auth/presentation/cubit/initial_cubit/initial_cubit.dart';
+import '../features/campaigns/presentation/cubit/campaign_action_cubit/campaign_action_cubit.dart';
 import '../features/campaigns/presentation/cubit/campaign_detail_cubit/campaign_detail_cubit.dart';
 import '../features/campaigns/presentation/cubit/campaign_store_favorite_cubit/campaign_store_favorite_cubit.dart';
 import '../features/campaigns/presentation/cubit/campaign_urgent_cubit/campaign_urgent_cubit.dart';
@@ -41,6 +42,7 @@ class UtuejiApp extends StatelessWidget {
         BlocProvider(create: (_) => di.instance<CampaignStoreFavoriteCubit>()),
         BlocProvider(create: (_) => di.instance<FavoriteCubit>()),
         BlocProvider(create: (_) => di.instance<UpdateActionCubit>()),
+        BlocProvider(create: (_) => di.instance<CampaignActionCubit>()),
       ],
       child: GetMaterialApp(
         theme: AppTheme.lightTheme,
