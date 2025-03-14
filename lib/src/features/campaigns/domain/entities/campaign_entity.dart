@@ -26,6 +26,10 @@ class CampaignEntity {
   bool? isUrgent;
   bool? isActivate;
   DateTime? endDate;
+  DateTime? birth;
+  String? currency;
+  String? campaignType;
+  String? beneficiaryName;
   String? title;
   String? userId;
   DateTime? startDate;
@@ -55,6 +59,7 @@ class CampaignEntity {
       this.numberOfContributions,
       this.ongId,
       this.phoneNumber,
+      this.beneficiaryName,
       this.priority = 0,
       this.endDate,
       this.title,
@@ -62,6 +67,9 @@ class CampaignEntity {
       this.startDate,
       this.category,
       this.ong,
+      this.birth,
+      this.campaignType,
+      this.currency,
       this.user,
       this.contributors,
       this.documents,

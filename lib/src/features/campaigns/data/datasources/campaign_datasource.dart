@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
 import '../../../../core/supabase/supabase_consts.dart';
 import '../../domain/entities/campaign_entity.dart';
 import '../models/campaign_model.dart';
@@ -12,9 +15,64 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
   });
 
   @override
-  Future<void> createCampaign(CampaignEntity campaign) {
-    // TODO: implement createCampaign
-    throw UnimplementedError();
+  Future<void> createCampaign(CampaignEntity campaign) async {
+    try {
+      String? imageCoverUrl;
+      List<String>? midiaImagesPathes;
+      List<String>? documentImagesPathes;
+
+      File? coverImageFile;
+
+      if (supabase.auth.currentUser != null) {
+        print("ESTÁ AUTENTICADO");
+      } else {
+        print("NÃO AUTENTICADO");
+      }
+
+      if (campaign.imageCoverUrl != null) {
+        final uuid = Uuid().v4();
+        final imageFile = File(campaign.imageCoverUrl!);
+        final fileName = "${DateTime.now()}${uuid}.jpg";
+        final storageResponse = await supabase.storage
+            .from(SupabaseConsts.campaigns)
+            .upload(fileName, imageFile);
+
+        if (storageResponse.isNotEmpty) {
+          imageCoverUrl = supabase.storage
+              .from(SupabaseConsts.campaigns)
+              .getPublicUrl(fileName);
+
+          final newCampaign = CampaignModel(
+            id: uuid,
+            categoryId: campaign.categoryId,
+            title: campaign.title,
+            description: campaign.description,
+            fundraisingGoal: campaign.fundraisingGoal,
+            fundsRaised: campaign.fundsRaised,
+            imageCoverUrl: imageCoverUrl,
+            currency: campaign.currency,
+            startDate: campaign.startDate,
+            endDate: campaign.endDate,
+            location: campaign.location,
+            campaignType: campaign.campaignType,
+            beneficiaryName: campaign.beneficiaryName,
+            phoneNumber: campaign.phoneNumber,
+            isUrgent: campaign.isUrgent,
+            userId: supabase.auth.currentUser!.id,
+            isActivate: true,
+            numberOfContributions: 0,
+            ongId: campaign.ongId,
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          ).toMap();
+
+          await supabase.from(SupabaseConsts.campaigns).insert(newCampaign);
+        }
+      }
+    } catch (e) {
+      print("ERRORROROROR $e");
+      throw e;
+    }
   }
 
   @override
@@ -111,7 +169,7 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
         .eq('is_urgent', true)
         .eq('is_activate', true)
         .eq('user_id', userId)
-        .order('created_at')
+        .order('created_at', ascending: false)
         .limit(10);
 
     return response.map((event) => CampaignModel.fromJson(event)).toList();
