@@ -33,6 +33,13 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
   TextEditingController controllerLocation = TextEditingController();
   Category? _selectedOptionCategory;
   String? _selectedOptionType;
+  TextEditingController title = TextEditingController();
+  TextEditingController description = TextEditingController();
+  TextEditingController currency = TextEditingController();
+  TextEditingController fundRaisingGoal = TextEditingController();
+  TextEditingController startDate = TextEditingController();
+  TextEditingController endDate = TextEditingController();
+  TextEditingController location = TextEditingController();
 
   List<Category> categories = [
     Category(
@@ -175,26 +182,42 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
             Expanded(
               child: ElevatedButton(
                 onPressed: () {
-                  print("STEP $activeStep");
-                  if (activeStep < 2) {
-                    if (activeStep == 0) {
-                      if (_formStepOneKey.currentState!.validate()) {
-                        print(_formStepOneKey.currentState!.value);
+                  if (activeStep == 0) {
+                    if (_formStepOneKey.currentState!.validate()) {
+                      print(_formStepOneKey.currentState!.value);
+                      setState(() {
+                        activeStep++;
+                      });
+                    } else {
+                      if (_selectedOptionCategory == null) {
+                        final category = Category(
+                            id: "empty",
+                            name: "Empty",
+                            createdAt: DateTime.now());
                         setState(() {
-                          activeStep++;
+                          _selectedOptionCategory = category;
                         });
-                      } else {
-                        if (_selectedOptionCategory == null) {
-                          final category = Category(
-                              id: "empty",
-                              name: "Empty",
-                              createdAt: DateTime.now());
-                          setState(() {
-                            _selectedOptionCategory = category;
-                          });
-                        }
-                        print(_formStepOneKey.currentState!.value);
                       }
+                      print(_formStepOneKey.currentState!.value);
+                    }
+                  } else if (activeStep == 1) {
+                    // print(_formStepOneKey.currentState!.value);
+                    if (_formStepOneKey.currentState!.validate()) {
+                      print(_formStepOneKey.currentState!.value);
+                      setState(() {
+                        activeStep++;
+                      });
+                    } else {
+                      if (_selectedOptionCategory == null) {
+                        final category = Category(
+                            id: "empty",
+                            name: "Empty",
+                            createdAt: DateTime.now());
+                        setState(() {
+                          _selectedOptionCategory = category;
+                        });
+                      }
+                      print(_formStepOneKey.currentState!.value);
                     }
                   } else {
                     // Handle form submission
@@ -681,6 +704,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: FormBuilderTextField(
               name: "title",
+              controller: title,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: FormBuilderValidators.required(
                 errorText: 'Título da campanha',
@@ -709,6 +733,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: FormBuilderTextField(
               name: "description",
+              controller: description,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: FormBuilderValidators.required(
                 errorText: 'Descrição da campanha',
@@ -801,11 +826,11 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                       errorText: 'Selecione moeda',
                     ),
                     decoration: InputDecoration(
-                      label: Text("AOA"),
+                      label: Text("Moeda"),
                       contentPadding:
                           EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                     ),
-                    items: ['USD', 'EUR', 'GBP', 'JPY', 'AUD']
+                    items: ['AOA', 'EUR', 'USD']
                         .map(
                           (member) => DropdownMenuItem(
                               value: member, child: Text("$member")),
@@ -867,6 +892,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
               inputType: InputType.date,
               format: DateFormat("dd-MM-yyyy"),
               autovalidateMode: AutovalidateMode.onUserInteraction,
+              controller: startDate,
               validator: FormBuilderValidators.required(
                 errorText: 'Data de início',
               ),
@@ -899,6 +925,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
             child: FormBuilderDateTimePicker(
               name: "end_date",
               inputType: InputType.date,
+              controller: endDate,
               format: DateFormat("dd-MM-yyyy"),
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: FormBuilderValidators.required(
