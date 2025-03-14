@@ -33,6 +33,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
   TextEditingController controllerLocation = TextEditingController();
   Category? _selectedOptionCategory;
   String? _selectedOptionType;
+  bool? _selectedOptionUrgent = false;
   TextEditingController title = TextEditingController();
   TextEditingController description = TextEditingController();
   TextEditingController currency = TextEditingController();
@@ -40,6 +41,8 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
   TextEditingController startDate = TextEditingController();
   TextEditingController endDate = TextEditingController();
   TextEditingController location = TextEditingController();
+  TextEditingController birth = TextEditingController();
+  TextEditingController beneficiaryName = TextEditingController();
 
   List<Category> categories = [
     Category(
@@ -184,7 +187,6 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                 onPressed: () {
                   if (activeStep == 0) {
                     if (_formStepOneKey.currentState!.validate()) {
-                      print(_formStepOneKey.currentState!.value);
                       setState(() {
                         activeStep++;
                       });
@@ -198,31 +200,22 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                           _selectedOptionCategory = category;
                         });
                       }
-                      print(_formStepOneKey.currentState!.value);
                     }
                   } else if (activeStep == 1) {
-                    // print(_formStepOneKey.currentState!.value);
-                    if (_formStepOneKey.currentState!.validate()) {
-                      print(_formStepOneKey.currentState!.value);
+                    if (_formStepTwoKey.currentState!.validate()) {
                       setState(() {
                         activeStep++;
                       });
                     } else {
-                      if (_selectedOptionCategory == null) {
-                        final category = Category(
-                            id: "empty",
-                            name: "Empty",
-                            createdAt: DateTime.now());
+                      print("else $_selectedOptionType");
+                      if (_selectedOptionType == null) {
                         setState(() {
-                          _selectedOptionCategory = category;
+                          _selectedOptionType = "empty";
                         });
                       }
-                      print(_formStepOneKey.currentState!.value);
                     }
                   } else {
-                    // Handle form submission
-                    if (_formKey.currentState!.validate()) {
-                      print("Object Filds");
+                    if (_formStepThreeKey.currentState!.validate()) {
                       print(_formKey.currentState!.fields.keys);
                     }
                   }
@@ -290,11 +283,80 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                     .copyWith(color: Colors.black),
                 children: [
                   TextSpan(
+                    text: "Mídia",
+                  ),
+                  TextSpan(
+                    text: " (Opcional)",
+                    style: TextStyle(
+                      color: Colors.black45,
+                      fontSize: 14,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding:
+                const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 20),
+            child: RichText(
+              text: TextSpan(
+                style: DefaultTextStyle.of(context).style,
+                children: [
+                  TextSpan(
+                    text:
+                        "Carregue imagens ou vídeos de até 100mb e formato mp4, jpg, jpeg, png",
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: FormBuilderFilePicker(
+              name: "images",
+              decoration: InputDecoration(labelText: "Mídia"),
+              previewImages: true,
+              maxFiles: 8,
+              allowedExtensions: ['pdf', 'doc', 'docx'],
+              onChanged: (val) => print(val),
+              typeSelectors: [
+                TypeSelector(
+                  type: FileType.any,
+                  selector: Row(
+                    children: <Widget>[
+                      Icon(Icons.add_circle),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Text("Adicionar Imagens/Videos"),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+              onFileLoading: (val) {
+                print(val);
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: RichText(
+              text: TextSpan(
+                style: DefaultTextStyle.of(context)
+                    .style
+                    .copyWith(color: Colors.black),
+                children: [
+                  TextSpan(
                     text: "Documentos relacionado a causa",
                   ),
                   TextSpan(
-                      text: " *",
-                      style: TextStyle(color: Colors.red, fontSize: 16))
+                    text: " (Opcional)",
+                    style: TextStyle(
+                      color: Colors.black45,
+                      fontSize: 14,
+                    ),
+                  )
                 ],
               ),
             ),
@@ -323,67 +385,6 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: Text("Adicionar documentos"),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-              onFileLoading: (val) {
-                print(val);
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            child: RichText(
-              text: TextSpan(
-                style: DefaultTextStyle.of(context)
-                    .style
-                    .copyWith(color: Colors.black),
-                children: [
-                  TextSpan(
-                    text: "Mídia",
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding:
-                const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 20),
-            child: RichText(
-              text: TextSpan(
-                style: DefaultTextStyle.of(context).style,
-                children: [
-                  TextSpan(
-                    text:
-                        "Carregue imagens ou vídeos de até 100mb e formato mp4, jpg, jpeg, png",
-                  ),
-                  TextSpan(
-                      text: " *",
-                      style: TextStyle(color: Colors.red, fontSize: 16))
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            child: FormBuilderFilePicker(
-              name: "images",
-              decoration: InputDecoration(labelText: "Mídia"),
-              previewImages: true,
-              maxFiles: 8,
-              allowedExtensions: ['pdf', 'doc', 'docx'],
-              onChanged: (val) => print(val),
-              typeSelectors: [
-                TypeSelector(
-                  type: FileType.any,
-                  selector: Row(
-                    children: <Widget>[
-                      Icon(Icons.add_circle),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text("Adicionar Imagens/Videos"),
                       ),
                     ],
                   ),
@@ -449,7 +450,9 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                     decoration: BoxDecoration(
                       color: isSelected ? AppColors.primaryColor : Colors.white,
                       border: Border.all(
-                        color: AppColors.primaryColor,
+                        color: (_selectedOptionType == "empty")
+                            ? Colors.red
+                            : AppColors.primaryColor,
                         width: 1,
                       ),
                       borderRadius: BorderRadius.circular(8),
@@ -465,7 +468,6 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
               },
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: RichText(
@@ -488,66 +490,71 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: FormBuilderTextField(
               name: "beneficiary_name",
+              controller: beneficiaryName,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: FormBuilderValidators.required(
+                errorText: 'Nome do beneficiário',
+              ),
               decoration: InputDecoration(
                 label: Text("Nome do Beneficiário"),
               ),
             ),
           ),
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          //   child: FormBuilderDropdown(
-          //     name: 'member',
-          //     isDense: false,
-          //     decoration: InputDecoration(
-          //       label: Text("Selecione"),
-          //       contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          //     ),
-          //     validator: FormBuilderValidators.required(
-          //       errorText: 'Selecione SITE',
-          //     ),
-          //     items: [
-          //       'Internado',
-          //       'Recebeu alta',
-          //       'Em observação',
-          //       'Não hospitalizado',
-          //     ]
-          //         .map(
-          //           (member) =>
-          //               DropdownMenuItem(value: member, child: Text("$member")),
-          //         )
-          //         .toList(),
-          //   ),
-          // ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            child: RichText(
-              text: TextSpan(
-                style: DefaultTextStyle.of(context)
-                    .style
-                    .copyWith(color: Colors.black),
-                children: [
-                  TextSpan(
-                    text: "Data de nascimento ",
-                  ),
-                  TextSpan(
-                      text: "*",
-                      style: TextStyle(color: Colors.red, fontSize: 16))
-                ],
-              ),
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: FormBuilderDateTimePicker(
-              name: "birth",
-              decoration: InputDecoration(
-                hintText: "DD-MM-YYYY",
-                suffixIcon: Icon(Icons.calendar_month_rounded),
-              ),
-            ),
-          ),
-
+          (_selectedOptionType == "Um Individuo")
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 4),
+                      child: RichText(
+                        text: TextSpan(
+                          style: DefaultTextStyle.of(context)
+                              .style
+                              .copyWith(color: Colors.black),
+                          children: [
+                            TextSpan(
+                              text: "Data de nascimento ",
+                            ),
+                            TextSpan(
+                                text: "*",
+                                style:
+                                    TextStyle(color: Colors.red, fontSize: 16))
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      child: FormBuilderDateTimePicker(
+                        name: "birth",
+                        inputType: InputType.date,
+                        controller: birth,
+                        format: DateFormat("dd-MM-yyyy"),
+                        initialValue: birth.text.isNotEmpty
+                            ? DateFormat("dd-MM-yyyy").parse(birth.text)
+                            : null, // Define a data inicial baseada no texto
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        onChanged: (value) {
+                          if (value != null) {
+                            birth.text = DateFormat("dd-MM-yyyy").format(value);
+                          }
+                        },
+                        validator: (_selectedOptionType == "Um Individuo")
+                            ? FormBuilderValidators.required(
+                                errorText: 'Aniversário',
+                              )
+                            : null,
+                        decoration: InputDecoration(
+                          hintText: "DD-MM-YYYY",
+                          suffixIcon: Icon(Icons.calendar_month_rounded),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              : SizedBox.shrink(),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: RichText(
@@ -579,12 +586,15 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
               ),
               itemCount: 2,
               itemBuilder: (context, index) {
-                bool isSelected = _selectedOptionType == types[index];
+                // Lista de opções
+                final List<String> options = ["NÃO", "SIM"];
+                final bool isSelected =
+                    (options[index] == "SIM") == _selectedOptionUrgent;
 
                 return GestureDetector(
                   onTap: () {
                     setState(() {
-                      _selectedOptionType = types[index];
+                      _selectedOptionUrgent = options[index] == "SIM";
                     });
                   },
                   child: Container(
@@ -599,9 +609,10 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                     ),
                     alignment: Alignment.center,
                     child: Text(
-                      ["SIM", "NÃO"][index],
+                      options[index],
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: isSelected ? Colors.white : Colors.black),
+                            color: isSelected ? Colors.white : Colors.black,
+                          ),
                     ),
                   ),
                 );
@@ -772,7 +783,11 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
             child: FormBuilderFilePicker(
               name: "image_cover_url",
               decoration: InputDecoration(labelText: "Imagem"),
-              maxFiles: null,
+              maxFiles: 1,
+              allowedExtensions: [
+                'jpeg',
+                "jpg",
+              ],
               previewImages: true,
               onChanged: (val) => print(val),
               typeSelectors: [
@@ -822,6 +837,10 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                     name: 'currency',
                     isDense: false,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
+                    initialValue: currency.text,
+                    onChanged: (value) {
+                      currency.text = value!;
+                    },
                     validator: FormBuilderValidators.required(
                       errorText: 'Selecione moeda',
                     ),
@@ -848,6 +867,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                         name: "fundraising_goal",
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         keyboardType: TextInputType.number,
+                        controller: fundRaisingGoal,
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
                           FormBuilderValidators.numeric(
@@ -890,11 +910,19 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
             child: FormBuilderDateTimePicker(
               name: "start_date",
               inputType: InputType.date,
-              format: DateFormat("dd-MM-yyyy"),
-              autovalidateMode: AutovalidateMode.onUserInteraction,
               controller: startDate,
+              format: DateFormat("dd-MM-yyyy"),
+              initialValue: startDate.text.isNotEmpty
+                  ? DateFormat("dd-MM-yyyy").parse(startDate.text)
+                  : DateTime.now(), // Define a data inicial baseada no texto
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              onChanged: (value) {
+                if (value != null) {
+                  startDate.text = DateFormat("dd-MM-yyyy").format(value);
+                }
+              },
               validator: FormBuilderValidators.required(
-                errorText: 'Data de início',
+                errorText: 'Data do início',
               ),
               decoration: InputDecoration(
                 hintText: "DD-MM-YYYY",
@@ -927,7 +955,15 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
               inputType: InputType.date,
               controller: endDate,
               format: DateFormat("dd-MM-yyyy"),
+              initialValue: endDate.text.isNotEmpty
+                  ? DateFormat("dd-MM-yyyy").parse(endDate.text)
+                  : DateTime.now(), // Define a data inicial baseada no texto
               autovalidateMode: AutovalidateMode.onUserInteraction,
+              onChanged: (value) {
+                if (value != null) {
+                  endDate.text = DateFormat("dd-MM-yyyy").format(value);
+                }
+              },
               validator: FormBuilderValidators.required(
                 errorText: 'Data do fim',
               ),
