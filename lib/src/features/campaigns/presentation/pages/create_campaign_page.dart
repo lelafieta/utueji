@@ -5,6 +5,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/images/app_images.dart';
@@ -25,9 +26,12 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
   final googleApiKey = dotenv.env["GOOGLE_API_KEY"];
   PredictionModel? prediction;
   final _formKey = GlobalKey<FormBuilderState>();
+  final _formStepOneKey = GlobalKey<FormBuilderState>();
+  final _formStepTwoKey = GlobalKey<FormBuilderState>();
+  final _formStepThreeKey = GlobalKey<FormBuilderState>();
 
   TextEditingController controllerLocation = TextEditingController();
-  Category? _selectedOption;
+  Category? _selectedOptionCategory;
   String? _selectedOptionType;
 
   List<Category> categories = [
@@ -168,29 +172,36 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // if (activeStep > 0)
-            //   IconButton(
-            //     style: ButtonStyle(
-            //       backgroundColor:
-            //           MaterialStatePropertyAll(AppColors.primaryColor),
-            //     ),
-            //     onPressed: () {
-            //       setState(() {
-            //         activeStep--;
-            //       });
-            //     },
-            //     icon: Icon(Icons.arrow_back),
-            //   ),
-
             Expanded(
               child: ElevatedButton(
                 onPressed: () {
+                  print("STEP $activeStep");
                   if (activeStep < 2) {
-                    setState(() {
-                      activeStep++;
-                    });
+                    if (activeStep == 0) {
+                      if (_formStepOneKey.currentState!.validate()) {
+                        print(_formStepOneKey.currentState!.value);
+                        setState(() {
+                          activeStep++;
+                        });
+                      } else {
+                        if (_selectedOptionCategory == null) {
+                          final category = Category(
+                              id: "empty",
+                              name: "Empty",
+                              createdAt: DateTime.now());
+                          setState(() {
+                            _selectedOptionCategory = category;
+                          });
+                        }
+                        print(_formStepOneKey.currentState!.value);
+                      }
+                    }
                   } else {
                     // Handle form submission
+                    if (_formKey.currentState!.validate()) {
+                      print("Object Filds");
+                      print(_formKey.currentState!.fields.keys);
+                    }
                   }
                 },
                 child:
@@ -241,690 +252,703 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
     );
   }
 
-  Column stepThree(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: RichText(
-            text: TextSpan(
-              style: DefaultTextStyle.of(context)
-                  .style
-                  .copyWith(color: Colors.black),
-              children: [
-                TextSpan(
-                  text: "Documentos relacionado a causa",
-                ),
-                TextSpan(
-                    text: " *",
-                    style: TextStyle(color: Colors.red, fontSize: 16))
-              ],
-            ),
-          ),
-        ),
-        Padding(
-          padding:
-              const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 20),
-          child: Text(
-              "Carregue os documentos de suporte para se conectar diretamente com os doadores"),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: FormBuilderFilePicker(
-            name: "documentos",
-            decoration: InputDecoration(labelText: "Documentos"),
-            maxFiles: 4,
-            allowedExtensions: ['pdf', 'doc', 'docx'],
-            previewImages: true,
-            onChanged: (val) => print(val),
-            typeSelectors: [
-              TypeSelector(
-                type: FileType.custom,
-                selector: Row(
-                  children: <Widget>[
-                    Icon(Icons.add_circle),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Text("Adicionar documentos"),
-                    ),
-                  ],
-                ),
+  Widget stepThree(BuildContext context) {
+    return FormBuilder(
+      key: _formStepThreeKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: RichText(
+              text: TextSpan(
+                style: DefaultTextStyle.of(context)
+                    .style
+                    .copyWith(color: Colors.black),
+                children: [
+                  TextSpan(
+                    text: "Documentos relacionado a causa",
+                  ),
+                  TextSpan(
+                      text: " *",
+                      style: TextStyle(color: Colors.red, fontSize: 16))
+                ],
               ),
-            ],
-            onFileLoading: (val) {
-              print(val);
-            },
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: RichText(
-            text: TextSpan(
-              style: DefaultTextStyle.of(context)
-                  .style
-                  .copyWith(color: Colors.black),
-              children: [
-                TextSpan(
-                  text: "Mídia",
-                ),
-              ],
             ),
           ),
-        ),
-        Padding(
-          padding:
-              const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 20),
-          child: RichText(
-            text: TextSpan(
-              style: DefaultTextStyle.of(context).style,
-              children: [
-                TextSpan(
-                  text:
-                      "Carregue imagens ou vídeos de até 100mb e formato mp4, jpg, jpeg, png",
-                ),
-                TextSpan(
-                    text: " *",
-                    style: TextStyle(color: Colors.red, fontSize: 16))
-              ],
-            ),
+          Padding(
+            padding:
+                const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 20),
+            child: Text(
+                "Carregue os documentos de suporte para se conectar diretamente com os doadores"),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: FormBuilderFilePicker(
-            name: "images",
-            decoration: InputDecoration(labelText: "Mídia"),
-            previewImages: true,
-            maxFiles: 8,
-            allowedExtensions: ['pdf', 'doc', 'docx'],
-            onChanged: (val) => print(val),
-            typeSelectors: [
-              TypeSelector(
-                type: FileType.any,
-                selector: Row(
-                  children: <Widget>[
-                    Icon(Icons.add_circle),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Text("Adicionar Imagens/Videos"),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-            onFileLoading: (val) {
-              print(val);
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  Column stepTwo(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: RichText(
-            text: TextSpan(
-              style: DefaultTextStyle.of(context)
-                  .style
-                  .copyWith(color: Colors.black),
-              children: [
-                TextSpan(
-                  text: "Quem será beneficiado? ",
-                ),
-                TextSpan(
-                    text: "*",
-                    style: TextStyle(color: Colors.red, fontSize: 16))
-              ],
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: GridView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: 4,
-            ),
-            itemCount: types.length,
-            itemBuilder: (context, index) {
-              bool isSelected = _selectedOptionType == types[index];
-
-              return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _selectedOptionType = types[index];
-                  });
-                },
-                child: Container(
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    color: isSelected ? AppColors.primaryColor : Colors.white,
-                    border: Border.all(
-                      color: AppColors.primaryColor,
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    types[index],
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: isSelected ? Colors.white : Colors.black),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: RichText(
-            text: TextSpan(
-              style: DefaultTextStyle.of(context)
-                  .style
-                  .copyWith(color: Colors.black),
-              children: [
-                TextSpan(
-                  text: "Nome do beneficiário ",
-                ),
-                TextSpan(
-                    text: "*",
-                    style: TextStyle(color: Colors.red, fontSize: 16))
-              ],
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: FormBuilderTextField(
-            name: "beneficiary_name",
-            decoration: InputDecoration(
-              label: Text("Nome do Beneficiário"),
-            ),
-          ),
-        ),
-        // Padding(
-        //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        //   child: FormBuilderDropdown(
-        //     name: 'member',
-        //     isDense: false,
-        //     decoration: InputDecoration(
-        //       label: Text("Selecione"),
-        //       contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        //     ),
-        //     validator: FormBuilderValidators.required(
-        //       errorText: 'Selecione SITE',
-        //     ),
-        //     items: [
-        //       'Internado',
-        //       'Recebeu alta',
-        //       'Em observação',
-        //       'Não hospitalizado',
-        //     ]
-        //         .map(
-        //           (member) =>
-        //               DropdownMenuItem(value: member, child: Text("$member")),
-        //         )
-        //         .toList(),
-        //   ),
-        // ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: RichText(
-            text: TextSpan(
-              style: DefaultTextStyle.of(context)
-                  .style
-                  .copyWith(color: Colors.black),
-              children: [
-                TextSpan(
-                  text: "Data de nascimento ",
-                ),
-                TextSpan(
-                    text: "*",
-                    style: TextStyle(color: Colors.red, fontSize: 16))
-              ],
-            ),
-          ),
-        ),
-
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: FormBuilderDateTimePicker(
-            name: "birth",
-            decoration: InputDecoration(
-              hintText: "DD-MM-YYYY",
-              suffixIcon: Icon(Icons.calendar_month_rounded),
-            ),
-          ),
-        ),
-
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: RichText(
-            text: TextSpan(
-              style: DefaultTextStyle.of(context)
-                  .style
-                  .copyWith(color: Colors.black),
-              children: [
-                TextSpan(
-                  text: "Tem urgência?",
-                ),
-                TextSpan(
-                    text: "*",
-                    style: TextStyle(color: Colors.red, fontSize: 16))
-              ],
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: GridView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: 4,
-            ),
-            itemCount: 2,
-            itemBuilder: (context, index) {
-              bool isSelected = _selectedOptionType == types[index];
-
-              return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _selectedOptionType = types[index];
-                  });
-                },
-                child: Container(
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    color: isSelected ? AppColors.primaryColor : Colors.white,
-                    border: Border.all(
-                      color: AppColors.primaryColor,
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    ["SIM", "NÃO"][index],
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: isSelected ? Colors.white : Colors.black),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  Column stepOne(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: RichText(
-            text: TextSpan(
-              style: DefaultTextStyle.of(context)
-                  .style
-                  .copyWith(color: Colors.black),
-              children: [
-                TextSpan(
-                  text: "Objetivo de arrecadar fundos ",
-                ),
-                TextSpan(
-                    text: "*",
-                    style: TextStyle(color: Colors.red, fontSize: 16))
-              ],
-            ),
-          ),
-        ),
-
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: GridView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: 4,
-            ),
-            itemCount: categories.length,
-            itemBuilder: (context, index) {
-              bool isSelected = _selectedOption == categories[index];
-
-              return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _selectedOption = categories[index];
-                  });
-                },
-                child: Container(
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    color: isSelected ? AppColors.primaryColor : Colors.white,
-                    border: Border.all(
-                      color: AppColors.primaryColor,
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    categories[index].name,
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: isSelected ? Colors.white : Colors.black),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: RichText(
-            text: TextSpan(
-              style: DefaultTextStyle.of(context)
-                  .style
-                  .copyWith(color: Colors.black),
-              children: [
-                TextSpan(
-                  text: "Informe o titulo da campanha ",
-                ),
-                TextSpan(
-                    text: "*",
-                    style: TextStyle(color: Colors.red, fontSize: 16))
-              ],
-            ),
-          ),
-        ),
-        // Padding(
-        //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        //   child: FormBuilderDropdown(
-        //     name: 'member',
-        //     isDense: false,
-        //     decoration: InputDecoration(
-        //       label: Text("Pessoa"),
-        //       contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        //     ),
-        //     validator: FormBuilderValidators.required(
-        //       errorText: 'Selecione SITE',
-        //     ),
-        //     items: [
-        //       'Mãe',
-        //       'Pai',
-        //       'Irmão',
-        //       'Filho',
-        //       'Outros',
-        //     ]
-        //         .map(
-        //           (member) =>
-        //               DropdownMenuItem(value: member, child: Text("$member")),
-        //         )
-        //         .toList(),
-        //   ),
-        // ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: FormBuilderTextField(
-            name: "title",
-            decoration: InputDecoration(
-              label: Text("Título"),
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: RichText(
-            text: TextSpan(
-              style: DefaultTextStyle.of(context)
-                  .style
-                  .copyWith(color: Colors.black),
-              children: [
-                TextSpan(
-                  text: "Adicione um descrição",
-                ),
-              ],
-            ),
-          ),
-        ),
-
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: FormBuilderTextField(
-            name: "description",
-            decoration: InputDecoration(
-              // label: Text("Descrição"),
-              hintMaxLines: 1,
-            ),
-            maxLines: 3,
-          ),
-        ),
-
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: RichText(
-            text: TextSpan(
-              style: DefaultTextStyle.of(context)
-                  .style
-                  .copyWith(color: Colors.black),
-              children: [
-                TextSpan(
-                  text: "Carregar imagem de capa",
-                ),
-                TextSpan(
-                  text: " (Opcional)",
-                  style: TextStyle(
-                    color: Colors.black45,
-                    fontSize: 14,
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
-
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: FormBuilderFilePicker(
-            name: "image_cover_url",
-            decoration: InputDecoration(labelText: "Imagem"),
-            maxFiles: null,
-            previewImages: true,
-            onChanged: (val) => print(val),
-            typeSelectors: [
-              TypeSelector(
-                type: FileType.any,
-                selector: Row(
-                  children: <Widget>[
-                    Icon(Icons.add_circle),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Text("Adicionar imagem"),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-            onFileLoading: (val) {
-              print(val);
-            },
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: RichText(
-            text: TextSpan(
-              style: DefaultTextStyle.of(context)
-                  .style
-                  .copyWith(color: Colors.black),
-              children: [
-                TextSpan(
-                  text: "Meta de Arrecadação",
-                ),
-                TextSpan(
-                    text: "*",
-                    style: TextStyle(color: Colors.red, fontSize: 16))
-              ],
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: FormBuilderDropdown(
-                  name: 'member',
-                  isDense: false,
-                  decoration: InputDecoration(
-                    label: Text("AOA"),
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                  ),
-                  validator: FormBuilderValidators.required(
-                    errorText: 'Selecione SITE',
-                  ),
-                  items: ['USD', 'EUR', 'GBP', 'JPY', 'AUD']
-                      .map(
-                        (member) => DropdownMenuItem(
-                            value: member, child: Text("$member")),
-                      )
-                      .toList(),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                flex: 2,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    FormBuilderTextField(
-                      name: "fundraising_goal",
-                      decoration: InputDecoration(
-                        label: Text("Entra com montante"),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: FormBuilderFilePicker(
+              name: "documents",
+              decoration: InputDecoration(labelText: "Documentos"),
+              maxFiles: 4,
+              allowedExtensions: ['pdf', 'doc', 'docx'],
+              previewImages: true,
+              onChanged: (val) => print(val),
+              typeSelectors: [
+                TypeSelector(
+                  type: FileType.custom,
+                  selector: Row(
+                    children: <Widget>[
+                      Icon(Icons.add_circle),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Text("Adicionar documentos"),
                       ),
-                    ),
-                    Text("Deveria ser mínimo 1.000.000Kz")
-                  ],
+                    ],
+                  ),
                 ),
+              ],
+              onFileLoading: (val) {
+                print(val);
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: RichText(
+              text: TextSpan(
+                style: DefaultTextStyle.of(context)
+                    .style
+                    .copyWith(color: Colors.black),
+                children: [
+                  TextSpan(
+                    text: "Mídia",
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: RichText(
-            text: TextSpan(
-              style: DefaultTextStyle.of(context)
-                  .style
-                  .copyWith(color: Colors.black),
-              children: [
-                TextSpan(
-                  text: "Data do início",
+          Padding(
+            padding:
+                const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 20),
+            child: RichText(
+              text: TextSpan(
+                style: DefaultTextStyle.of(context).style,
+                children: [
+                  TextSpan(
+                    text:
+                        "Carregue imagens ou vídeos de até 100mb e formato mp4, jpg, jpeg, png",
+                  ),
+                  TextSpan(
+                      text: " *",
+                      style: TextStyle(color: Colors.red, fontSize: 16))
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: FormBuilderFilePicker(
+              name: "images",
+              decoration: InputDecoration(labelText: "Mídia"),
+              previewImages: true,
+              maxFiles: 8,
+              allowedExtensions: ['pdf', 'doc', 'docx'],
+              onChanged: (val) => print(val),
+              typeSelectors: [
+                TypeSelector(
+                  type: FileType.any,
+                  selector: Row(
+                    children: <Widget>[
+                      Icon(Icons.add_circle),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Text("Adicionar Imagens/Videos"),
+                      ),
+                    ],
+                  ),
                 ),
-                TextSpan(
-                    text: "*",
-                    style: TextStyle(color: Colors.red, fontSize: 16))
+              ],
+              onFileLoading: (val) {
+                print(val);
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget stepTwo(BuildContext context) {
+    return FormBuilder(
+      key: _formStepTwoKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: RichText(
+              text: TextSpan(
+                style: DefaultTextStyle.of(context)
+                    .style
+                    .copyWith(color: Colors.black),
+                children: [
+                  TextSpan(
+                    text: "Quem será beneficiado? ",
+                  ),
+                  TextSpan(
+                      text: "*",
+                      style: TextStyle(color: Colors.red, fontSize: 16))
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: GridView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                childAspectRatio: 4,
+              ),
+              itemCount: types.length,
+              itemBuilder: (context, index) {
+                bool isSelected = _selectedOptionType == types[index];
+
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _selectedOptionType = types[index];
+                    });
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: isSelected ? AppColors.primaryColor : Colors.white,
+                      border: Border.all(
+                        color: AppColors.primaryColor,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      types[index],
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: isSelected ? Colors.white : Colors.black),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: RichText(
+              text: TextSpan(
+                style: DefaultTextStyle.of(context)
+                    .style
+                    .copyWith(color: Colors.black),
+                children: [
+                  TextSpan(
+                    text: "Nome do beneficiário ",
+                  ),
+                  TextSpan(
+                      text: "*",
+                      style: TextStyle(color: Colors.red, fontSize: 16))
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: FormBuilderTextField(
+              name: "beneficiary_name",
+              decoration: InputDecoration(
+                label: Text("Nome do Beneficiário"),
+              ),
+            ),
+          ),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          //   child: FormBuilderDropdown(
+          //     name: 'member',
+          //     isDense: false,
+          //     decoration: InputDecoration(
+          //       label: Text("Selecione"),
+          //       contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          //     ),
+          //     validator: FormBuilderValidators.required(
+          //       errorText: 'Selecione SITE',
+          //     ),
+          //     items: [
+          //       'Internado',
+          //       'Recebeu alta',
+          //       'Em observação',
+          //       'Não hospitalizado',
+          //     ]
+          //         .map(
+          //           (member) =>
+          //               DropdownMenuItem(value: member, child: Text("$member")),
+          //         )
+          //         .toList(),
+          //   ),
+          // ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: RichText(
+              text: TextSpan(
+                style: DefaultTextStyle.of(context)
+                    .style
+                    .copyWith(color: Colors.black),
+                children: [
+                  TextSpan(
+                    text: "Data de nascimento ",
+                  ),
+                  TextSpan(
+                      text: "*",
+                      style: TextStyle(color: Colors.red, fontSize: 16))
+                ],
+              ),
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: FormBuilderDateTimePicker(
+              name: "birth",
+              decoration: InputDecoration(
+                hintText: "DD-MM-YYYY",
+                suffixIcon: Icon(Icons.calendar_month_rounded),
+              ),
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: RichText(
+              text: TextSpan(
+                style: DefaultTextStyle.of(context)
+                    .style
+                    .copyWith(color: Colors.black),
+                children: [
+                  TextSpan(
+                    text: "Tem urgência?",
+                  ),
+                  TextSpan(
+                      text: "*",
+                      style: TextStyle(color: Colors.red, fontSize: 16))
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: GridView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                childAspectRatio: 4,
+              ),
+              itemCount: 2,
+              itemBuilder: (context, index) {
+                bool isSelected = _selectedOptionType == types[index];
+
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _selectedOptionType = types[index];
+                    });
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: isSelected ? AppColors.primaryColor : Colors.white,
+                      border: Border.all(
+                        color: AppColors.primaryColor,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      ["SIM", "NÃO"][index],
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: isSelected ? Colors.white : Colors.black),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget stepOne(BuildContext context) {
+    return FormBuilder(
+      key: _formStepOneKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: RichText(
+              text: TextSpan(
+                style: DefaultTextStyle.of(context)
+                    .style
+                    .copyWith(color: Colors.black),
+                children: [
+                  TextSpan(
+                    text: "Objetivo de arrecadar fundos ",
+                  ),
+                  TextSpan(
+                      text: "*",
+                      style: TextStyle(color: Colors.red, fontSize: 16))
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: GridView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                childAspectRatio: 4,
+              ),
+              itemCount: categories.length,
+              itemBuilder: (context, index) {
+                bool isSelected = _selectedOptionCategory == categories[index];
+
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _selectedOptionCategory = categories[index];
+                    });
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: isSelected ? AppColors.primaryColor : Colors.white,
+                      border: Border.all(
+                        color: ((_selectedOptionCategory != null) &&
+                                _selectedOptionCategory!.id == "empty")
+                            ? Colors.red
+                            : AppColors.primaryColor,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      categories[index].name,
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: isSelected ? Colors.white : Colors.black),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: RichText(
+              text: TextSpan(
+                style: DefaultTextStyle.of(context)
+                    .style
+                    .copyWith(color: Colors.black),
+                children: [
+                  TextSpan(
+                    text: "Informe o titulo da campanha ",
+                  ),
+                  TextSpan(
+                      text: "*",
+                      style: TextStyle(color: Colors.red, fontSize: 16))
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: FormBuilderTextField(
+              name: "title",
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: FormBuilderValidators.required(
+                errorText: 'Título da campanha',
+              ),
+              decoration: InputDecoration(
+                label: Text("Título"),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: RichText(
+              text: TextSpan(
+                style: DefaultTextStyle.of(context)
+                    .style
+                    .copyWith(color: Colors.black),
+                children: [
+                  TextSpan(
+                    text: "Adicione um descrição",
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: FormBuilderTextField(
+              name: "description",
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: FormBuilderValidators.required(
+                errorText: 'Descrição da campanha',
+              ),
+              decoration: InputDecoration(
+                // label: Text("Descrição"),
+                hintMaxLines: 1,
+              ),
+              maxLines: 3,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: RichText(
+              text: TextSpan(
+                style: DefaultTextStyle.of(context)
+                    .style
+                    .copyWith(color: Colors.black),
+                children: [
+                  TextSpan(
+                    text: "Carregar imagem de capa",
+                  ),
+                  TextSpan(
+                    text: " (Opcional)",
+                    style: TextStyle(
+                      color: Colors.black45,
+                      fontSize: 14,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: FormBuilderFilePicker(
+              name: "image_cover_url",
+              decoration: InputDecoration(labelText: "Imagem"),
+              maxFiles: null,
+              previewImages: true,
+              onChanged: (val) => print(val),
+              typeSelectors: [
+                TypeSelector(
+                  type: FileType.any,
+                  selector: Row(
+                    children: <Widget>[
+                      Icon(Icons.add_circle),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Text("Adicionar imagem"),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+              onFileLoading: (val) {
+                print(val);
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: RichText(
+              text: TextSpan(
+                style: DefaultTextStyle.of(context)
+                    .style
+                    .copyWith(color: Colors.black),
+                children: [
+                  TextSpan(
+                    text: "Meta de Arrecadação",
+                  ),
+                  TextSpan(
+                      text: "*",
+                      style: TextStyle(color: Colors.red, fontSize: 16))
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: FormBuilderDropdown(
+                    name: 'currency',
+                    isDense: false,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: FormBuilderValidators.required(
+                      errorText: 'Selecione moeda',
+                    ),
+                    decoration: InputDecoration(
+                      label: Text("AOA"),
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    ),
+                    items: ['USD', 'EUR', 'GBP', 'JPY', 'AUD']
+                        .map(
+                          (member) => DropdownMenuItem(
+                              value: member, child: Text("$member")),
+                        )
+                        .toList(),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  flex: 2,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      FormBuilderTextField(
+                        name: "fundraising_goal",
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        keyboardType: TextInputType.number,
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(),
+                          FormBuilderValidators.numeric(
+                              errorText: 'Apenas números são permitidos'),
+                          FormBuilderValidators.max(100000000,
+                              errorText:
+                                  'O valor deve ser no máximo 100.000.000'),
+                        ]),
+                        decoration: InputDecoration(
+                          labelText: "Entra com montante",
+                        ),
+                      ),
+                      Text("Deveria ser mínimo 1.000.000Kz")
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: FormBuilderDateTimePicker(
-            name: "start_date",
-            decoration: InputDecoration(
-              hintText: "DD-MM-YYYY",
-              suffixIcon: Icon(Icons.calendar_month_rounded),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: RichText(
+              text: TextSpan(
+                style: DefaultTextStyle.of(context)
+                    .style
+                    .copyWith(color: Colors.black),
+                children: [
+                  TextSpan(
+                    text: "Data do início",
+                  ),
+                  TextSpan(
+                      text: "*",
+                      style: TextStyle(color: Colors.red, fontSize: 16))
+                ],
+              ),
             ),
           ),
-        ),
-
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: RichText(
-            text: TextSpan(
-              style: DefaultTextStyle.of(context)
-                  .style
-                  .copyWith(color: Colors.black),
-              children: [
-                TextSpan(
-                  text: "Data do fim",
-                ),
-                TextSpan(
-                    text: "*",
-                    style: TextStyle(color: Colors.red, fontSize: 16))
-              ],
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: FormBuilderDateTimePicker(
+              name: "start_date",
+              inputType: InputType.date,
+              format: DateFormat("dd-MM-yyyy"),
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: FormBuilderValidators.required(
+                errorText: 'Data de início',
+              ),
+              decoration: InputDecoration(
+                hintText: "DD-MM-YYYY",
+                suffixIcon: Icon(Icons.calendar_month_rounded),
+              ),
             ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: FormBuilderDateTimePicker(
-            name: "end_date",
-            decoration: InputDecoration(
-              hintText: "DD-MM-YYYY",
-              suffixIcon: Icon(Icons.calendar_month_rounded),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: RichText(
+              text: TextSpan(
+                style: DefaultTextStyle.of(context)
+                    .style
+                    .copyWith(color: Colors.black),
+                children: [
+                  TextSpan(
+                    text: "Data do fim",
+                  ),
+                  TextSpan(
+                      text: "*",
+                      style: TextStyle(color: Colors.red, fontSize: 16))
+                ],
+              ),
             ),
           ),
-        ),
-
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: RichText(
-            text: TextSpan(
-              style: DefaultTextStyle.of(context)
-                  .style
-                  .copyWith(color: Colors.black),
-              children: [
-                TextSpan(
-                  text: "Localização ",
-                ),
-                TextSpan(
-                    text: "*",
-                    style: TextStyle(color: Colors.red, fontSize: 16))
-              ],
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: FormBuilderDateTimePicker(
+              name: "end_date",
+              inputType: InputType.date,
+              format: DateFormat("dd-MM-yyyy"),
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: FormBuilderValidators.required(
+                errorText: 'Data do fim',
+              ),
+              decoration: InputDecoration(
+                hintText: "DD-MM-YYYY",
+                suffixIcon: Icon(Icons.calendar_month_rounded),
+              ),
             ),
           ),
-        ),
-
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: FormBuilderTextField(
-            name: "location",
-            controller: controllerLocation,
-            readOnly: true,
-            onTap: () {
-              _searchPlaces();
-            },
-            decoration: InputDecoration(
-              hintText: "Localização",
-              suffixIcon: Icon(Icons.search),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: RichText(
+              text: TextSpan(
+                style: DefaultTextStyle.of(context)
+                    .style
+                    .copyWith(color: Colors.black),
+                children: [
+                  TextSpan(
+                    text: "Localização ",
+                  ),
+                  TextSpan(
+                      text: "*",
+                      style: TextStyle(color: Colors.red, fontSize: 16))
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: FormBuilderTextField(
+              name: "location",
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: FormBuilderValidators.required(
+                errorText: 'Localização',
+              ),
+              controller: controllerLocation,
+              readOnly: true,
+              onTap: () {
+                _searchPlaces();
+              },
+              decoration: InputDecoration(
+                hintText: "Localização",
+                suffixIcon: Icon(Icons.search),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -941,4 +965,18 @@ class Category {
     this.description,
     required this.createdAt,
   });
+
+  Category copyWith({
+    String? id,
+    String? name,
+    String? description,
+    DateTime? createdAt,
+  }) {
+    return Category(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
 }
