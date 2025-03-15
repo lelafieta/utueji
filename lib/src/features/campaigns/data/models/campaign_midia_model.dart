@@ -6,6 +6,7 @@ class CampaignMidiaModel extends CampaignMidiaEntity {
       super.createdAt,
       super.updatedAt,
       super.midiaUrl,
+      super.campaignId,
       super.userId,
       super.midiaType});
 
@@ -18,6 +19,7 @@ class CampaignMidiaModel extends CampaignMidiaEntity {
       updatedAt: json['updated_at'] != null
           ? DateTime.parse(json['updated_at'])
           : null,
+      campaignId: json['campaign_id'] as String?,
       userId: json['user_id'] as String?,
       midiaUrl: json['midia_url'] as String?,
       midiaType: json['midia_type'] as String?,
@@ -28,6 +30,7 @@ class CampaignMidiaModel extends CampaignMidiaEntity {
     return {
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
+      'campaign_id': campaignId,
       'midia_url': midiaUrl,
       'midia_type': midiaType,
       'user_id': userId,
