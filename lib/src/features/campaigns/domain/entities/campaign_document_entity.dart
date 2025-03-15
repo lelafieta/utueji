@@ -3,6 +3,7 @@ class CampaignDocumentEntity {
   final String? userId;
   final String? documentPath;
   final bool? isApproved;
+  final String? campaignId;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
@@ -11,6 +12,7 @@ class CampaignDocumentEntity {
       this.isApproved,
       this.createdAt,
       this.updatedAt,
+      this.campaignId,
       this.documentPath,
       this.userId});
 }

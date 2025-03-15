@@ -6,6 +6,7 @@ import 'package:utueji/src/features/campaigns/data/models/campaign_midia_model.d
 import 'package:uuid/uuid.dart';
 import '../../../../core/supabase/supabase_consts.dart';
 import '../../domain/entities/campaign_entity.dart';
+import '../models/campaign_document_model.dart';
 import '../models/campaign_model.dart';
 import 'i_campaign_datasource.dart';
 
@@ -19,16 +20,15 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
   @override
   Future<void> createCampaign(CampaignEntity campaign) async {
     try {
+      final supabase = Supabase.instance.client; // Conexão com Supabase
+      final campaignId = Uuid().v4();
       String? imageCoverUrl;
-      List<String>? midiaImagesPathes;
-      List<String>? documentImagesPathes;
 
-      File? coverImageFile;
-
+      // Upload da imagem de capa da campanha
       if (campaign.imageCoverUrl != null) {
-        final campaignId = Uuid().v4();
         final imageFile = File(campaign.imageCoverUrl!);
         final fileName = "${DateTime.now()}${campaignId}.jpg";
+
         final storageResponse = await supabase.storage
             .from(SupabaseConsts.campaigns)
             .upload(fileName, imageFile);
@@ -37,85 +37,235 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
           imageCoverUrl = supabase.storage
               .from(SupabaseConsts.campaigns)
               .getPublicUrl(fileName);
+        }
+      }
 
-          final newCampaign = CampaignModel(
-            id: campaignId,
-            categoryId: campaign.categoryId,
-            title: campaign.title,
-            description: campaign.description,
-            fundraisingGoal: campaign.fundraisingGoal,
-            fundsRaised: campaign.fundsRaised,
-            imageCoverUrl: imageCoverUrl,
-            currency: campaign.currency,
-            startDate: campaign.startDate,
-            endDate: campaign.endDate,
-            location: campaign.location,
-            campaignType: campaign.campaignType,
-            beneficiaryName: campaign.beneficiaryName,
-            phoneNumber: campaign.phoneNumber,
-            isUrgent: campaign.isUrgent,
-            userId: supabase.auth.currentUser!.id,
-            isActivate: true,
-            numberOfContributions: 0,
-            ongId: campaign.ongId,
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-          ).toMap();
+      // Criando JSON para enviar ao Supabase
+      final campaignData = {
+        "id": campaignId,
+        "categoryId": campaign.categoryId,
+        "title": campaign.title,
+        "description": campaign.description,
+        "fundraisingGoal": campaign.fundraisingGoal,
+        "fundsRaised": campaign.fundsRaised,
+        "imageCoverUrl": imageCoverUrl,
+        "currency": campaign.currency,
+        "startDate": campaign.startDate?.toIso8601String(),
+        "endDate": campaign.endDate?.toIso8601String(),
+        "location": campaign.location,
+        "campaignType": campaign.campaignType,
+        "beneficiaryName": campaign.beneficiaryName,
+        "phoneNumber": campaign.phoneNumber,
+        "isUrgent": campaign.isUrgent,
+        "userId": supabase.auth.currentUser!.id,
+        "isActivate": true,
+        "numberOfContributions": 0,
+        "ongId": campaign.ongId
+      };
 
-          final res =
-              await supabase.from(SupabaseConsts.campaigns).insert(newCampaign);
+      // Processamento e Upload de Mídias (Imagens e Vídeos)
+      List<Map<String, dynamic>> mediaList = [];
+      if (campaign.midias != null && campaign.midias!.isNotEmpty) {
+        for (var media in campaign.midias!) {
+          final uuid = Uuid().v4();
+          final mediaFile = File(media.midiaUrl!);
+          final fileExtension =
+              path.extension(mediaFile.path).replaceFirst('.', '');
 
-          print("RESPONSE");
-          print(res);
+          // Identificando o tipo da mídia (imagem ou vídeo)
+          String midiaType =
+              (['jpg', 'jpeg', 'png'].contains(fileExtension.toLowerCase()))
+                  ? "image"
+                  : "video";
 
-          if (campaign.midias!.length > 0) {
-            String midiaType = "";
+          final fileName = "${DateTime.now()}${uuid}.$fileExtension";
+          final storageResponse = await supabase.storage
+              .from(SupabaseStorageConsts.midias)
+              .upload(fileName, mediaFile);
 
-            final allowedImageExtensions = ['jpg', 'jpeg', 'png'];
-            campaign.midias!.forEach((element) async {
-              final uuid = Uuid().v4();
-              final imageFile = File(element.midiaUrl!);
-              final fileExtension =
-                  path.extension(imageFile.path).replaceFirst('.', '');
+          if (storageResponse.isNotEmpty) {
+            final midiaPath = supabase.storage
+                .from(SupabaseStorageConsts.midias)
+                .getPublicUrl(fileName);
 
-              if (allowedImageExtensions
-                  .contains(fileExtension.toLowerCase())) {
-                midiaType = "image";
-              } else {
-                midiaType = "video";
-              }
-
-              final fileName = "${DateTime.now()}${uuid}.jpg";
-              final storageResponse = await supabase.storage
-                  .from(SupabaseConsts.campaigns)
-                  .upload(fileName, imageFile);
-
-              if (storageResponse.isNotEmpty) {
-                final midiaPath = supabase.storage
-                    .from(SupabaseConsts.midias)
-                    .getPublicUrl(fileName);
-
-                final newMidia = CampaignMidiaModel(
-                        id: uuid,
-                        midiaType: midiaType,
-                        midiaUrl: midiaPath,
-                        campaignId: campaignId,
-                        createdAt: DateTime.now(),
-                        updatedAt: DateTime.now(),
-                        userId: supabase.auth.currentUser!.id)
-                    .toJson();
-
-                await supabase.from(SupabaseConsts.midias).insert(newMidia);
-              }
+            mediaList.add({
+              "id": uuid,
+              "midiaType": midiaType,
+              "midiaUrl": midiaPath,
             });
           }
         }
       }
+
+      // Processamento e Upload de Documentos
+      List<Map<String, dynamic>> documentList = [];
+      if (campaign.documents != null && campaign.documents!.isNotEmpty) {
+        for (var doc in campaign.documents!) {
+          final uuid = Uuid().v4();
+          final documentFile = File(doc.documentPath!);
+          final fileExtension =
+              path.extension(documentFile.path).replaceFirst('.', '');
+
+          final fileName = "${DateTime.now()}${uuid}.$fileExtension";
+          final storageResponse = await supabase.storage
+              .from(SupabaseStorageConsts.documents)
+              .upload(fileName, documentFile);
+
+          if (storageResponse.isNotEmpty) {
+            final documentPath = supabase.storage
+                .from(SupabaseStorageConsts.documents)
+                .getPublicUrl(fileName);
+
+            documentList.add({
+              "id": uuid,
+              "documentPath": documentPath,
+            });
+          }
+        }
+      }
+
+      // Chamando a Stored Procedure do Supabase
+      final response = await supabase.rpc(
+        'create_campaign_transaction',
+        params: {
+          'campaign_data': campaignData,
+          'media_list': mediaList,
+          'document_list': documentList,
+        },
+      );
+
+      if (response.error != null) {
+        print("Erro ao criar campanha: ${response.error!.message}");
+      } else {
+        print("✅ Campanha criada com sucesso!");
+      }
     } catch (e) {
-      print("ERRORROROROR $e");
+      print("❌ Erro: $e");
       throw e;
     }
   }
+  // Future<void> createCampaign(CampaignEntity campaign) async {
+  //   try {
+  //     String? imageCoverUrl;
+  //     if (campaign.imageCoverUrl != null) {
+  //       final campaignId = Uuid().v4();
+  //       final imageFile = File(campaign.imageCoverUrl!);
+  //       final fileName = "${DateTime.now()}${campaignId}.jpg";
+  //       final storageResponse = await supabase.storage
+  //           .from(SupabaseConsts.campaigns)
+  //           .upload(fileName, imageFile);
+
+  //       if (storageResponse.isNotEmpty) {
+  //         imageCoverUrl = supabase.storage
+  //             .from(SupabaseConsts.campaigns)
+  //             .getPublicUrl(fileName);
+
+  //         final newCampaign = CampaignModel(
+  //           id: campaignId,
+  //           categoryId: campaign.categoryId,
+  //           title: campaign.title,
+  //           description: campaign.description,
+  //           fundraisingGoal: campaign.fundraisingGoal,
+  //           fundsRaised: campaign.fundsRaised,
+  //           imageCoverUrl: imageCoverUrl,
+  //           currency: campaign.currency,
+  //           startDate: campaign.startDate,
+  //           endDate: campaign.endDate,
+  //           location: campaign.location,
+  //           campaignType: campaign.campaignType,
+  //           beneficiaryName: campaign.beneficiaryName,
+  //           phoneNumber: campaign.phoneNumber,
+  //           isUrgent: campaign.isUrgent,
+  //           userId: supabase.auth.currentUser!.id,
+  //           isActivate: true,
+  //           numberOfContributions: 0,
+  //           ongId: campaign.ongId,
+  //           createdAt: DateTime.now(),
+  //           updatedAt: DateTime.now(),
+  //         ).toMap();
+
+  //         await supabase.from(SupabaseConsts.campaigns).insert(newCampaign);
+
+  //         if (campaign.midias!.length > 0) {
+  //           String midiaType = "";
+
+  //           final allowedImageExtensions = ['jpg', 'jpeg', 'png'];
+  //           campaign.midias!.forEach((element) async {
+  //             final uuid = Uuid().v4();
+  //             final imageFile = File(element.midiaUrl!);
+  //             final fileExtension =
+  //                 path.extension(imageFile.path).replaceFirst('.', '');
+
+  //             if (allowedImageExtensions
+  //                 .contains(fileExtension.toLowerCase())) {
+  //               midiaType = "image";
+  //             } else {
+  //               midiaType = "video";
+  //             }
+
+  //             final fileName = "${DateTime.now()}${uuid}.jpg";
+  //             final storageResponse = await supabase.storage
+  //                 .from(SupabaseStorageConsts.midias)
+  //                 .upload(fileName, imageFile);
+
+  //             if (storageResponse.isNotEmpty) {
+  //               final midiaPath = supabase.storage
+  //                   .from(SupabaseStorageConsts.midias)
+  //                   .getPublicUrl(fileName);
+
+  //               final newMidia = CampaignMidiaModel(
+  //                       id: uuid,
+  //                       midiaType: midiaType,
+  //                       midiaUrl: midiaPath,
+  //                       campaignId: campaignId,
+  //                       createdAt: DateTime.now(),
+  //                       updatedAt: DateTime.now(),
+  //                       userId: supabase.auth.currentUser!.id)
+  //                   .toJson();
+
+  //               await supabase.from(SupabaseConsts.midias).insert(newMidia);
+  //             }
+  //           });
+  //         }
+  //         if (campaign.documents!.length > 0) {
+  //           campaign.documents!.forEach((element) async {
+  //             final uuid = Uuid().v4();
+  //             final documentFile = File(element.documentPath!);
+  //             final fileExtension =
+  //                 path.extension(documentFile.path).replaceFirst('.', '');
+
+  //             final fileName = "${DateTime.now()}${uuid}.$fileExtension";
+  //             final storageResponse = await supabase.storage
+  //                 .from(SupabaseStorageConsts.documents)
+  //                 .upload(fileName, documentFile);
+
+  //             if (storageResponse.isNotEmpty) {
+  //               final documentPath = supabase.storage
+  //                   .from(SupabaseStorageConsts.documents)
+  //                   .getPublicUrl(fileName);
+
+  //               final newDocument = CampaignDocumentModel(
+  //                       id: uuid,
+  //                       documentPath: documentPath,
+  //                       campaignId: campaignId,
+  //                       createdAt: DateTime.now(),
+  //                       updatedAt: DateTime.now(),
+  //                       userId: supabase.auth.currentUser!.id)
+  //                   .toJson();
+
+  //               await supabase
+  //                   .from(SupabaseConsts.documents)
+  //                   .insert(newDocument);
+  //             }
+  //           });
+  //         }
+  //       }
+  //     }
+  //   } catch (e) {
+  //     print("ERRORROROROR $e");
+  //     throw e;
+  //   }
+  // }
 
   @override
   Future<void> deleteCampaign(String id) {

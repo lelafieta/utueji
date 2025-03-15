@@ -5,6 +5,7 @@ class CampaignDocumentModel extends CampaignDocumentEntity {
       {super.id,
       super.createdAt,
       super.updatedAt,
+      super.campaignId,
       super.documentPath,
       super.userId,
       super.isApproved});
@@ -19,6 +20,7 @@ class CampaignDocumentModel extends CampaignDocumentEntity {
           ? DateTime.parse(json['updated_at'])
           : null,
       userId: json['user_id'] as String?,
+      campaignId: json['campaign_id'] as String?,
       documentPath: json['document_path'] as String?,
       isApproved: json['is_approved'] as bool?,
     );
@@ -30,6 +32,7 @@ class CampaignDocumentModel extends CampaignDocumentEntity {
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
       'document_path': documentPath,
+      'campaign_id': campaignId,
       'user_id': userId,
       'is_approved': isApproved,
     };
