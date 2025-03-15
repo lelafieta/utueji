@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:path/path.dart' as path;
+import 'package:utueji/src/features/campaigns/data/models/campaign_midia_model.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../core/supabase/supabase_consts.dart';
 import '../../domain/entities/campaign_entity.dart';
@@ -23,16 +25,10 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
 
       File? coverImageFile;
 
-      if (supabase.auth.currentUser != null) {
-        print("ESTÁ AUTENTICADO");
-      } else {
-        print("NÃO AUTENTICADO");
-      }
-
       if (campaign.imageCoverUrl != null) {
-        final uuid = Uuid().v4();
+        final campaignId = Uuid().v4();
         final imageFile = File(campaign.imageCoverUrl!);
-        final fileName = "${DateTime.now()}${uuid}.jpg";
+        final fileName = "${DateTime.now()}${campaignId}.jpg";
         final storageResponse = await supabase.storage
             .from(SupabaseConsts.campaigns)
             .upload(fileName, imageFile);
@@ -43,7 +39,7 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
               .getPublicUrl(fileName);
 
           final newCampaign = CampaignModel(
-            id: uuid,
+            id: campaignId,
             categoryId: campaign.categoryId,
             title: campaign.title,
             description: campaign.description,
@@ -66,7 +62,53 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
             updatedAt: DateTime.now(),
           ).toMap();
 
-          await supabase.from(SupabaseConsts.campaigns).insert(newCampaign);
+          final res =
+              await supabase.from(SupabaseConsts.campaigns).insert(newCampaign);
+
+          print("RESPONSE");
+          print(res);
+
+          if (campaign.midias!.length > 0) {
+            String midiaType = "";
+
+            final allowedImageExtensions = ['jpg', 'jpeg', 'png'];
+            campaign.midias!.forEach((element) async {
+              final uuid = Uuid().v4();
+              final imageFile = File(element.midiaUrl!);
+              final fileExtension =
+                  path.extension(imageFile.path).replaceFirst('.', '');
+
+              if (allowedImageExtensions
+                  .contains(fileExtension.toLowerCase())) {
+                midiaType = "image";
+              } else {
+                midiaType = "video";
+              }
+
+              final fileName = "${DateTime.now()}${uuid}.jpg";
+              final storageResponse = await supabase.storage
+                  .from(SupabaseConsts.campaigns)
+                  .upload(fileName, imageFile);
+
+              if (storageResponse.isNotEmpty) {
+                final midiaPath = supabase.storage
+                    .from(SupabaseConsts.midias)
+                    .getPublicUrl(fileName);
+
+                final newMidia = CampaignMidiaModel(
+                        id: uuid,
+                        midiaType: midiaType,
+                        midiaUrl: midiaPath,
+                        campaignId: campaignId,
+                        createdAt: DateTime.now(),
+                        updatedAt: DateTime.now(),
+                        userId: supabase.auth.currentUser!.id)
+                    .toJson();
+
+                await supabase.from(SupabaseConsts.midias).insert(newMidia);
+              }
+            });
+          }
         }
       }
     } catch (e) {
