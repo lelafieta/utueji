@@ -438,6 +438,10 @@ class AppUtils {
     return "AOA ${NumberFormat.compact(locale: 'pt_AO').format(value)}";
   }
 
+  static String formatFullCurrency(num value) {
+    return "${NumberFormat.currency(locale: 'pt_AO', symbol: "AOA").format(value)}";
+  }
+
   static int daysBetweenToday(DateTime date) {
     DateTime today = DateTime.now();
     return date.difference(today).inDays;

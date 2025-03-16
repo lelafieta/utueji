@@ -1,15 +1,17 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:utueji/src/features/home/presentation/pages/home_page.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
 import '../../../campaigns/presentation/pages/my_campaign_page.dart';
 import '../../../chat/presentation/pages/chat_page.dart';
 import '../../../explore/presentation/pages/explore_page.dart';
-import '../../../home/presentation/pages/home_page.dart';
 
 class SolidaryPage extends StatefulWidget {
-  const SolidaryPage({super.key});
+  final int? currentIndex;
+  SolidaryPage({super.key, this.currentIndex});
 
   @override
   State<SolidaryPage> createState() => _SolidaryPageState();
@@ -61,6 +63,14 @@ class _SolidaryPageState extends State<SolidaryPage> {
     const MyCampaignPage(),
     const ChatPage(),
   ];
+  Map<String, dynamic>? arguments = Get.arguments;
+  @override
+  void initState() {
+    if (widget.currentIndex != null) {
+      _currentIndex = widget.currentIndex!;
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

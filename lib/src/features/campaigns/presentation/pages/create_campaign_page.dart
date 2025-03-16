@@ -84,7 +84,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
       createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
     ),
     Category(
-      id: "e31e98b7-6be3-43b4-af8e-ec0ac9cf0cc",
+      id: "e31e98b7-6be3-43b4-af8e-ec0ac9cf0fcc",
       name: "Médico",
       description: null,
       createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
@@ -238,18 +238,18 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
       formDataStepThree = _formStepThreeKey.currentState!.value;
 
       // Recuperando os arquivos
-      List<dynamic>? images = formDataStepThree['images'];
+      List<dynamic>? midias = formDataStepThree['midias'];
       List<dynamic>? documents = formDataStepThree['documents'];
       List<CampaignDocumentEntity> docs = [];
       List<CampaignMidiaEntity> mids = [];
 
       // Processando as imagens
       List<Map<String, dynamic>> uploadedImages = [];
-      if (images != null) {
-        for (var file in images) {
+      if (midias != null) {
+        for (var file in midias) {
           if (file is PlatformFile) {
             final midia = CampaignMidiaEntity(
-                midiaType: "image", userId: AppEntity.uid, midiaUrl: file.path);
+                midiaType: "midia", userId: AppEntity.uid, midiaUrl: file.path);
             mids.add(midia);
             // uploadedImages.add({
             //   'name': file.name,
@@ -285,7 +285,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
       print("Documentos carregados: $uploadedDocuments");
       print("CATEGORIA ID ${_selectedOptionCategory!.id}");
 
-      String categoriaSelecionada = _selectedOptionCategory?.name ?? "";
+      // String categoriaSelecionada = _selectedOptionCategory?.name ?? "";
       String titulo = formDataStepOne["title"];
       String descricao = formDataStepOne["description"];
       String moeda = formDataStepOne["currency"];
@@ -297,14 +297,13 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
       // Recuperando os valores específicos
       String beneficiaryName = formDataStepTwo['beneficiary_name'] ?? '';
       String phoneNumber = formDataStepTwo['phone_number'] ?? '';
-      // String? birthDate = formDataStepTwo['birth'] != null
-      //     ? DateFormat("dd-MM-yyyy").format(formDataStepTwo['birth'])
-      //     : null;
       String? beneficiaryType = _selectedOptionType;
       bool? isUrgent = _selectedOptionUrgent;
-      final birthDateString = formDataStepTwo['birth'];
-      // final DateFormat formatter = DateFormat("dd-MM-yyyy");
-      // final DateTime birthDate = formatter.parse(birthDateString);
+      String? birthDateString = (formDataStepTwo['birth'] == null)
+          ? null
+          : formDataStepTwo['birth'].toString();
+      print("BIRTH");
+      print(birthDateString);
 
       final campaign = CampaignEntity(
           title: titulo,
@@ -413,6 +412,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
           } else if (state is CampaignActionError) {
             EasyLoading.showError(state.message);
           } else {
+            EasyLoading.dismiss();
             Get.toNamed(AppRoutes.createCampaignSuccessRoute);
           }
         },
@@ -497,7 +497,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                 children: [
                   TextSpan(
                     text:
-                        "Carregue imagens ou vídeos de até 100mb e formato mp4, jpg, jpeg, png",
+                        "Carregue imagens ou vídeos de até 10mb e formato mp4, jpg, jpeg, png",
                   ),
                 ],
               ),
@@ -506,12 +506,24 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: FormBuilderFilePicker(
-              name: "images",
+              name: "midias",
               initialValue: selectedMidias,
               decoration: InputDecoration(labelText: "Mídia"),
               previewImages: true,
               maxFiles: 8,
-              allowedExtensions: ['jpg', 'jpeg', 'png'],
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              allowedExtensions: ['jpg', 'jpeg', 'png', 'mp4'],
+              validator: (value) {
+                String? result = null;
+                selectedMidias.forEach((file) {
+                  int fileSizeInMB = file.size ~/ (1024 * 1024);
+                  print("SIZE: ${file.size}");
+                  if (fileSizeInMB >= 10) {
+                    result = "Cada mídia não pode exceder os 50MB";
+                  }
+                });
+                return result;
+              },
               onChanged: (val) {
                 setState(() {
                   selectedMidias = List<PlatformFile>.from(val ?? []);
@@ -525,7 +537,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                       Icon(Icons.add_circle),
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
-                        child: Text("Adicionar Imagens/Videos"),
+                        child: Text("Adicionar Imagens/Vídeos"),
                       ),
                     ],
                   ),
@@ -562,7 +574,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
             padding:
                 const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 20),
             child: Text(
-                "Carregue os documentos de suporte para se conectar diretamente com os doadores"),
+                "Carregue os documentos de suporte para se conectar diretamente com os doadores até 5MB"),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -572,7 +584,19 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
               decoration: InputDecoration(labelText: "Documentos"),
               maxFiles: 4,
               allowedExtensions: ['pdf', 'doc', 'docx'],
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               previewImages: true,
+              validator: (value) {
+                String? result = null;
+                selectedMidias.forEach((file) {
+                  int fileSizeInMB = file.size ~/ (1024 * 1024);
+                  print("SIZE: ${file.size}");
+                  if (fileSizeInMB >= 10) {
+                    result = "Cada mídia não pode exceder os 50MB";
+                  }
+                });
+                return result;
+              },
               onChanged: (val) {
                 setState(() {
                   selectedDocments = List<PlatformFile>.from(val ?? []);

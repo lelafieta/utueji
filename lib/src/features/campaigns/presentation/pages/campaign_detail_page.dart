@@ -290,7 +290,7 @@ class _CampaignDetailPageState extends State<CampaignDetailPage> {
                               style: DefaultTextStyle.of(context).style,
                               children: [
                                 TextSpan(
-                                  text: AppUtils.formatCurrency(
+                                  text: AppUtils.formatFullCurrency(
                                       widget.campaign.fundsRaised!),
                                   style: Theme.of(context)
                                       .textTheme
@@ -301,7 +301,7 @@ class _CampaignDetailPageState extends State<CampaignDetailPage> {
                                 ),
                                 const TextSpan(text: " / "),
                                 TextSpan(
-                                    text: AppUtils.formatCurrency(
+                                    text: AppUtils.formatFullCurrency(
                                         widget.campaign.fundraisingGoal!))
                               ],
                             ),
@@ -806,6 +806,7 @@ class _AboutWidgetState extends State<AboutWidget> {
       padding: const EdgeInsets.all(10.0),
       child: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Card(
               shape: RoundedRectangleBorder(
@@ -906,6 +907,7 @@ class _AboutWidgetState extends State<AboutWidget> {
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           widget.campaign.title!,
