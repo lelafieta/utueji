@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:utueji/src/config/routes/app_routes.dart';
 
 import '../../../../config/themes/app_colors.dart';
+import '../../../../core/resources/images/app_images.dart';
 import '../../../../core/utils/app_date_utils_helper.dart';
 import '../../../../core/utils/app_utils.dart';
 import '../../domain/entities/campaign_entity.dart';
@@ -74,18 +75,23 @@ class _MyCampaignWidgetState extends State<MyCampaignWidget> {
                   child: Container(
                     width: 60,
                     height: 70,
-                    color: Colors.red,
-                    child: CachedNetworkImage(
-                      imageUrl: widget.campaign.imageCoverUrl!,
-                      fit: BoxFit.cover,
-                      placeholder: (context, url) => const Center(
-                        child: SizedBox(
-                          width: 40,
-                          height: 40,
-                          child: CircularProgressIndicator(),
-                        ),
-                      ),
-                    ),
+                    color: Colors.black12,
+                    child: (widget.campaign.imageCoverUrl == null)
+                        ? Image.asset(
+                            AppImages.coverBackground,
+                            fit: BoxFit.cover,
+                          )
+                        : CachedNetworkImage(
+                            imageUrl: widget.campaign.imageCoverUrl!,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => const Center(
+                              child: SizedBox(
+                                width: 40,
+                                height: 40,
+                                child: CircularProgressIndicator(),
+                              ),
+                            ),
+                          ),
                   ),
                 ),
                 title: Text(widget.campaign.title!,

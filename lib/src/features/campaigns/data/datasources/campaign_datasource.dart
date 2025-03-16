@@ -2,11 +2,9 @@ import 'dart:io';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:path/path.dart' as path;
-import 'package:utueji/src/features/campaigns/data/models/campaign_midia_model.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../core/supabase/supabase_consts.dart';
 import '../../domain/entities/campaign_entity.dart';
-import '../models/campaign_document_model.dart';
 import '../models/campaign_model.dart';
 import 'i_campaign_datasource.dart';
 

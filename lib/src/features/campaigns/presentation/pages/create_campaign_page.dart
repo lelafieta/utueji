@@ -1,13 +1,16 @@
 import 'package:awesome_place_search/awesome_place_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:utueji/src/app/app_entity.dart';
+import 'package:utueji/src/config/routes/app_routes.dart';
 import 'package:utueji/src/features/campaigns/domain/entities/campaign_midia_entity.dart';
 
 import '../../../../config/themes/app_colors.dart';
@@ -55,7 +58,6 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
   Map<String, dynamic> formDataStepOne = {};
   Map<String, dynamic> formDataStepTwo = {};
   Map<String, dynamic> formDataStepThree = {};
-
   List<Category> categories = [
     Category(
       id: "0279de80-27c5-4ddf-81ca-f4b5f12ec0dd",
@@ -76,20 +78,26 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
       createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
     ),
     Category(
-      id: "e3198b7-6be3-43b4-a8fe-ec0ac9c0fcc",
+      id: "d822573c-14e5-4eca-99b4-52a35e5889b3",
+      name: "Outros",
+      description: null,
+      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
+    ),
+    Category(
+      id: "e31e98b7-6be3-43b4-af8e-ec0ac9cf0cc",
       name: "Médico",
       description: null,
       createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
     ),
     Category(
-      id: "e949f3bd-5a94-44e0-bfd6-4728f0e9ea91",
+      id: "e949f3bd-5a94-44e0-bf6d-4728f0e9ea91",
       name: "Educação",
       description: null,
       createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
     ),
     Category(
-      id: "ebe15c90-13d7-4ec9-8fa5-d5900cc6dc4c",
-      name: "Olfá",
+      id: "ebe15c90-13d7-4ec9-8fa5-d5900cc6dcc4",
+      name: "Olfã",
       description: null,
       createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
     ),
@@ -99,14 +107,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
       description: null,
       createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
     ),
-    Category(
-      id: "d822573c-14e5-4eca-99b4-52a35e5889b3",
-      name: "Outros",
-      description: null,
-      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
-    ),
   ];
-
   List<String> types = [
     "Um Individuo",
     "Uma Família",
@@ -296,15 +297,13 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
       // Recuperando os valores específicos
       String beneficiaryName = formDataStepTwo['beneficiary_name'] ?? '';
       String phoneNumber = formDataStepTwo['phone_number'] ?? '';
-      String? birthDate = formDataStepTwo['birth'] != null
-          ? DateFormat("dd-MM-yyyy").format(formDataStepTwo['birth'])
-          : null;
+      // String? birthDate = formDataStepTwo['birth'] != null
+      //     ? DateFormat("dd-MM-yyyy").format(formDataStepTwo['birth'])
+      //     : null;
       String? beneficiaryType = _selectedOptionType;
       bool? isUrgent = _selectedOptionUrgent;
-
-      print("VIRTH");
-      final birthDateString = "19-03-2025";
-      final DateFormat formatter = DateFormat("dd-MM-yyyy");
+      final birthDateString = formDataStepTwo['birth'];
+      // final DateFormat formatter = DateFormat("dd-MM-yyyy");
       // final DateTime birthDate = formatter.parse(birthDateString);
 
       final campaign = CampaignEntity(
@@ -313,7 +312,8 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
           fundraisingGoal: double.parse(objetivo),
           fundsRaised: 0.0,
           currency: moeda,
-          imageCoverUrl: selectedCoverImage[0].path,
+          imageCoverUrl:
+              (selectedCoverImage.isEmpty) ? null : selectedCoverImage[0].path,
           categoryId: _selectedOptionCategory!.id,
           ongId: "32ca60fa-9c02-4d58-a5b8-8e8968141965",
           location: localizacao,
@@ -406,7 +406,15 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
       ),
       body: BlocConsumer<CampaignActionCubit, CampaignActionState>(
         listener: (context, state) {
-          print("MOSTRAR O ESTADO $state");
+          if (state is CampaignActionLoading) {
+            EasyLoading.show(
+                status: "Criando uma campanha",
+                maskType: EasyLoadingMaskType.black);
+          } else if (state is CampaignActionError) {
+            EasyLoading.showError(state.message);
+          } else {
+            Get.toNamed(AppRoutes.createCampaignSuccessRoute);
+          }
         },
         builder: (context, state) {
           return Column(
