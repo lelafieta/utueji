@@ -134,13 +134,13 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
         },
       );
 
-      if (response.error != null) {
+      if (response != null) {
         print("Erro ao criar campanha: ${response.error!.message}");
       } else {
         print("✅ Campanha criada com sucesso!");
       }
-    } catch (e) {
-      print("❌ Erro: $e");
+    } catch (e, strack) {
+      print("❌ Erro: $e $strack");
       throw e;
     }
   }

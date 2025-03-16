@@ -303,7 +303,9 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
       bool? isUrgent = _selectedOptionUrgent;
 
       print("VIRTH");
-      print(_selectedOptionCategory!.id);
+      final birthDateString = "19-03-2025";
+      final DateFormat formatter = DateFormat("dd-MM-yyyy");
+      // final DateTime birthDate = formatter.parse(birthDateString);
 
       final campaign = CampaignEntity(
           title: titulo,
@@ -319,12 +321,14 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
           campaignType: beneficiaryType,
           phoneNumber: phoneNumber,
           priority: 0,
-          // isUrgent: isUrgent,
-          isUrgent: true,
+          isUrgent: isUrgent,
+          // isUrgent: true,
           isActivate: true,
           numberOfContributions: 0,
           beneficiaryName: beneficiaryName,
-          birth: birthDate != null ? DateTime.parse(birthDate) : null,
+          birth: birthDateString != null
+              ? DateFormat("dd-MM-yyyy").parse(birthDateString)
+              : null,
           endDate: dataFim != null ? DateTime.parse(dataFim) : null,
           startDate: dataInicio != null ? DateTime.parse(dataInicio) : null,
           documents: docs,
