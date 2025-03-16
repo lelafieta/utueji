@@ -10,4 +10,6 @@ class AppImages {
   static const String healthcare = "assets/images/healthcare.png";
   static const String anonymousMask = "assets/images/anonymous-mask.jpg";
   static const String charity = "assets/images/charity.gif";
+  static const String coverBackground = "assets/images/cover_background.png";
+  static const String success = "assets/images/success.png";
 }

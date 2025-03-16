@@ -82,10 +82,15 @@ class _CampaignDetailPageState extends State<CampaignDetailPage> {
                         ],
                         flexibleSpace: FlexibleSpaceBar(
                           // title: Text(widget.campaign.title!),
-                          background: CachedNetworkImage(
-                            imageUrl: campaign.imageCoverUrl!,
-                            fit: BoxFit.cover,
-                          ),
+                          background: (widget.campaign.imageCoverUrl == null)
+                              ? Image.asset(
+                                  AppImages.coverBackground,
+                                  fit: BoxFit.cover,
+                                )
+                              : CachedNetworkImage(
+                                  imageUrl: campaign.imageCoverUrl!,
+                                  fit: BoxFit.cover,
+                                ),
                         ),
                         bottom: PreferredSize(
                           preferredSize: const Size.fromHeight(150.0),
@@ -185,16 +190,21 @@ class _CampaignDetailPageState extends State<CampaignDetailPage> {
                           child: Container(
                             width: 50,
                             height: 50,
-                            child: CachedNetworkImage(
-                              imageUrl: campaign.ong!.coverImageUrl!,
-                              fit: BoxFit.cover,
-                              progressIndicatorBuilder:
-                                  (context, url, downloadProgress) =>
-                                      CircularProgressIndicator(
-                                          value: downloadProgress.progress),
-                              errorWidget: (context, url, error) =>
-                                  const Icon(Icons.error),
-                            ),
+                            child: (widget.campaign.imageCoverUrl == null)
+                                ? Image.asset(
+                                    AppImages.coverBackground,
+                                    fit: BoxFit.cover,
+                                  )
+                                : CachedNetworkImage(
+                                    imageUrl: campaign.ong!.coverImageUrl!,
+                                    fit: BoxFit.cover,
+                                    progressIndicatorBuilder: (context, url,
+                                            downloadProgress) =>
+                                        CircularProgressIndicator(
+                                            value: downloadProgress.progress),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
+                                  ),
                           ),
                         ),
                         title: Text(
@@ -808,7 +818,49 @@ class _AboutWidgetState extends State<AboutWidget> {
                     width: double.infinity,
                     height: 200,
                     child: (widget.campaign.midias!.isEmpty)
-                        ? const Center(child: Text("FOTO DE CAPA"))
+                        ? (widget.campaign.imageCoverUrl == null)
+                            ? Image.asset(AppImages.coverBackground)
+                            : CarouselSlider.builder(
+                                itemCount: widget.campaign.midias!.length,
+                                itemBuilder: (BuildContext context,
+                                    int itemIndex, int _) {
+                                  final campaignMidia =
+                                      widget.campaign.midias![itemIndex];
+
+                                  return GestureDetector(
+                                    onTap: () => _openPreview(
+                                      context,
+                                      campaignMidia.midiaType!,
+                                      campaignMidia.midiaUrl!,
+                                    ),
+                                    child: Container(
+                                      color: AppColors.primaryColor,
+                                      width: double.infinity,
+                                      height: 200,
+                                      child: campaignMidia.midiaType == "video"
+                                          ? VideoThumbnail(
+                                              videoUrl: campaignMidia.midiaUrl!,
+                                            )
+                                          : CachedNetworkImage(
+                                              width: double.infinity,
+                                              height: 200,
+                                              fit: BoxFit.cover,
+                                              imageUrl: campaignMidia.midiaUrl!,
+                                            ),
+                                    ),
+                                  );
+                                },
+                                options: CarouselOptions(
+                                  height: 200,
+                                  aspectRatio: 16 / 9,
+                                  viewportFraction: 0.95,
+                                  initialPage: 0,
+                                  enableInfiniteScroll: true,
+                                  animateToClosest: true,
+                                  autoPlay: false,
+                                  scrollDirection: Axis.horizontal,
+                                ),
+                              )
                         : CarouselSlider.builder(
                             itemCount: widget.campaign.midias!.length,
                             itemBuilder:

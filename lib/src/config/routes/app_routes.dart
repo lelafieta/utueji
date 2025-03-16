@@ -17,4 +17,5 @@ class AppRoutes {
   static const String myCampaignDetailRoute = "/myCampaignDetail";
   static const String campaignCreateUpdateRoute = "/campaignCreateUpdate";
   static const String createCampaignRoute = "/createCampaign";
+  static const String createCampaignSuccessRoute = "/createCampaignSuccess";
 }

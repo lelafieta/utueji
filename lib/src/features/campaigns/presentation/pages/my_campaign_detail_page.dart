@@ -144,15 +144,21 @@ class _MyCampaignDetailPageState extends State<MyCampaignDetailPage> {
                       child: Container(
                         width: 50,
                         height: 50,
-                        child: CachedNetworkImage(
-                          imageUrl: campaign.imageCoverUrl!,
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) =>
-                              const CircularProgressIndicator(),
-                          errorWidget: (context, url, error) => const Icon(
-                            Icons.error,
-                          ),
-                        ),
+                        child: (widget.campaign.imageCoverUrl == null)
+                            ? Image.asset(
+                                AppImages.coverBackground,
+                                fit: BoxFit.cover,
+                              )
+                            : CachedNetworkImage(
+                                imageUrl: campaign.imageCoverUrl!,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) =>
+                                    const CircularProgressIndicator(),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(
+                                  Icons.error,
+                                ),
+                              ),
                       ),
                     ),
                     title: Text(campaign.title!),

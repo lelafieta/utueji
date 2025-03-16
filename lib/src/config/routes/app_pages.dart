@@ -1,15 +1,16 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:utueji/src/features/campaigns/presentation/pages/campaign_create_update_page.dart';
-import 'package:utueji/src/features/campaigns/presentation/pages/create_campaign_page.dart';
-import 'package:utueji/src/features/campaigns/presentation/pages/my_campaign_detail_page.dart';
 import '../../features/auth/presentation/cubit/initial_cubit/initial_cubit.dart';
 import '../../features/auth/presentation/cubit/initial_cubit/initial_state.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/blogs/presentation/pages/blog_page.dart';
 import '../../features/campaigns/domain/entities/campaign_entity.dart';
+import '../../features/campaigns/presentation/pages/campaign_create_update_page.dart';
+import '../../features/campaigns/presentation/pages/campaign_created_success_page.dart';
 import '../../features/campaigns/presentation/pages/campaign_detail_page.dart';
+import '../../features/campaigns/presentation/pages/create_campaign_page.dart';
+import '../../features/campaigns/presentation/pages/my_campaign_detail_page.dart';
 import '../../features/campaigns/presentation/pages/my_campaign_page.dart';
 import '../../features/campaigns/presentation/pages/campaign_urgent_page.dart';
 import '../../features/chat/presentation/pages/chat_page.dart';
@@ -300,6 +301,21 @@ class RouteManager {
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) {
             return CreateCampaignPage();
+          },
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return SharedAxisTransition(
+              animation: animation,
+              secondaryAnimation: secondaryAnimation,
+              transitionType: SharedAxisTransitionType.vertical,
+              child: child,
+            );
+          },
+        );
+
+      case AppRoutes.createCampaignSuccessRoute:
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return CampaignCreatedSuccessPage();
           },
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return SharedAxisTransition(
