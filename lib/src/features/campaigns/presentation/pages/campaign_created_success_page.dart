@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:utueji/src/config/routes/app_routes.dart';
 import 'package:utueji/src/core/resources/images/app_images.dart';
 
 class CampaignCreatedSuccessPage extends StatelessWidget {
@@ -17,14 +19,17 @@ class CampaignCreatedSuccessPage extends StatelessWidget {
               ),
               SizedBox(height: 20.0),
               Text(
-                'Todos os seus documentos foram enviados para verificação e você receberá uma atualização dentro de 24 horas úteis no seu celular ou e-mail registrado.',
+                'A sua campanha foi criada com sucesso para qualquer informação eviaremos notificação no app ou ao seu e-mail registado.',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16.0),
               ),
               SizedBox(height: 40.0),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Get.offAndToNamed(
+                    AppRoutes.rootRoute,
+                    arguments: {"currentIndex": 2},
+                  );
                 },
                 child: Text('Concluído'),
                 style: ElevatedButton.styleFrom(

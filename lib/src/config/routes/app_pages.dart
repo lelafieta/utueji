@@ -49,9 +49,16 @@ class RouteManager {
           pageBuilder: (context, animation, secondaryAnimation) {
             return BlocBuilder<InitialCubit, InitialState>(
               builder: (context, authState) {
-                print(authState);
+                final map = routeSettings.arguments == null
+                    ? null
+                    : routeSettings.arguments as Map<String, dynamic>;
+
+                int? currentIndex = map?['currentIndex'];
+
                 if (authState is Initialized) {
-                  return SolidaryPage();
+                  return SolidaryPage(
+                    currentIndex: currentIndex,
+                  );
                 } else {
                   return const OnBoardingPage();
                 }
