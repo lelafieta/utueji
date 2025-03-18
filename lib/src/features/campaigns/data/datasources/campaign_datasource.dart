@@ -376,8 +376,6 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
   @override
   Future<List<CampaignEntity>> getAllMyCampaigns(
       {int? page = 1, int? limit = 10}) async {
-    final start = (page! - 1) * limit!;
-    final end = start + limit - 1;
     final userId = supabase.auth.currentUser!.id;
 
     print("Page: $page");
@@ -393,7 +391,7 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
       updates:campaign_updates(*), 
       comments:campaign_comments(*, user:profiles(*)),
       midias:campaign_midias(*)
-    ''').eq('user_id', userId).order('created_at').range(start, end);
+    ''').eq('user_id', userId).order('created_at').range(page!, limit!);
 
     return response.map((event) => CampaignModel.fromJson(event)).toList();
   }
