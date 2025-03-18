@@ -11,7 +11,12 @@ sealed class MyCampaignState extends Equatable {
 
 final class MyCampaignInitial extends MyCampaignState {}
 
-final class MyCampaignLoading extends MyCampaignState {}
+final class MyCampaignLoading extends MyCampaignState {
+  final List<CampaignEntity> oldCampaigns;
+  final bool isFirstFetch;
+
+  MyCampaignLoading(this.oldCampaigns, {this.isFirstFetch = false});
+}
 
 final class MyCampaignLoaded extends MyCampaignState {
   final List<CampaignEntity> campaigns;

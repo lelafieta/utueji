@@ -1,8 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter/material.dart';
-import 'package:utueji/src/features/campaigns/presentation/cubit/my_campaign_detail_cubit/my_campaign_detail_state.dart';
+import 'package:utueji/src/features/campaigns/domain/entities/campaign_params.dart';
 import '../../../domain/entities/campaign_entity.dart';
-import '../../../domain/entities/campaign_params.dart';
 import '../../../domain/usecases/get_all_my_campaigns_usecase.dart';
 import 'my_campaign_state.dart';
 
@@ -12,78 +10,31 @@ class MyCampaignCubit extends Cubit<MyCampaignState> {
   MyCampaignCubit({required this.getAllMyCampaignsUseCase})
       : super(MyCampaignInitial());
 
-  int _pageSize = 1;
-  int _currentPage = 1;
-  bool _hasReachedMax = false;
-  int length = 10;
-  int _limit = 10;
-  List<CampaignEntity> _campaigns = [];
-  ValueNotifier<bool> isLoading = ValueNotifier<bool>(false);
+  int page = 1;
 
   Future<void> getAllMyCamapigns(
-      {bool isRefresh = false, bool init = false}) async {
-    if (isRefresh) {
-      _pageSize = _currentPage;
-      _campaigns = [];
+      {required int pagea, required int limit}) async {
+    if (state is MyCampaignLoading) return;
+
+    final currentState = state;
+
+    var oldCampaigns = <CampaignEntity>[];
+
+    if (currentState is MyCampaignLoaded) {
+      oldCampaigns = currentState.campaigns;
     }
 
-    if (init) {
-      _hasReachedMax = false;
-      _pageSize = _currentPage;
-      emit(MyCampaignLoading());
-    }
-    if (_hasReachedMax) return;
-
+    emit(MyCampaignLoading(oldCampaigns, isFirstFetch: page == 1));
     final result = await getAllMyCampaignsUseCase
-        .call(CampaignParams(page: _currentPage, limit: _limit));
+        .call(CampaignParams(page: page, limit: limit));
 
     result.fold(
-      (failure) {
-        isLoading.value = false;
-        emit(
-          MyCampaignError(
-            message: failure.message.toString(),
-          ),
-        );
-      },
-      (rounds) async {
-        _pageSize = _pageSize + _currentPage;
-        _campaigns.addAll(rounds);
-        print("CURRENT PAGE $_pageSize");
-
-        if ((init && rounds.length < length)) {
-          _hasReachedMax = true;
-          isLoading.value = true;
-        } else if (init && rounds.length >= length) {
-          final res = await getAllMyCampaignsUseCase
-              .call(CampaignParams(page: _currentPage, limit: _limit));
-
-          res.fold((l) {
-            isLoading.value = false;
-            emit(
-              MyCampaignError(
-                message: l.message.toString(),
-              ),
-            );
-          }, (r) {
-            print("ADICIONOU ${r.length}");
-            _campaigns.addAll(r);
-            if (r.isEmpty) {
-              _hasReachedMax = true;
-            }
-            _pageSize = _pageSize + _currentPage;
-          });
-        }
-
-        if (rounds.isEmpty) {
-          _hasReachedMax = true;
-        }
-
-        init = false;
-        emit(MyCampaignLoaded(
-            campaigns: _campaigns, isLastPage: _hasReachedMax));
-        isLoading.value = false;
-      },
-    );
+        (failure) => emit(MyCampaignError(message: failure.message.toString())),
+        (myCampaigns) {
+      page++;
+      final campaigns = (state as MyCampaignLoading).oldCampaigns;
+      campaigns.addAll(myCampaigns);
+      emit(MyCampaignLoaded(campaigns: campaigns, isLastPage: false));
+    });
   }
 }
