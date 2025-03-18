@@ -14,6 +14,7 @@ import '../../../events/presentation/cubit/event_cubit.dart';
 import '../../../events/presentation/cubit/event_state.dart';
 import '../../../events/presentation/widgets/event_widget.dart';
 
+import '../../domain/entities/campaign_entity.dart';
 import '../cubit/my_campaign_cubit/my_campaign_cubit.dart';
 import '../cubit/my_campaign_cubit/my_campaign_state.dart';
 import '../widgets/my_campaign_widget.dart';
@@ -27,6 +28,7 @@ class MyCampaignPage extends StatefulWidget {
 
 class _MyCampaignPageState extends State<MyCampaignPage> {
   List<String> menus = ["Todas", "Pendentes", "Passado", "Pendentes"];
+  late ScrollController _scrollController;
 
   int selectedIndex = 0;
   List<Widget> widgets = [
@@ -37,8 +39,18 @@ class _MyCampaignPageState extends State<MyCampaignPage> {
 
   @override
   void initState() {
+    _scrollController = ScrollController();
+    _scrollController.addListener(_onScroll);
+    // context.read<MyCampaignsCubit>().fetchCampaigns();
     context.read<MyCampaignCubit>().getAllMyCamapigns();
     super.initState();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent * 0.9) {
+      context.read<MyCampaignCubit>().getAllMyCamapigns();
+    }
   }
 
   @override
@@ -133,26 +145,35 @@ class _MyCampaignPageState extends State<MyCampaignPage> {
           Expanded(
             child: BlocBuilder<MyCampaignCubit, MyCampaignState>(
               builder: (context, state) {
-                if (state is MyCampaignLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
+                print(state);
+                if (state is MyCampaignInitial) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (state is MyCampaignError) {
+                  return Center(child: Text(state.message));
                 } else if (state is MyCampaignLoaded) {
-                  return ListView.separated(
-                    padding: const EdgeInsets.all(16),
+                  final List<CampaignEntity> list = [];
+                  final campaigns = state.campaigns;
+
+                  campaigns.forEach((element) {
+                    list.add(element);
+                  });
+
+                  return ListView.builder(
+                    controller: _scrollController,
+                    itemCount: state.isLastPage ? list.length : list.length + 1,
                     itemBuilder: (context, index) {
-                      final campaign = state.campaigns[index];
+                      print(
+                          state.campaigns.length + (state.isLastPage ? 0 : 1));
+                      if (index == list.length) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                      final campaign = list.elementAt(index);
+
                       return MyCampaignWidget(campaign: campaign);
                     },
-                    separatorBuilder: (context, index) {
-                      return const SizedBox(
-                        height: 10,
-                      );
-                    },
-                    itemCount: state.campaigns.length,
                   );
                 }
-                return Text("data");
+                return SizedBox.shrink();
               },
             ),
           ),

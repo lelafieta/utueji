@@ -15,8 +15,9 @@ final class MyCampaignLoading extends MyCampaignState {}
 
 final class MyCampaignLoaded extends MyCampaignState {
   final List<CampaignEntity> campaigns;
+  final bool isLastPage;
 
-  const MyCampaignLoaded({required this.campaigns});
+  const MyCampaignLoaded({required this.campaigns, required this.isLastPage});
 
   @override
   List<Object> get props => [campaigns];

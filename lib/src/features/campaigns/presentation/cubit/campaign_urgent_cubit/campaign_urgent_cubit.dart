@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:utueji/src/features/campaigns/domain/usecases/get_all_urgent_campaigns_usecase.dart';
-import '../../../../../core/entities/no_params.dart';
+
+import '../../../domain/usecases/get_all_urgent_campaigns_usecase.dart';
 import 'campaign_urgent_state.dart';
 
 class CampaignUrgentCubit extends Cubit<CampaignUrgentState> {
@@ -11,11 +11,11 @@ class CampaignUrgentCubit extends Cubit<CampaignUrgentState> {
 
   Future<void> getUrgentCampaigns() async {
     emit(CampaignUrgentLoading());
-    final response = await getUrgentCampaignsUseCase.call(const NoParams());
+    // final response = await getUrgentCampaignsUseCase.call();
 
-    response.fold(
-        (failure) =>
-            emit(CampaignUrgentError(message: failure.message.toString())),
-        (campaigns) => emit(CampaignUrgentLoaded(campaigns: campaigns)));
+    // response.fold(
+    //     (failure) =>
+    //         emit(CampaignUrgentError(message: failure.message.toString())),
+    //     (campaigns) => emit(CampaignUrgentLoaded(campaigns: campaigns)));
   }
 }
