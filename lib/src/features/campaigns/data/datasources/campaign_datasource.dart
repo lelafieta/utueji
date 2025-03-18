@@ -271,7 +271,8 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
   }
 
   @override
-  Future<List<CampaignEntity>> getAllCampaigns() async {
+  Future<List<CampaignEntity>> getAllCampaigns(
+      {int? page = 1, int? limit = 10}) async {
     final userId = supabase.auth.currentUser!.id;
     final response = await supabase.from(SupabaseConsts.campaigns).select('''
       *, 
@@ -289,7 +290,8 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
   }
 
   @override
-  Future<List<CampaignEntity>> getAllUrgentCampaigns() async {
+  Future<List<CampaignEntity>> getAllUrgentCampaigns(
+      {int? page = 1, int? limit = 10}) async {
     final userId = supabase.auth.currentUser!.id;
 
     final response = await supabase
@@ -340,7 +342,8 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
   }
 
   @override
-  Future<List<CampaignEntity>> getLatestUrgentCampaigns() async {
+  Future<List<CampaignEntity>> getLatestUrgentCampaigns(
+      {int? page = 1, int? limit = 10}) async {
     final userId = supabase.auth.currentUser!.id;
 
     final response = await supabase
@@ -371,8 +374,15 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
   }
 
   @override
-  Future<List<CampaignEntity>> getAllMyCampaigns() async {
+  Future<List<CampaignEntity>> getAllMyCampaigns(
+      {int? page = 1, int? limit = 10}) async {
+    final start = (page! - 1) * limit!;
+    final end = start + limit - 1;
     final userId = supabase.auth.currentUser!.id;
+
+    print("Page: $page");
+    print("LIMIT: $limit");
+
     final response = await supabase.from(SupabaseConsts.campaigns).select('''
       *, 
       user:profiles(*), 
@@ -383,7 +393,7 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
       updates:campaign_updates(*), 
       comments:campaign_comments(*, user:profiles(*)),
       midias:campaign_midias(*)
-    ''').eq('user_id', userId).order('created_at');
+    ''').eq('user_id', userId).order('created_at').range(start, end);
 
     return response.map((event) => CampaignModel.fromJson(event)).toList();
   }

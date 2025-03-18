@@ -14,10 +14,10 @@ class CampaignCubit extends Cubit<CampaignState> {
 
   Future<void> getAllCamapigns() async {
     emit(CampaignLoading());
-    final result = await getAllCampaignsUseCase.call(const NoParams());
+    // final result = await getAllCampaignsUseCase.call(const NoParams());
 
-    result.fold(
-        (failure) => emit(CampaignError(message: failure.message.toString())),
-        (campaigns) => emit(CampaignLoaded(campaigns: campaigns)));
+    // result.fold(
+    //     (failure) => emit(CampaignError(message: failure.message.toString())),
+    //     (campaigns) => emit(CampaignLoaded(campaigns: campaigns)));
   }
 }

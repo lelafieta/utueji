@@ -12,12 +12,12 @@ class HomeCampaignCubit extends Cubit<HomeCampaignState> {
   Future<void> getLatestUrgentCampaigns() async {
     emit(HomeCampaignLoading());
 
-    final response =
-        await getLatestUrgentCampaignsUseCase.call(const NoParams());
+    // final response =
+    //     await getLatestUrgentCampaignsUseCase.call(const NoParams());
 
-    response.fold(
-        (failure) =>
-            emit(HomeCampaignError(message: failure.message.toString())),
-        (campaigns) => emit(HomeCampaignLoaded(campaigns: campaigns)));
+    // response.fold(
+    //     (failure) =>
+    //         emit(HomeCampaignError(message: failure.message.toString())),
+    //     (campaigns) => emit(HomeCampaignLoaded(campaigns: campaigns)));
   }
 }

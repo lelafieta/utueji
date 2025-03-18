@@ -518,8 +518,8 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                 selectedMidias.forEach((file) {
                   int fileSizeInMB = file.size ~/ (1024 * 1024);
                   print("SIZE: ${file.size}");
-                  if (fileSizeInMB >= 10) {
-                    result = "Cada mídia não pode exceder os 50MB";
+                  if (fileSizeInMB >= 20) {
+                    result = "Cada mídia não pode exceder os 20MB";
                   }
                 });
                 return result;
@@ -591,8 +591,8 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                 selectedMidias.forEach((file) {
                   int fileSizeInMB = file.size ~/ (1024 * 1024);
                   print("SIZE: ${file.size}");
-                  if (fileSizeInMB >= 10) {
-                    result = "Cada mídia não pode exceder os 50MB";
+                  if (fileSizeInMB >= 20) {
+                    result = "Cada mídia não pode exceder os 20MB";
                   }
                 });
                 return result;

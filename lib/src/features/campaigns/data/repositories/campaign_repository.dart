@@ -33,10 +33,12 @@ class CampaignRepository implements ICampaignRepository {
   }
 
   @override
-  Future<Either<Failure, List<CampaignEntity>>> getAllCampaigns() async {
+  Future<Either<Failure, List<CampaignEntity>>> getAllCampaigns(
+      {required int page, required int limit}) async {
     if (await networkInfo.isConnected == true) {
       try {
-        final response = await datasource.getAllCampaigns();
+        final response =
+            await datasource.getAllCampaigns(page: page, limit: limit);
         return right(response);
       } catch (e) {
         return left(ServerFailure(message: e.toString()));
@@ -47,10 +49,12 @@ class CampaignRepository implements ICampaignRepository {
   }
 
   @override
-  Future<Either<Failure, List<CampaignEntity>>> getAllUrgentCampaigns() async {
+  Future<Either<Failure, List<CampaignEntity>>> getAllUrgentCampaigns(
+      {required int page, required int limit}) async {
     if (await networkInfo.isConnected == true) {
       try {
-        final response = await datasource.getAllUrgentCampaigns();
+        final response =
+            await datasource.getAllUrgentCampaigns(page: page, limit: limit);
         return right(response);
       } catch (e) {
         return left(ServerFailure(message: e.toString()));
@@ -75,8 +79,8 @@ class CampaignRepository implements ICampaignRepository {
   }
 
   @override
-  Future<Either<Failure, List<CampaignEntity>>>
-      getLatestUrgentCampaigns() async {
+  Future<Either<Failure, List<CampaignEntity>>> getLatestUrgentCampaigns(
+      {required int page, required int limit}) async {
     // if (await networkInfo.isConnected == true) {
     //   try {
     //     final response = await datasource.getLatestUrgentCampaigns();
@@ -88,7 +92,8 @@ class CampaignRepository implements ICampaignRepository {
     //   return left(ServerFailure(message: "Sem conexão de internet"));
     // }
     try {
-      final response = await datasource.getLatestUrgentCampaigns();
+      final response =
+          await datasource.getLatestUrgentCampaigns(page: page, limit: limit);
       return right(response);
     } catch (e) {
       return left(ServerFailure(message: e.toString()));
@@ -102,10 +107,12 @@ class CampaignRepository implements ICampaignRepository {
   }
 
   @override
-  Future<Either<Failure, List<CampaignEntity>>> getAllMyCampaigns() async {
+  Future<Either<Failure, List<CampaignEntity>>> getAllMyCampaigns(
+      {required int page, required int limit}) async {
     if (await networkInfo.isConnected == true) {
       try {
-        final response = await datasource.getAllMyCampaigns();
+        final response =
+            await datasource.getAllMyCampaigns(page: page, limit: limit);
         return right(response);
       } catch (e) {
         return left(ServerFailure(message: e.toString()));
