@@ -45,7 +45,6 @@ class CampaignModel extends CampaignEntity {
       super.midias});
 
   factory CampaignModel.fromJson(Map<String, dynamic> map) {
-    print(map["category"]);
     return CampaignModel(
       id: map['id'],
       createdAt:

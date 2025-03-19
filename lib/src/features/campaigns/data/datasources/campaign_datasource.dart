@@ -378,8 +378,8 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
       {int? page = 1, int? limit = 10}) async {
     final userId = supabase.auth.currentUser!.id;
 
-    print("Page: $page");
-    print("LIMIT: $limit");
+    final start = (page! - 1) * limit!;
+    final end = start + limit - 1;
 
     final response = await supabase.from(SupabaseConsts.campaigns).select('''
       *, 
@@ -391,7 +391,7 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
       updates:campaign_updates(*), 
       comments:campaign_comments(*, user:profiles(*)),
       midias:campaign_midias(*)
-    ''').eq('user_id', userId).order('created_at').range(page!, limit!);
+    ''').eq('user_id', userId).order('created_at').range(start, end);
 
     return response.map((event) => CampaignModel.fromJson(event)).toList();
   }
