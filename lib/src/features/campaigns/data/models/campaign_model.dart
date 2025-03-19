@@ -1,7 +1,9 @@
+import '../../../../core/utils/campaign_status_extension.dart';
 import '../../../auth/data/models/user_model.dart';
 import '../../../categories/data/models/category_model.dart';
 import '../../../ongs/data/models/ong_model.dart';
 import '../../domain/entities/campaign_entity.dart';
+import '../../domain/enums/campaign_status.dart';
 import 'campaign_comment_model.dart';
 import 'campaign_contribuitor_model.dart';
 import 'campaign_document_model.dart';
@@ -34,6 +36,7 @@ class CampaignModel extends CampaignEntity {
       super.title,
       super.isFavorited,
       super.userId,
+      super.status,
       super.startDate,
       super.category,
       super.ong,
@@ -71,6 +74,7 @@ class CampaignModel extends CampaignEntity {
       endDate: map['end_date'] != null ? DateTime.parse(map['end_date']) : null,
       title: map['title'],
       userId: map['user_id'],
+      status: CampaignStatusExtension.fromString(map['status'] as String),
       birth: map['birth'] != null ? DateTime.parse(map['birth']) : null,
       currency: map["currency"],
       beneficiaryName: map["beneficiary_name"],
@@ -123,6 +127,7 @@ class CampaignModel extends CampaignEntity {
     DateTime? endDate,
     String? title,
     String? userId,
+    CampaignStatus? status,
     DateTime? startDate,
     CategoryModel? category,
     OngModel? ong,
@@ -148,6 +153,7 @@ class CampaignModel extends CampaignEntity {
       endDate: endDate ?? this.endDate,
       title: title ?? this.title,
       userId: userId ?? this.userId!,
+      status: status ?? this.status,
       startDate: startDate ?? this.startDate!,
       category: category ?? this.category!,
       ong: ong ?? this.ong!,
@@ -169,7 +175,7 @@ class CampaignModel extends CampaignEntity {
       'image_cover_url': imageCoverUrl,
       'institution': institution,
       'location': location,
-      // 'is_favorited': isFavorited,
+      'status': status,
       'number_of_contributions': numberOfContributions,
       'ong_id': ongId,
       'phone_number': phoneNumber,

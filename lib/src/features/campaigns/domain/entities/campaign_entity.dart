@@ -1,6 +1,7 @@
 import '../../../auth/domain/entities/user_entity.dart';
 import '../../../categories/domain/entities/category_entity.dart';
 import '../../../ongs/domain/entities/ong_entity.dart';
+import '../enums/campaign_status.dart';
 import 'campaign_comment_entity.dart';
 import 'campaign_contributor_entity.dart';
 import 'campaign_document_entity.dart';
@@ -32,6 +33,7 @@ class CampaignEntity {
   String? beneficiaryName;
   String? title;
   String? userId;
+  CampaignStatus? status;
   DateTime? startDate;
   CategoryEntity? category;
   OngEntity? ong;
@@ -64,6 +66,7 @@ class CampaignEntity {
       this.endDate,
       this.title,
       this.userId,
+      this.status,
       this.startDate,
       this.category,
       this.ong,

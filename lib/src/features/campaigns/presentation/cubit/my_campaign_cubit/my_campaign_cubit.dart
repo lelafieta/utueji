@@ -11,30 +11,44 @@ class MyCampaignCubit extends Cubit<MyCampaignState> {
       : super(MyCampaignInitial());
 
   int page = 1;
-
-  Future<void> getAllMyCamapigns(
-      {required int pagea, required int limit}) async {
+  int limit = 10;
+  Future<void> getAllMyCamapigns({bool isRefresh = false}) async {
     if (state is MyCampaignLoading) return;
 
-    final currentState = state;
+    // Resetar paginação e campanhas se for um refresh
+    if (isRefresh) {
+      page = 1;
+      emit(MyCampaignInitial());
+    }
 
+    final currentState = state;
     var oldCampaigns = <CampaignEntity>[];
 
-    if (currentState is MyCampaignLoaded) {
+    if (currentState is MyCampaignLoaded && !isRefresh) {
       oldCampaigns = currentState.campaigns;
     }
 
     emit(MyCampaignLoading(oldCampaigns, isFirstFetch: page == 1));
+
     final result = await getAllMyCampaignsUseCase
         .call(CampaignParams(page: page, limit: limit));
 
     result.fold(
-        (failure) => emit(MyCampaignError(message: failure.message.toString())),
-        (myCampaigns) {
-      page++;
-      final campaigns = (state as MyCampaignLoading).oldCampaigns;
-      campaigns.addAll(myCampaigns);
-      emit(MyCampaignLoaded(campaigns: campaigns, isLastPage: false));
-    });
+      (failure) => emit(MyCampaignError(message: failure.message.toString())),
+      (myCampaigns) {
+        if (isRefresh) {
+          oldCampaigns.clear();
+        }
+
+        if (myCampaigns.isEmpty) {
+          emit(MyCampaignLoaded(campaigns: oldCampaigns, isLastPage: true));
+        } else {
+          page++;
+          final campaigns = (state as MyCampaignLoading).oldCampaigns;
+          campaigns.addAll(myCampaigns);
+          emit(MyCampaignLoaded(campaigns: campaigns, isLastPage: false));
+        }
+      },
+    );
   }
 }

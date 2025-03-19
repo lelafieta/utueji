@@ -12,10 +12,12 @@ import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
 import '../../../../core/resources/images/app_images.dart';
 
+import '../../../../core/utils/campaign_status_extension.dart';
 import '../../../events/presentation/cubit/event_cubit.dart';
 import '../../../events/presentation/cubit/event_state.dart';
 import '../../../events/presentation/widgets/event_widget.dart';
 
+import '../../domain/enums/campaign_status.dart';
 import '../cubit/my_campaign_cubit/my_campaign_cubit.dart';
 import '../cubit/my_campaign_cubit/my_campaign_state.dart';
 import '../widgets/my_campaign_widget.dart';
@@ -28,16 +30,15 @@ class MyCampaignPage extends StatefulWidget {
 }
 
 class _MyCampaignPageState extends State<MyCampaignPage> {
-  List<String> menus = ["Todas", "Pendentes", "Passado", "Pendentes"];
+  // List<String> menus = ["Todas", "Pendentes", "Passado", "Pendentes"];
+  List<CampaignStatus> statuses = CampaignStatusExtension.allStatuses;
   final scrollController = ScrollController();
 
   void setupScrollController() {
     scrollController.addListener(() {
       if (scrollController.position.atEdge) {
         if (scrollController.position.pixels != 0) {
-          context
-              .read<MyCampaignCubit>()
-              .getAllMyCamapigns(pagea: 1, limit: 10);
+          context.read<MyCampaignCubit>().getAllMyCamapigns(isRefresh: false);
         }
       }
     });
@@ -52,7 +53,7 @@ class _MyCampaignPageState extends State<MyCampaignPage> {
 
   @override
   void initState() {
-    context.read<MyCampaignCubit>().getAllMyCamapigns(pagea: 1, limit: 10);
+    context.read<MyCampaignCubit>().getAllMyCamapigns(isRefresh: true);
     setupScrollController();
     super.initState();
   }
@@ -128,7 +129,7 @@ class _MyCampaignPageState extends State<MyCampaignPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Center(
                       child: Text(
-                        menus[index],
+                        statuses[index].label,
                         style: TextStyle(
                           color: (index == selectedIndex)
                               ? AppColors.whiteColor
@@ -142,7 +143,7 @@ class _MyCampaignPageState extends State<MyCampaignPage> {
               separatorBuilder: (context, index) {
                 return const SizedBox(width: 10);
               },
-              itemCount: menus.length,
+              itemCount: statuses.length,
             ),
           ),
           const SizedBox(height: 5),

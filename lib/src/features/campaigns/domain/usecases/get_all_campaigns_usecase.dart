@@ -15,7 +15,6 @@ class GetAllCampaignsUseCase
   @override
   Future<Either<Failure, List<CampaignEntity>>> call(
       CampaignParams params) async {
-    return await repository.getAllCampaigns(
-        page: params.page, limit: params.limit);
+    return await repository.getAllCampaigns(params);
   }
 }

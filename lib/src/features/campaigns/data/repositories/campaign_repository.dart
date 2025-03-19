@@ -4,6 +4,7 @@ import 'package:utueji/src/core/errors/failures.dart';
 
 import '../../../../core/network/i_network_info.dart';
 import '../../domain/entities/campaign_entity.dart';
+import '../../domain/entities/campaign_params.dart';
 import '../../domain/repositories/i_campaign_repository.dart';
 import '../datasources/i_campaign_datasource.dart';
 
@@ -34,11 +35,10 @@ class CampaignRepository implements ICampaignRepository {
 
   @override
   Future<Either<Failure, List<CampaignEntity>>> getAllCampaigns(
-      {required int page, required int limit}) async {
+      CampaignParams params) async {
     if (await networkInfo.isConnected == true) {
       try {
-        final response =
-            await datasource.getAllCampaigns(page: page, limit: limit);
+        final response = await datasource.getAllCampaigns(params);
         return right(response);
       } catch (e) {
         return left(ServerFailure(message: e.toString()));
@@ -50,11 +50,10 @@ class CampaignRepository implements ICampaignRepository {
 
   @override
   Future<Either<Failure, List<CampaignEntity>>> getAllUrgentCampaigns(
-      {required int page, required int limit}) async {
+      CampaignParams params) async {
     if (await networkInfo.isConnected == true) {
       try {
-        final response =
-            await datasource.getAllUrgentCampaigns(page: page, limit: limit);
+        final response = await datasource.getAllUrgentCampaigns(params);
         return right(response);
       } catch (e) {
         return left(ServerFailure(message: e.toString()));
@@ -80,7 +79,7 @@ class CampaignRepository implements ICampaignRepository {
 
   @override
   Future<Either<Failure, List<CampaignEntity>>> getLatestUrgentCampaigns(
-      {required int page, required int limit}) async {
+      CampaignParams params) async {
     // if (await networkInfo.isConnected == true) {
     //   try {
     //     final response = await datasource.getLatestUrgentCampaigns();
@@ -92,8 +91,7 @@ class CampaignRepository implements ICampaignRepository {
     //   return left(ServerFailure(message: "Sem conexão de internet"));
     // }
     try {
-      final response =
-          await datasource.getLatestUrgentCampaigns(page: page, limit: limit);
+      final response = await datasource.getLatestUrgentCampaigns(params);
       return right(response);
     } catch (e) {
       return left(ServerFailure(message: e.toString()));
@@ -108,11 +106,10 @@ class CampaignRepository implements ICampaignRepository {
 
   @override
   Future<Either<Failure, List<CampaignEntity>>> getAllMyCampaigns(
-      {required int page, required int limit}) async {
+      CampaignParams params) async {
     if (await networkInfo.isConnected == true) {
       try {
-        final response =
-            await datasource.getAllMyCampaigns(page: page, limit: limit);
+        final response = await datasource.getAllMyCampaigns(params);
         return right(response);
       } catch (e) {
         return left(ServerFailure(message: e.toString()));
