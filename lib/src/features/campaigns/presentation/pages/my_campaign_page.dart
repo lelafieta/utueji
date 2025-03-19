@@ -31,7 +31,7 @@ class _MyCampaignPageState extends State<MyCampaignPage> {
   List<String> menus = ["Todas", "Pendentes", "Passado", "Pendentes"];
   final scrollController = ScrollController();
 
-  void setupScrollController(context) {
+  void setupScrollController() {
     scrollController.addListener(() {
       if (scrollController.position.atEdge) {
         if (scrollController.position.pixels != 0) {
@@ -53,7 +53,7 @@ class _MyCampaignPageState extends State<MyCampaignPage> {
   @override
   void initState() {
     context.read<MyCampaignCubit>().getAllMyCamapigns(pagea: 1, limit: 10);
-    setupScrollController(context);
+    setupScrollController();
     super.initState();
   }
 
