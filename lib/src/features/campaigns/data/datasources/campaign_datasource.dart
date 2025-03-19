@@ -5,6 +5,7 @@ import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
 import '../../../../core/supabase/supabase_consts.dart';
 import '../../domain/entities/campaign_entity.dart';
+import '../../domain/entities/campaign_params.dart';
 import '../models/campaign_model.dart';
 import 'i_campaign_datasource.dart';
 
@@ -271,8 +272,7 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
   }
 
   @override
-  Future<List<CampaignEntity>> getAllCampaigns(
-      {int? page = 1, int? limit = 10}) async {
+  Future<List<CampaignEntity>> getAllCampaigns(CampaignParams params) async {
     final userId = supabase.auth.currentUser!.id;
     final response = await supabase.from(SupabaseConsts.campaigns).select('''
       *, 
@@ -291,7 +291,7 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
 
   @override
   Future<List<CampaignEntity>> getAllUrgentCampaigns(
-      {int? page = 1, int? limit = 10}) async {
+      CampaignParams params) async {
     final userId = supabase.auth.currentUser!.id;
 
     final response = await supabase
@@ -343,7 +343,7 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
 
   @override
   Future<List<CampaignEntity>> getLatestUrgentCampaigns(
-      {int? page = 1, int? limit = 10}) async {
+      CampaignParams params) async {
     final userId = supabase.auth.currentUser!.id;
 
     final response = await supabase
@@ -374,24 +374,46 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
   }
 
   @override
-  Future<List<CampaignEntity>> getAllMyCampaigns(
-      {int? page = 1, int? limit = 10}) async {
+  Future<List<CampaignEntity>> getAllMyCampaigns(CampaignParams params) async {
     final userId = supabase.auth.currentUser!.id;
 
-    final start = (page! - 1) * limit!;
-    final end = start + limit - 1;
+    var query = supabase.from(SupabaseConsts.campaigns).select('''
+        *, 
+        user:profiles(*), 
+        ong:ongs(*), 
+        category:categories(*), 
+        contributors:campaign_contributors(*, user:profiles(*)), 
+        documents:campaign_documents(*), 
+        updates:campaign_updates(*), 
+        comments:campaign_comments(*, user:profiles(*)),
+        midias:campaign_midias(*)
+      ''').eq('user_id', userId);
 
-    final response = await supabase.from(SupabaseConsts.campaigns).select('''
-      *, 
-      user:profiles(*), 
-      ong:ongs(*), 
-      category:categories(*), 
-      contributors:campaign_contributors(*, user:profiles(*)), 
-      documents:campaign_documents(*), 
-      updates:campaign_updates(*), 
-      comments:campaign_comments(*, user:profiles(*)),
-      midias:campaign_midias(*)
-    ''').eq('user_id', userId).order('created_at').range(start, end);
+    if (params.categoryId != null) {
+      query = query.eq('category_id', params.categoryId.toString());
+    }
+
+    if (params.nameFilter != null) {
+      query = query.ilike('name', '%${params.nameFilter}%');
+    }
+
+    if (params.status != null) {
+      query = query.eq('status', params.status.toString());
+    }
+
+    if (params.location != null) {
+      query = query.ilike('location', '%${params.location}%');
+    }
+
+    if (params.startDate != null && params.endDate != null) {
+      query = query
+          .gte('created_at', params.startDate!.toIso8601String())
+          .lte('created_at', params.endDate!.toIso8601String());
+    }
+
+    // Aplicando paginação diretamente na consulta final
+    final response = await query.range(
+        (params.page - 1) * params.limit, params.page * params.limit - 1);
 
     return response.map((event) => CampaignModel.fromJson(event)).toList();
   }
