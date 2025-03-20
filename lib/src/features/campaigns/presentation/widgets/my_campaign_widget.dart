@@ -1,9 +1,15 @@
+import 'dart:io';
+
+import 'package:appinio_social_share/appinio_social_share.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_dashed_line/dotted_dashed_line.dart';
 import 'package:flutter/material.dart';
+import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:utueji/src/config/routes/app_routes.dart';
+import 'package:http/http.dart' as http;
 
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/images/app_images.dart';
@@ -24,6 +30,7 @@ class MyCampaignWidget extends StatefulWidget {
 }
 
 class _MyCampaignWidgetState extends State<MyCampaignWidget> {
+  AppinioSocialShare appinioSocialShare = AppinioSocialShare();
   double fundraisingGoal = 0.0;
   double fundsRaised = 0.0;
   String raisingGoals = "";
@@ -38,6 +45,36 @@ class _MyCampaignWidgetState extends State<MyCampaignWidget> {
   @override
   void initState() {
     super.initState();
+  }
+
+  String fixUrl(String url) {
+    if (url.startsWith("https:/") && !url.startsWith("https://")) {
+      return url.replaceFirst("https:/", "https://");
+    }
+    return url;
+  }
+
+  Future<String?> downloadImage(String imageUrl) async {
+    print(imageUrl);
+    try {
+      String validUrl = fixUrl(imageUrl);
+      final response = await http.get(Uri.parse(validUrl));
+
+      if (response.statusCode == 200) {
+        final tempDir = await getTemporaryDirectory();
+        final filePath = '${tempDir.path}/${validUrl.split('/').last}';
+        final file = File(filePath);
+        await file.writeAsBytes(response.bodyBytes);
+        return filePath;
+      }
+    } catch (e) {
+      print("Erro ao baixar a imagem: $e");
+    }
+    return null;
+  }
+
+  Future shareToWhatsApp(String message, String filePath) async {
+    await appinioSocialShare.android.shareFilesToSystem(message, [filePath]);
   }
 
   @override
@@ -101,7 +138,23 @@ class _MyCampaignWidgetState extends State<MyCampaignWidget> {
                 subtitle: Text(
                     "${AppDateUtilsHelper.formatDate(data: widget.campaign.endDate!)}"),
                 trailing: IconButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    // String? result = (widget.campaign.imageCoverUrl != null)
+                    //     ? await downloadImage(widget.campaign.imageCoverUrl!)
+                    //     : null;
+
+                    // if (result != null) {
+                    //   shareToWhatsApp(
+                    //       "${widget.campaign.title}\n${widget.campaign.description}",
+                    //       result);
+                    // }
+
+                    FilePickerResult? result = await FilePicker.platform
+                        .pickFiles(type: FileType.image, allowMultiple: false);
+                    if (result != null && result.paths.isNotEmpty) {
+                      shareToWhatsApp("message", result.paths[0]!);
+                    }
+                  },
                   icon: const Icon(Icons.share),
                 ),
               ),
