@@ -1,18 +1,25 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.example.utueji">
-    
+        <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+        <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+        <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+        <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+                android:maxSdkVersion="29" />
+        <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+        <uses-permission android:name="android.permission.INTERNET" />
+
         <queries>
-            <!-- Query for Facebook -->
+           <package android:name="com.instagram.android" />
+            <package android:name="com.zhiliaoapp.musically" />
             <package android:name="com.facebook.katana" />
-            <!-- Query for Twitter -->
-            <package android:name="com.twitter.android" />
-            <!-- Query for LinkedIn -->
-            <package android:name="com.linkedin.android" />
-            <!-- Query for Reddit -->
-            <package android:name="com.reddit.frontpage" />
-            <!-- Query for WhatsApp -->
-            <package android:name="com.whatsapp" />
-            <!-- Query for Telegram -->
+            <package android:name="com.facebook.orca" />
             <package android:name="org.telegram.messenger" />
+            <package android:name="com.whatsapp" />
+            <package android:name="com.twitter.android" />
+        
+            <provider android:authorities="com.facebook.katana.provider.PlatformProvider" /> <!-- allows app to access Facebook app features -->
+            <provider android:authorities="com.facebook.orca.provider.PlatformProvider" /> <!-- allows sharing to Messenger app -->
+
         </queries>
   
     <application
@@ -20,16 +27,20 @@
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
 
-          <provider
-        android:name="androidx.core.content.FileProvider"
-        android:authorities="${applicationId}.fileprovider"
-        android:exported="false"
-        android:grantUriPermissions="true">
-        <meta-data
-            android:name="android.support.FILE_PROVIDER_PATHS"
-            android:resource="@xml/filepaths" />
-    </provider>
-     
+          <provider android:name="androidx.core.content.FileProvider" 
+                android:authorities="${applicationId}.provider"
+                android:exported="false" 
+                android:grantUriPermissions="true">
+                <meta-data android:name="android.support.FILE_PROVIDER_PATHS" 
+                android:resource="@xml/filepaths" />
+            </provider>
+            <provider android:name="com.facebook.FacebookContentProvider" 
+                      android:authorities="com.facebook.app.FacebookContentProvider1775094426386458"
+         android:exported="true" />
+     <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id" />
+     <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token" />
+     <meta-data android:name="com.facebook.sdk.ApplicationName" android:value="${applicationName}"/>
+     <activity android:name="com.facebook.FacebookActivity" android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation" android:label="${applicationName}" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:appinio_social_share/appinio_social_share.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -46,6 +47,7 @@ class _MyCampaignDetailPageState extends State<MyCampaignDetailPage> {
 
   ValueNotifier<List<_ChartData>> filteredData =
       ValueNotifier<List<_ChartData>>([]);
+  AppinioSocialShare appinioSocialShare = AppinioSocialShare();
 
   ValueNotifier<List<_ChartData>> allData = ValueNotifier<List<_ChartData>>([
     // _ChartData(DateTime(2024, 3, 1), 5000),
@@ -101,142 +103,6 @@ class _MyCampaignDetailPageState extends State<MyCampaignDetailPage> {
     Share.share(textToShare);
   }
 
-  static const List<SocialPlatform> _platforms = SocialPlatform.values;
-
-  final ImagePicker _picker = ImagePicker();
-  String? _mediaPath;
-  List<String> _mediaPaths = [];
-
-  Future<void> _pickImage() async {
-    final XFile? pickedFile =
-        await _picker.pickImage(source: ImageSource.gallery);
-
-    setState(() {
-      if (pickedFile != null) _mediaPath = pickedFile.path;
-    });
-  }
-
-  Future<void> _pickVideo() async {
-    final XFile? pickedFile =
-        await _picker.pickVideo(source: ImageSource.gallery);
-
-    setState(() {
-      if (pickedFile != null) _mediaPath = pickedFile.path;
-    });
-  }
-
-  Future<void> _pickMultiMedia() async {
-    final List<XFile> pickedFiles = await _picker.pickMultiImage();
-
-    setState(() {
-      _mediaPaths = pickedFiles.map((file) => file.path).toList();
-    });
-  }
-
-  Future<void> _pickMultiVideo() async {
-    final XFile? pickedFile =
-        await _picker.pickVideo(source: ImageSource.gallery);
-
-    setState(() {
-      if (pickedFile != null) {
-        _mediaPaths.add(pickedFile.path);
-      }
-    });
-  }
-
-  // Future<void> _share(SocialPlatform platform,
-  //     {bool isMultipleShare = false,
-  //     String? description,
-  //     List<String>? mediaPaths,
-  //     String? midiaPath}) async {
-  //   isMultipleShare
-  //       ? await SocialSharingPlus.shareToSocialMediaWithMultipleMedia(
-  //           platform,
-  //           media: mediaPaths ?? _mediaPaths,
-  //           content: description,
-  //           isOpenBrowser: true,
-  //           onAppNotInstalled: () {
-  //             ScaffoldMessenger.of(context)
-  //               ..hideCurrentSnackBar()
-  //               ..showSnackBar(SnackBar(
-  //                 content:
-  //                     Text('${platform.name.capitalize} is not installed.'),
-  //               ));
-  //           },
-  //         )
-  //       : await SocialSharingPlus.shareToSocialMedia(
-  //           platform,
-  //           description!,
-  //           media: midiaPath,
-  //           isOpenBrowser: true,
-  //           onAppNotInstalled: () {
-  //             ScaffoldMessenger.of(context)
-  //               ..hideCurrentSnackBar()
-  //               ..showSnackBar(SnackBar(
-  //                 content:
-  //                     Text('${platform.name.capitalize} is not installed.'),
-  //               ));
-  //           },
-  //         );
-  // }
-
-  Future<void> _share(SocialPlatform platform,
-      {bool isMultipleShare = false,
-      String? description,
-      List<String>? mediaPaths,
-      String? midiaPath}) async {
-    List<String> localMediaPaths = [];
-
-    print("DESCRIPTION $description");
-    print("MEDIA PATHS $mediaPaths");
-
-    if (isMultipleShare) {
-      // Se forem várias imagens, baixar todas
-      for (String url in mediaPaths ?? []) {
-        String? localPath = await downloadImage(url);
-        if (localPath != null) {
-          localMediaPaths.add(localPath);
-        }
-      }
-    } else if (midiaPath != null) {
-      // Se for apenas uma imagem, baixar ela
-      String? localPath = await downloadImage(midiaPath);
-      if (localPath != null) {
-        midiaPath = localPath;
-      }
-    }
-
-    isMultipleShare
-        ? await SocialSharingPlus.shareToSocialMediaWithMultipleMedia(
-            platform,
-            media: localMediaPaths,
-            content: description,
-            isOpenBrowser: true,
-            onAppNotInstalled: () {
-              ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(SnackBar(
-                  content:
-                      Text('${platform.name.capitalize} is not installed.'),
-                ));
-            },
-          )
-        : await SocialSharingPlus.shareToSocialMedia(
-            platform,
-            description!,
-            media: midiaPath,
-            isOpenBrowser: true,
-            onAppNotInstalled: () {
-              ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(SnackBar(
-                  content:
-                      Text('${platform.name.capitalize} is not installed.'),
-                ));
-            },
-          );
-  }
-
   String fixUrl(String url) {
     if (url.startsWith("https:/") && !url.startsWith("https://")) {
       return url.replaceFirst("https:/", "https://");
@@ -261,6 +127,26 @@ class _MyCampaignDetailPageState extends State<MyCampaignDetailPage> {
       print("Erro ao baixar a imagem: $e");
     }
     return null;
+  }
+
+  copyClipboard(String message, String filePath) async {
+    await appinioSocialShare.android.shareFilesToSystem(message, [filePath]);
+  }
+
+  shareToWhatsApp(String message, String filePath) async {
+    await appinioSocialShare.android.shareToWhatsapp(message, filePath);
+  }
+
+  shareToFacebookApp(String message, String filePath) async {
+    await appinioSocialShare.android.shareToFacebook(message, [filePath]);
+  }
+
+  shareToInstagramApp(String message, String filePath) async {
+    await appinioSocialShare.android.shareToInstagramFeed(message, filePath);
+  }
+
+  shareToXApp(String message, String filePath) async {
+    await appinioSocialShare.android.shareToTwitter(message, filePath);
   }
 
   @override
@@ -483,9 +369,16 @@ class _MyCampaignDetailPageState extends State<MyCampaignDetailPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       IconButton(
-                        onPressed: () {
-                          // final platform = SocialPlatform.facebook;
-                          // _share(platform);
+                        onPressed: () async {
+                          String? result = (campaign.imageCoverUrl != null)
+                              ? await downloadImage(campaign.imageCoverUrl!)
+                              : null;
+
+                          if (result != null) {
+                            copyClipboard(
+                                "${campaign.title}\n${campaign.description}",
+                                result);
+                          }
                         },
                         icon: SvgPicture.asset(
                           AppIcons.link,
@@ -498,12 +391,15 @@ class _MyCampaignDetailPageState extends State<MyCampaignDetailPage> {
                       ),
                       IconButton(
                         onPressed: () async {
-                          SocialPlatform platform = SocialPlatform.whatsapp;
+                          String? result = (campaign.imageCoverUrl != null)
+                              ? await downloadImage(campaign.imageCoverUrl!)
+                              : null;
 
-                          await _share(platform,
-                              description:
-                                  "${campaign.title}\n${campaign.description}",
-                              midiaPath: campaign.imageCoverUrl);
+                          if (result != null) {
+                            shareToWhatsApp(
+                                "${campaign.title}\n${campaign.description}",
+                                result);
+                          }
                         },
                         icon: SvgPicture.asset(
                           AppIcons.whatsapp,
@@ -516,12 +412,15 @@ class _MyCampaignDetailPageState extends State<MyCampaignDetailPage> {
                       ),
                       IconButton(
                         onPressed: () async {
-                          SocialPlatform platform = SocialPlatform.facebook;
+                          String? result = (campaign.imageCoverUrl != null)
+                              ? await downloadImage(campaign.imageCoverUrl!)
+                              : null;
 
-                          await _share(platform,
-                              description:
-                                  "${campaign.title}\n${campaign.description}",
-                              midiaPath: campaign.imageCoverUrl);
+                          if (result != null) {
+                            shareToFacebookApp(
+                                "${campaign.title}\n${campaign.description}",
+                                result);
+                          }
                         },
                         icon: SvgPicture.asset(
                           AppIcons.facebook,
@@ -533,14 +432,16 @@ class _MyCampaignDetailPageState extends State<MyCampaignDetailPage> {
                         width: 10,
                       ),
                       IconButton(
-                        onPressed: () {
-                          
-                          SocialPlatform platform = SocialPlatform.whatsapp;
+                        onPressed: () async {
+                          String? result = (campaign.imageCoverUrl != null)
+                              ? await downloadImage(campaign.imageCoverUrl!)
+                              : null;
 
-                          await _share(platform,
-                              description:
-                                  "${campaign.title}\n${campaign.description}",
-                              midiaPath: campaign.imageCoverUrl);
+                          if (result != null) {
+                            shareToInstagramApp(
+                                "${campaign.title}\n${campaign.description}",
+                                result);
+                          }
                         },
                         icon: SvgPicture.asset(
                           AppIcons.instagram,
@@ -552,7 +453,17 @@ class _MyCampaignDetailPageState extends State<MyCampaignDetailPage> {
                         width: 10,
                       ),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          String? result = (campaign.imageCoverUrl != null)
+                              ? await downloadImage(campaign.imageCoverUrl!)
+                              : null;
+
+                          if (result != null) {
+                            shareToXApp(
+                                "${campaign.title}\n${campaign.description}",
+                                result);
+                          }
+                        },
                         icon: SvgPicture.asset(
                           AppIcons.x,
                           width: 30,
