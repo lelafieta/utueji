@@ -1,16 +1,20 @@
 class CampaignParams {
-  final int page;
-  final int limit;
-  final String? categoryId;
-  final String? nameFilter;
-  final String? status;
-  final String? location;
-  final DateTime? startDate;
-  final DateTime? endDate;
+  int? page;
+  int? limit;
+  String? title;
+  String? description;
+  String? categoryId;
+  String? nameFilter;
+  String? status;
+  String? location;
+  DateTime? startDate;
+  DateTime? endDate;
 
   CampaignParams({
-    required this.page,
-    required this.limit,
+    this.page,
+    this.limit,
+    this.title,
+    this.description,
     this.categoryId,
     this.nameFilter,
     this.status,
@@ -18,6 +22,32 @@ class CampaignParams {
     this.startDate,
     this.endDate,
   });
+
+  CampaignParams copyWith({
+    int? page,
+    int? limit,
+    String? title,
+    String? description,
+    String? categoryId,
+    String? nameFilter,
+    String? status,
+    String? location,
+    DateTime? startDate,
+    DateTime? endDate,
+  }) {
+    return CampaignParams(
+      page: page ?? this.page,
+      limit: limit ?? this.limit,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      categoryId: categoryId ?? this.categoryId,
+      nameFilter: nameFilter ?? this.nameFilter,
+      status: status ?? this.status,
+      location: location ?? this.location,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+    );
+  }
 
   Map<String, dynamic> toJson() {
     return {

@@ -12,10 +12,11 @@ class MyCampaignCubit extends Cubit<MyCampaignState> {
 
   int page = 1;
   int limit = 10;
-  Future<void> getAllMyCamapigns({bool isRefresh = false}) async {
+  Future<void> getAllMyCamapigns(
+      {bool isRefresh = false, CampaignParams? params}) async {
+    print(params!.status);
     if (state is MyCampaignLoading) return;
 
-    // Resetar paginação e campanhas se for um refresh
     if (isRefresh) {
       page = 1;
       emit(MyCampaignInitial());
@@ -30,8 +31,8 @@ class MyCampaignCubit extends Cubit<MyCampaignState> {
 
     emit(MyCampaignLoading(oldCampaigns, isFirstFetch: page == 1));
 
-    final result = await getAllMyCampaignsUseCase
-        .call(CampaignParams(page: page, limit: limit));
+    final result = await getAllMyCampaignsUseCase.call(CampaignParams(
+        page: page, limit: limit, status: params.status, title: params.title));
 
     result.fold(
       (failure) => emit(MyCampaignError(message: failure.message.toString())),

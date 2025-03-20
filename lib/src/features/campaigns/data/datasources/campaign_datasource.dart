@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:path/path.dart' as path;
+import 'package:utueji/src/features/campaigns/domain/enums/campaign_status.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../core/supabase/supabase_consts.dart';
 import '../../domain/entities/campaign_entity.dart';
@@ -397,8 +398,18 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
       query = query.ilike('name', '%${params.nameFilter}%');
     }
 
+    if (params.title != null) {
+      query = query.ilike('title', '%${params.title}%');
+    }
+
+    if (params.description != null) {
+      query = query.ilike('description', '%${params.description}%');
+    }
+
     if (params.status != null) {
-      query = query.eq('status', params.status.toString());
+      if (params.status != CampaignStatus.all.name) {
+        query = query.eq('status', params.status.toString());
+      }
     }
 
     if (params.location != null) {
@@ -413,7 +424,7 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
 
     // Aplicando paginação diretamente na consulta final
     final response = await query.range(
-        (params.page - 1) * params.limit, params.page * params.limit - 1);
+        (params.page! - 1) * params.limit!, params.page! * params.limit! - 1);
 
     return response.map((event) => CampaignModel.fromJson(event)).toList();
   }
