@@ -4,9 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:utueji/src/features/campaigns/domain/entities/campaign_entity.dart';
-import 'package:utueji/src/features/campaigns/presentation/cubit/campaign_cubit.dart';
-
 import '../../../../config/routes/app_routes.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
@@ -17,6 +14,8 @@ import '../../../events/presentation/cubit/event_cubit.dart';
 import '../../../events/presentation/cubit/event_state.dart';
 import '../../../events/presentation/widgets/event_widget.dart';
 
+import '../../domain/entities/campaign_entity.dart';
+import '../../domain/entities/campaign_params.dart';
 import '../../domain/enums/campaign_status.dart';
 import '../cubit/my_campaign_cubit/my_campaign_cubit.dart';
 import '../cubit/my_campaign_cubit/my_campaign_state.dart';
@@ -30,7 +29,8 @@ class MyCampaignPage extends StatefulWidget {
 }
 
 class _MyCampaignPageState extends State<MyCampaignPage> {
-  // List<String> menus = ["Todas", "Pendentes", "Passado", "Pendentes"];
+  ValueNotifier<CampaignParams> params =
+      ValueNotifier<CampaignParams>(CampaignParams());
   List<CampaignStatus> statuses = CampaignStatusExtension.allStatuses;
   final scrollController = ScrollController();
 
@@ -38,7 +38,11 @@ class _MyCampaignPageState extends State<MyCampaignPage> {
     scrollController.addListener(() {
       if (scrollController.position.atEdge) {
         if (scrollController.position.pixels != 0) {
-          context.read<MyCampaignCubit>().getAllMyCamapigns(isRefresh: false);
+          context.read<MyCampaignCubit>().getAllMyCamapigns(
+              isRefresh: false,
+              params: CampaignParams(
+                status: params!.value.status,
+              ));
         }
       }
     });
@@ -53,7 +57,9 @@ class _MyCampaignPageState extends State<MyCampaignPage> {
 
   @override
   void initState() {
-    context.read<MyCampaignCubit>().getAllMyCamapigns(isRefresh: true);
+    context.read<MyCampaignCubit>().getAllMyCamapigns(
+        isRefresh: true,
+        params: CampaignParams(status: CampaignStatus.all.name));
     setupScrollController();
     super.initState();
   }
@@ -75,137 +81,156 @@ class _MyCampaignPageState extends State<MyCampaignPage> {
           color: Colors.white,
         ),
       ),
-      body: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: "Pesquise campanhas, caridades...",
-                fillColor: Colors.white,
-                filled: true,
-                prefixIcon: Container(
-                  padding: const EdgeInsets.all(12),
-                  child: SvgPicture.asset(
-                    AppIcons.search,
-                    width: 14,
-                    color: Colors.grey,
-                  ),
-                ),
-                suffixIcon: Container(
-                  padding: const EdgeInsets.all(12),
-                  child: SvgPicture.asset(
-                    AppIcons.microphone,
-                    width: 14,
-                    color: Colors.grey,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 10),
-          SizedBox(
-            height: 40,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              shrinkWrap: true,
-              physics: const ClampingScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: () {
-                    setState(() {
-                      selectedIndex = index;
-                    });
+      body: ValueListenableBuilder<CampaignParams>(
+        valueListenable: params,
+        builder: (context, valueStatus, _) {
+          return Column(
+            children: [
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                child: TextField(
+                  onChanged: (value) {
+                    params.value.title = value;
+                    context.read<MyCampaignCubit>().getAllMyCamapigns(
+                        isRefresh: true,
+                        params: CampaignParams(
+                            status: params.value.status,
+                            title: params.value.title));
                   },
-                  child: Container(
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: (index == selectedIndex)
-                          ? AppColors.blackColor
-                          : Colors.white,
-                      borderRadius: BorderRadius.circular(8),
+                  decoration: InputDecoration(
+                    hintText: "Pesquise campanhas, caridades...",
+                    fillColor: Colors.white,
+                    filled: true,
+                    prefixIcon: Container(
+                      padding: const EdgeInsets.all(12),
+                      child: SvgPicture.asset(
+                        AppIcons.search,
+                        width: 14,
+                        color: Colors.grey,
+                      ),
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Center(
-                      child: Text(
-                        statuses[index].label,
-                        style: TextStyle(
-                          color: (index == selectedIndex)
-                              ? AppColors.whiteColor
-                              : Colors.black,
-                        ),
+                    suffixIcon: Container(
+                      padding: const EdgeInsets.all(12),
+                      child: SvgPicture.asset(
+                        AppIcons.microphone,
+                        width: 14,
+                        color: Colors.grey,
                       ),
                     ),
                   ),
-                );
-              },
-              separatorBuilder: (context, index) {
-                return const SizedBox(width: 10);
-              },
-              itemCount: statuses.length,
-            ),
-          ),
-          const SizedBox(height: 5),
-          Expanded(
-            child: BlocBuilder<MyCampaignCubit, MyCampaignState>(
-              builder: (context, state) {
-                // if (state is MyCampaignLoading) {
-                //   return const Center(
-                //     child: CircularProgressIndicator(),
-                //   );
-                // } else if (state is MyCampaignLoaded) {
-                //   return ListView.separated(
-                //     padding: const EdgeInsets.all(16),
-                //     itemBuilder: (context, index) {
-                //       final campaign = state.campaigns[index];
-                //       return MyCampaignWidget(campaign: campaign);
-                //     },
-                //     separatorBuilder: (context, index) {
-                //       return const SizedBox(
-                //         height: 10,
-                //       );
-                //     },
-                //     itemCount: state.campaigns.length,
-                //   );
-                // }
-                if (state is MyCampaignLoading && state.isFirstFetch) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                List<CampaignEntity> campaigns = [];
-                bool isLoading = false;
-                if (state is MyCampaignLoading) {
-                  campaigns = state.oldCampaigns;
-                  isLoading = true;
-                } else if (state is MyCampaignLoaded) {
-                  campaigns = state.campaigns;
-                }
-                return ListView.separated(
-                  controller: scrollController,
-                  padding: const EdgeInsets.all(16),
+                ),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                height: 40,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+                  physics: const ClampingScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   itemBuilder: (context, index) {
-                    if (index < campaigns.length) {
-                      final campaign = campaigns[index];
-                      return MyCampaignWidget(campaign: campaign);
-                    } else {
+                    return InkWell(
+                      onTap: () {
+                        setState(() {
+                          selectedIndex = index;
+                          params.value.status = statuses[index].name;
+                          context.read<MyCampaignCubit>().getAllMyCamapigns(
+                              isRefresh: true,
+                              params:
+                                  CampaignParams(status: statuses[index].name));
+                        });
+                      },
+                      child: Container(
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: (index == selectedIndex)
+                              ? AppColors.blackColor
+                              : Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Center(
+                          child: Text(
+                            statuses[index].label,
+                            style: TextStyle(
+                              color: (index == selectedIndex)
+                                  ? AppColors.whiteColor
+                                  : Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return const SizedBox(width: 10);
+                  },
+                  itemCount: statuses.length,
+                ),
+              ),
+              const SizedBox(height: 5),
+              Expanded(
+                child: BlocBuilder<MyCampaignCubit, MyCampaignState>(
+                  builder: (context, state) {
+                    // if (state is MyCampaignLoading) {
+                    //   return const Center(
+                    //     child: CircularProgressIndicator(),
+                    //   );
+                    // } else if (state is MyCampaignLoaded) {
+                    //   return ListView.separated(
+                    //     padding: const EdgeInsets.all(16),
+                    //     itemBuilder: (context, index) {
+                    //       final campaign = state.campaigns[index];
+                    //       return MyCampaignWidget(campaign: campaign);
+                    //     },
+                    //     separatorBuilder: (context, index) {
+                    //       return const SizedBox(
+                    //         height: 10,
+                    //       );
+                    //     },
+                    //     itemCount: state.campaigns.length,
+                    //   );
+                    // }
+                    if (state is MyCampaignLoading && state.isFirstFetch) {
                       return Center(
                         child: CircularProgressIndicator(),
                       );
                     }
-                  },
-                  separatorBuilder: (context, index) {
-                    return const SizedBox(
-                      height: 10,
+                    List<CampaignEntity> campaigns = [];
+                    bool isLoading = false;
+                    if (state is MyCampaignLoading) {
+                      campaigns = state.oldCampaigns;
+                      isLoading = true;
+                    } else if (state is MyCampaignLoaded) {
+                      campaigns = state.campaigns;
+                    }
+                    return ListView.separated(
+                      controller: scrollController,
+                      padding: const EdgeInsets.all(16),
+                      itemBuilder: (context, index) {
+                        if (index < campaigns.length) {
+                          final campaign = campaigns[index];
+                          return MyCampaignWidget(campaign: campaign);
+                        } else {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                      },
+                      separatorBuilder: (context, index) {
+                        return const SizedBox(
+                          height: 10,
+                        );
+                      },
+                      itemCount: campaigns.length + (isLoading == true ? 1 : 0),
                     );
                   },
-                  itemCount: campaigns.length + (isLoading == true ? 1 : 0),
-                );
-              },
-            ),
-          ),
-        ],
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
