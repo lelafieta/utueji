@@ -150,7 +150,7 @@ class AppTheme {
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(
-                  AppValues.s100,
+                  AppValues.s10,
                 ), // Define o raio da borda aqui
               ),
             ),
@@ -235,7 +235,7 @@ class AppTheme {
           hintStyle: TextStyle(fontSize: AppValues.s14),
         ),
         appBarTheme: const AppBarTheme(
-          centerTitle: true,
+          centerTitle: false,
           color: Color(0xff363636),
           titleTextStyle: TextStyle(
             fontFamily: AppStrings.fontFamily,

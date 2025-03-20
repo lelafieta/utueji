@@ -156,7 +156,43 @@ class _MyCampaignDetailPageState extends State<MyCampaignDetailPage> {
         centerTitle: false,
         title: const Text('Campanha'),
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.more_vert)),
+          BlocBuilder<MyCampaignDetailCubit, MyCampaignDetailState>(
+            builder: (context, state) {
+              if (state is MyCampaignDetailLoaded) {
+                final campaign = state.campaign;
+                return PopupMenuButton<String>(
+                  splashRadius: 10,
+                  onSelected: (value) {
+                    print("Selecionado: $value");
+                  },
+                  itemBuilder: (BuildContext context) => [
+                    PopupMenuItem(
+                      value: "edit",
+                      onTap: () {
+                        Get.toNamed(
+                          AppRoutes.editMyCampaignRoute,
+                          arguments: widget.campaign,
+                        );
+                      },
+                      child: Text("Editar"),
+                    ),
+                    PopupMenuItem(
+                      value: "config",
+                      child: Text("Configurações"),
+                      onTap: () {
+                        Get.toNamed(
+                          AppRoutes.myCampaignSettingsRoute,
+                          arguments: widget.campaign,
+                        );
+                      },
+                    ),
+                  ],
+                  icon: Icon(Icons.more_vert), // Ícone do botão
+                );
+              }
+              return SizedBox.shrink();
+            },
+          ),
         ],
       ),
       body: BlocBuilder<MyCampaignDetailCubit, MyCampaignDetailState>(
@@ -183,9 +219,6 @@ class _MyCampaignDetailPageState extends State<MyCampaignDetailPage> {
               allData.value = chartData;
               _filterData();
             });
-
-            // selectedFilter == "Tudo";
-            // filteredData.value = chartData;
 
             return SingleChildScrollView(
               child: Column(

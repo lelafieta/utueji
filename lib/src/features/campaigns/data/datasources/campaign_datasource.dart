@@ -347,6 +347,8 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
       CampaignParams params) async {
     final userId = supabase.auth.currentUser!.id;
 
+    print("CEHGOU!!! AQUI");
+
     final response = await supabase
         .from(SupabaseConsts.campaigns)
         .select('''
