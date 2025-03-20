@@ -1,19 +1,36 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:io';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dotted_dashed_line/dotted_dashed_line.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:social_sharing_plus/social_sharing_plus.dart';
+import 'package:utueji/src/features/campaigns/presentation/cubit/campaign_urgent_cubit/campaign_urgent_cubit.dart';
 import 'package:utueji/src/features/campaigns/presentation/widgets/campaign_widget.dart';
+import '../../../../config/routes/app_routes.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
 import '../../../../core/resources/images/app_images.dart';
-import '../../../../core/utils/app_utils.dart';
+
+import '../../../../core/utils/campaign_status_extension.dart';
 import '../../../events/presentation/cubit/event_cubit.dart';
 import '../../../events/presentation/cubit/event_state.dart';
 import '../../../events/presentation/widgets/event_widget.dart';
-import '../cubit/campaign_urgent_cubit/campaign_urgent_cubit.dart';
+
+import '../../domain/entities/campaign_entity.dart';
+import '../../domain/entities/campaign_params.dart';
+import '../../domain/enums/campaign_status.dart';
 import '../cubit/campaign_urgent_cubit/campaign_urgent_state.dart';
+import '../cubit/my_campaign_cubit/my_campaign_cubit.dart';
+import '../cubit/my_campaign_cubit/my_campaign_state.dart';
+import '../widgets/campaign_skeleton_widget.dart';
+import '../widgets/my_campaign_skeleton_widget.dart';
+import '../widgets/my_campaign_widget.dart';
 
 class CampaignUrgentPage extends StatefulWidget {
   const CampaignUrgentPage({super.key});
@@ -23,22 +40,102 @@ class CampaignUrgentPage extends StatefulWidget {
 }
 
 class _CampaignUrgentPageState extends State<CampaignUrgentPage> {
-  List<String> categories = [
-    "Todos",
-    "Médico",
-    "Educação",
-    "Olfã",
-    "Animal",
-    "Idosos",
-    "Desporto",
-    "Desastre",
-    "Outros",
+  ValueNotifier<CampaignParams> params =
+      ValueNotifier<CampaignParams>(CampaignParams());
+  List<CampaignStatus> statuses = CampaignStatusExtension.allStatuses;
+  final scrollController = ScrollController();
+
+  List<Category> categories = [
+    Category(
+      id: null,
+      name: "Todos",
+      description: null,
+      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
+    ),
+    Category(
+      id: "e31e98b7-6be3-43b4-af8e-ec0ac9cf0fcc",
+      name: "Médico",
+      description: null,
+      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
+    ),
+    Category(
+      id: "e31e98b7-6be3-43b4-af8e-ec0ac9cf0fcc",
+      name: "Médico",
+      description: null,
+      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
+    ),
+    Category(
+      id: "ebe15c90-13d7-4ec9-8fa5-d5900cc6dcc4",
+      name: "Olfã",
+      description: null,
+      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
+    ),
+    Category(
+      id: "278d5de0-7b6d-4aab-9453-b587c7911aef",
+      name: "Desporto",
+      description: null,
+      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
+    ),
+    Category(
+      id: "a7408d26-8e08-49b2-b404-4855a00020b8",
+      name: "Idosos",
+      description: null,
+      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
+    ),
+    Category(
+      id: "e949f3bd-5a94-44e0-bf6d-4728f0e9ea91",
+      name: "Educação",
+      description: null,
+      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
+    ),
+    Category(
+      id: "0279de80-27c5-4ddf-81ca-f4b5f12ec0dd",
+      name: "Animal",
+      description: null,
+      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
+    ),
+    Category(
+      id: "f2b24c2a-9771-4162-aa5d-8fa8a05d3cd2",
+      name: "Desastre",
+      description: null,
+      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
+    ),
+    Category(
+      id: "d822573c-14e5-4eca-99b4-52a35e5889b3",
+      name: "Outros",
+      description: null,
+      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
+    ),
   ];
+
+  void setupScrollController() {
+    scrollController.addListener(() {
+      if (scrollController.position.atEdge) {
+        if (scrollController.position.pixels != 0) {
+          context.read<CampaignUrgentCubit>().getUrgentCampaigns(
+              isRefresh: false,
+              params: CampaignParams(
+                categoryId: params.value.categoryId,
+              ));
+        }
+      }
+    });
+  }
+
   int selectedIndex = 0;
+  List<Widget> widgets = [
+    const FeedContainer(),
+    const BlogContainer(),
+    const EventContainer(),
+  ];
 
   @override
   void initState() {
-    context.read<CampaignUrgentCubit>().getUrgentCampaigns();
+    context.read<CampaignUrgentCubit>().getUrgentCampaigns(
+        isRefresh: true,
+        params:
+            CampaignParams(categoryId: "a7408d26-8e08-49b2-b404-4855a00020b8"));
+    setupScrollController();
     super.initState();
   }
 
@@ -49,105 +146,249 @@ class _CampaignUrgentPageState extends State<CampaignUrgentPage> {
         centerTitle: false,
         title: const Text('Campanhas Urgentes'),
       ),
-      body: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: "Pesquise campanhas, caridades...",
-                fillColor: Colors.white,
-                filled: true,
-                prefixIcon: Container(
-                  padding: const EdgeInsets.all(12),
-                  child: SvgPicture.asset(
-                    AppIcons.search,
-                    width: 14,
-                    color: Colors.grey,
-                  ),
-                ),
-                suffixIcon: Container(
-                  padding: const EdgeInsets.all(12),
-                  child: SvgPicture.asset(
-                    AppIcons.microphone,
-                    width: 14,
-                    color: Colors.grey,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 10),
-          SizedBox(
-            height: 40,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              shrinkWrap: true,
-              physics: const ClampingScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: () {
-                    setState(() {
-                      selectedIndex = index;
-                    });
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColors.primaryColor,
+        onPressed: () {
+          Get.toNamed(AppRoutes.createCampaignRoute);
+        },
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+      ),
+      body: ValueListenableBuilder<CampaignParams>(
+        valueListenable: params,
+        builder: (context, valueStatus, _) {
+          return Column(
+            children: [
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                child: TextField(
+                  onChanged: (value) {
+                    params.value.title = value;
+                    context.read<MyCampaignCubit>().getAllMyCamapigns(
+                        isRefresh: true,
+                        params: CampaignParams(
+                            status: params.value.status,
+                            title: params.value.title));
                   },
-                  child: Container(
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: (index == selectedIndex)
-                          ? AppColors.blackColor
-                          : Colors.white,
-                      borderRadius: BorderRadius.circular(8),
+                  decoration: InputDecoration(
+                    hintText: "Pesquise campanhas, caridades...",
+                    fillColor: Colors.white,
+                    filled: true,
+                    prefixIcon: Container(
+                      padding: const EdgeInsets.all(12),
+                      child: SvgPicture.asset(
+                        AppIcons.search,
+                        width: 14,
+                        color: Colors.grey,
+                      ),
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Center(
-                      child: Text(
-                        categories[index],
-                        style: TextStyle(
-                          color: (index == selectedIndex)
-                              ? AppColors.whiteColor
-                              : Colors.black,
-                        ),
+                    suffixIcon: IconButton(
+                      onPressed: () {},
+                      icon: SvgPicture.asset(
+                        AppIcons.microphone,
+                        color: Colors.grey,
                       ),
                     ),
                   ),
-                );
-              },
-              separatorBuilder: (context, index) {
-                return const SizedBox(width: 10);
-              },
-              itemCount: categories.length,
-            ),
-          ),
-          const SizedBox(height: 5),
-          Expanded(
-            child: BlocBuilder<CampaignUrgentCubit, CampaignUrgentState>(
-              builder: (context, state) {
-                if (state is CampaignUrgentLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (state is CampaignUrgentLoaded) {
-                  return ListView.separated(
-                    padding: const EdgeInsets.all(16),
-                    itemBuilder: (context, index) {
-                      final campaign = state.campaigns[index];
-                      return CampaignWidget(campaign: campaign);
-                    },
-                    separatorBuilder: (context, index) {
-                      return const SizedBox(
-                        height: 10,
+                ),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                height: 40,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+                  physics: const ClampingScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () {
+                        setState(() {
+                          selectedIndex = index;
+                          params.value.categoryId = categories[index].id;
+                          print("CATEGORIA ${params.value.categoryId}");
+                          context
+                              .read<CampaignUrgentCubit>()
+                              .getUrgentCampaigns(
+                                  isRefresh: true,
+                                  params: CampaignParams(
+                                      categoryId: categories[index].id));
+                        });
+                      },
+                      child: Container(
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: (index == selectedIndex)
+                              ? AppColors.blackColor
+                              : Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Center(
+                          child: Text(
+                            categories[index].name!,
+                            style: TextStyle(
+                              color: (index == selectedIndex)
+                                  ? AppColors.whiteColor
+                                  : Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return const SizedBox(width: 10);
+                  },
+                  itemCount: categories.length,
+                ),
+              ),
+              const SizedBox(height: 5),
+              Expanded(
+                child: BlocBuilder<CampaignUrgentCubit, CampaignUrgentState>(
+                  builder: (context, state) {
+                    if (state is CampaignUrgentLoading && state.isFirstFetch) {
+                      return Skeletonizer(
+                        enabled: true,
+                        child: ListView.separated(
+                          padding: const EdgeInsets.all(16),
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return CampaignSkeletonWidget();
+                          },
+                          separatorBuilder: (context, index) {
+                            return const SizedBox(height: 10);
+                          },
+                          itemCount: 5,
+                        ),
                       );
-                    },
-                    itemCount: state.campaigns.length,
-                  );
-                }
-                return Text("data");
-              },
+                    }
+                    List<CampaignEntity> campaigns = [];
+                    bool isLoading = false;
+                    if (state is CampaignUrgentLoading) {
+                      campaigns = state.oldCampaigns;
+                      isLoading = true;
+                    } else if (state is CampaignUrgentLoaded) {
+                      campaigns = state.campaigns;
+                    }
+                    return ListView.separated(
+                      controller: scrollController,
+                      padding: const EdgeInsets.all(16),
+                      itemBuilder: (context, index) {
+                        if (index < campaigns.length) {
+                          final campaign = campaigns[index];
+                          return CampaignWidget(campaign: campaign);
+                        } else {
+                          return CampaignSkeletonWidget();
+                        }
+                      },
+                      separatorBuilder: (context, index) {
+                        return const SizedBox(
+                          height: 10,
+                        );
+                      },
+                      itemCount: campaigns.length + (isLoading == true ? 1 : 0),
+                    );
+                  },
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Card _campaignSkeletonWidget(BuildContext context) {
+    return Card(
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              titleAlignment: ListTileTitleAlignment.center,
+              minVerticalPadding: 0,
+              leading: ClipRRect(
+                borderRadius: BorderRadius.circular(5),
+                child: Container(
+                  width: 60,
+                  height: 70,
+                  color: Colors.black12,
+                  child: Image.asset(
+                    AppImages.coverBackground,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              title: Text("Campaign",
+                  style: Theme.of(context).textTheme.titleSmall,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis),
+              subtitle: Text("Date"),
+              trailing: IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.share),
+              ),
             ),
-          ),
-        ],
+            const DottedDashedLine(
+              height: 0,
+              width: double.infinity,
+              axis: Axis.horizontal,
+              dashColor: Colors.black26,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: RichText(
+                      text: TextSpan(
+                        style: DefaultTextStyle.of(context)
+                            .style
+                            .copyWith(fontSize: 12),
+                        children: [
+                          // const TextSpan(text: "Objectivo: "),
+                          TextSpan(
+                            style: const TextStyle(
+                              color: AppColors.primaryColor,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            text: "Money /",
+                          ),
+                          TextSpan(
+                            style: const TextStyle(color: Colors.black),
+                            text: " Money",
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.history,
+                        color: AppColors.textColor,
+                        size: 18,
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        "Está acontecer",
+                        style: const TextStyle(
+                          fontSize: 12,
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -583,6 +824,34 @@ class EventContainer extends StatelessWidget {
         }
         return Text("data");
       },
+    );
+  }
+}
+
+class Category {
+  String? id;
+  String? name;
+  String? description;
+  DateTime? createdAt;
+
+  Category({
+    this.id,
+    this.name,
+    this.description,
+    this.createdAt,
+  });
+
+  Category copyWith({
+    String? id,
+    String? name,
+    String? description,
+    DateTime? createdAt,
+  }) {
+    return Category(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 }
