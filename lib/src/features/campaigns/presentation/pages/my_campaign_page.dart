@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dotted_dashed_line/dotted_dashed_line.dart';
 
@@ -5,7 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:social_sharing_plus/social_sharing_plus.dart';
 import '../../../../config/routes/app_routes.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
@@ -36,6 +40,87 @@ class _MyCampaignPageState extends State<MyCampaignPage> {
       ValueNotifier<CampaignParams>(CampaignParams());
   List<CampaignStatus> statuses = CampaignStatusExtension.allStatuses;
   final scrollController = ScrollController();
+  final TextEditingController _controller = TextEditingController();
+  static const List<SocialPlatform> _platforms = SocialPlatform.values;
+
+  final ImagePicker _picker = ImagePicker();
+  String? _mediaPath;
+  List<String> _mediaPaths = [];
+
+  Future<void> _pickImage() async {
+    final XFile? pickedFile =
+        await _picker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) _mediaPath = pickedFile.path;
+    });
+  }
+
+  Future<void> _pickVideo() async {
+    final XFile? pickedFile =
+        await _picker.pickVideo(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) _mediaPath = pickedFile.path;
+    });
+  }
+
+  Future<void> _pickMultiMedia() async {
+    final List<XFile> pickedFiles = await _picker.pickMultiImage();
+
+    setState(() {
+      _mediaPaths = pickedFiles.map((file) => file.path).toList();
+    });
+  }
+
+  Future<void> _pickMultiVideo() async {
+    final XFile? pickedFile =
+        await _picker.pickVideo(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _mediaPaths.add(pickedFile.path);
+      }
+    });
+  }
+
+  Future<void> _share(
+    SocialPlatform platform, {
+    bool isMultipleShare = false,
+    String? description,
+    List<String>? mediaPaths,
+  }) async {
+    final String content = _controller.text;
+    isMultipleShare
+        ? await SocialSharingPlus.shareToSocialMediaWithMultipleMedia(
+            platform,
+            media: mediaPaths ?? _mediaPaths,
+            content: description,
+            isOpenBrowser: true,
+            onAppNotInstalled: () {
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(SnackBar(
+                  content:
+                      Text('${platform.name.capitalize} is not installed.'),
+                ));
+            },
+          )
+        : await SocialSharingPlus.shareToSocialMedia(
+            platform,
+            content,
+            media: _mediaPath,
+            isOpenBrowser: true,
+            onAppNotInstalled: () {
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(SnackBar(
+                  content:
+                      Text('${platform.name.capitalize} is not installed.'),
+                ));
+            },
+          );
+  }
 
   void setupScrollController() {
     scrollController.addListener(() {
@@ -69,6 +154,73 @@ class _MyCampaignPageState extends State<MyCampaignPage> {
 
   @override
   Widget build(BuildContext context) {
+    // return Scaffold(
+    //   appBar: AppBar(
+    //     title: const Text('social_sharing_plus'),
+    //   ),
+    //   body: SingleChildScrollView(
+    //     child: Center(
+    //       child: Column(
+    //         mainAxisAlignment: MainAxisAlignment.center,
+    //         children: <Widget>[
+    //           Padding(
+    //             padding: const EdgeInsets.all(24),
+    //             child: TextField(
+    //               controller: _controller,
+    //               decoration: const InputDecoration(
+    //                 border: OutlineInputBorder(),
+    //                 hintText: 'Enter a text',
+    //               ),
+    //             ),
+    //           ),
+    //           Row(
+    //             mainAxisAlignment: MainAxisAlignment.center,
+    //             children: [
+    //               ElevatedButton(
+    //                 onPressed: _pickImage,
+    //                 child: const Text('Pick Image'),
+    //               ),
+    //               const SizedBox(width: 20),
+    //               if (Platform.isAndroid)
+    //                 ElevatedButton(
+    //                   onPressed: _pickVideo,
+    //                   child: const Text('Pick Video'),
+    //                 ),
+    //             ],
+    //           ),
+    //           Padding(
+    //             padding: const EdgeInsets.symmetric(vertical: 20),
+    //             child: Row(
+    //               mainAxisAlignment: MainAxisAlignment.center,
+    //               children: [
+    //                 ElevatedButton(
+    //                   onPressed: _pickMultiMedia,
+    //                   child: const Text('Pick Multi Image'),
+    //                 ),
+    //                 const SizedBox(width: 20),
+    //                 if (Platform.isAndroid)
+    //                   ElevatedButton(
+    //                     onPressed: _pickMultiVideo,
+    //                     child: const Text('Pick Multi Video'),
+    //                   ),
+    //               ],
+    //             ),
+    //           ),
+    //           ..._platforms.map(
+    //             (SocialPlatform platform) => ElevatedButton(
+    //               onPressed: () => _share(
+    //                 platform,
+    //                 isMultipleShare: true,
+    //               ),
+    //               child: Text('Share to ${platform.name.capitalize}'),
+    //             ),
+    //           ),
+    //         ],
+    //       ),
+    //     ),
+    //   ),
+    // );
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,

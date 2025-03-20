@@ -1,8 +1,35 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.example.utueji">
+    
+        <queries>
+            <!-- Query for Facebook -->
+            <package android:name="com.facebook.katana" />
+            <!-- Query for Twitter -->
+            <package android:name="com.twitter.android" />
+            <!-- Query for LinkedIn -->
+            <package android:name="com.linkedin.android" />
+            <!-- Query for Reddit -->
+            <package android:name="com.reddit.frontpage" />
+            <!-- Query for WhatsApp -->
+            <package android:name="com.whatsapp" />
+            <!-- Query for Telegram -->
+            <package android:name="org.telegram.messenger" />
+        </queries>
+  
     <application
         android:label="utueji"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
+
+          <provider
+        android:name="androidx.core.content.FileProvider"
+        android:authorities="${applicationId}.fileprovider"
+        android:exported="false"
+        android:grantUriPermissions="true">
+        <meta-data
+            android:name="android.support.FILE_PROVIDER_PATHS"
+            android:resource="@xml/filepaths" />
+    </provider>
+     
         <activity
             android:name=".MainActivity"
             android:exported="true"
