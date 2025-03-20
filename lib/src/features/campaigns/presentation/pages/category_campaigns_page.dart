@@ -7,9 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:social_sharing_plus/social_sharing_plus.dart';
 import 'package:utueji/src/features/campaigns/presentation/cubit/campaign_urgent_cubit/campaign_urgent_cubit.dart';
 import 'package:utueji/src/features/campaigns/presentation/widgets/campaign_widget.dart';
 import '../../../../config/routes/app_routes.dart';
@@ -59,8 +57,8 @@ class _CategoryCampaignPageState extends State<CategoryCampaignPage> {
           context.read<CampaignUrgentCubit>().getUrgentCampaigns(
               isRefresh: false,
               params: CampaignParams(
-                categoryId: params.value.categoryId,
-              ));
+                  categoryId: params.value.categoryId,
+                  filter: params.value.filter));
         }
       }
     });
@@ -77,8 +75,9 @@ class _CategoryCampaignPageState extends State<CategoryCampaignPage> {
   void initState() {
     context.read<CampaignUrgentCubit>().getUrgentCampaigns(
         isRefresh: true,
-        params:
-            CampaignParams(categoryId: "a7408d26-8e08-49b2-b404-4855a00020b8"));
+        params: widget.category.id != null
+            ? CampaignParams(categoryId: widget.category.id)
+            : CampaignParams());
     setupScrollController();
     super.initState();
   }
@@ -153,13 +152,13 @@ class _CategoryCampaignPageState extends State<CategoryCampaignPage> {
                         setState(() {
                           selectedIndex = index;
                           params.value.categoryId = filters[index].id;
-                          print("CATEGORIA ${params.value.categoryId}");
                           context
                               .read<CampaignUrgentCubit>()
                               .getUrgentCampaigns(
                                   isRefresh: true,
                                   params: CampaignParams(
-                                      categoryId: filters[index].id));
+                                      categoryId: widget.category.id,
+                                      filter: filters[index].id));
                         });
                       },
                       child: Container(

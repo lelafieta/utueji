@@ -7,6 +7,7 @@ class CampaignParams {
   String? nameFilter;
   String? status;
   String? location;
+  String? filter;
   DateTime? startDate;
   DateTime? endDate;
 
@@ -17,6 +18,7 @@ class CampaignParams {
     this.description,
     this.categoryId,
     this.nameFilter,
+    this.filter,
     this.status,
     this.location,
     this.startDate,
