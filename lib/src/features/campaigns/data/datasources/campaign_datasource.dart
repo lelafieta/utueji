@@ -341,16 +341,14 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
           .lte('created_at', params.endDate!.toIso8601String());
     }
 
-    // Aplicando ordenação por data de criação
-    // query = query.order('created_at');
-
-    // Aplicando paginação diretamente na consulta final
     final response = await query
         .range((params.page! - 1) * params.limit!,
             params.page! * params.limit! - 1)
         .order("created_at", ascending: false);
 
-    return response.map((event) => CampaignModel.fromJson(event)).toList();
+    return response.map((event) {
+      return CampaignModel.fromJson(event);
+    }).toList();
   }
 
   @override
