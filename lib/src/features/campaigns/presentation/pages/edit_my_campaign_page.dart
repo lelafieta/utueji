@@ -7,6 +7,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../config/themes/app_colors.dart';
+import '../../../categories/domain/entities/category_entity.dart';
 import '../../domain/entities/campaign_entity.dart';
 import 'create_campaign_page.dart';
 
@@ -30,7 +31,7 @@ class _EditMyCampaignPageState extends State<EditMyCampaignPage> {
   List<PlatformFile> selectedCoverImage = [];
 
   TextEditingController controllerLocation = TextEditingController();
-  Category? _selectedOptionCategory;
+  CategoryEntity? _selectedOptionCategory;
   String? _selectedOptionType;
   bool? _selectedOptionUrgent = false;
   TextEditingController title = TextEditingController();

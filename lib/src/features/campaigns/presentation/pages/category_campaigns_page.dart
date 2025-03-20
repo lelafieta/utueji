@@ -18,6 +18,7 @@ import '../../../../core/resources/icons/app_icons.dart';
 import '../../../../core/resources/images/app_images.dart';
 
 import '../../../../core/utils/campaign_status_extension.dart';
+import '../../../categories/domain/entities/category_entity.dart';
 import '../../../events/presentation/cubit/event_cubit.dart';
 import '../../../events/presentation/cubit/event_state.dart';
 import '../../../events/presentation/widgets/event_widget.dart';
@@ -29,80 +30,26 @@ import '../cubit/campaign_urgent_cubit/campaign_urgent_state.dart';
 import '../cubit/my_campaign_cubit/my_campaign_cubit.dart';
 import '../widgets/campaign_skeleton_widget.dart';
 
-class CampaignUrgentPage extends StatefulWidget {
-  const CampaignUrgentPage({super.key});
+class CategoryCampaignPage extends StatefulWidget {
+  final CategoryEntity category;
+  const CategoryCampaignPage({super.key, required this.category});
 
   @override
-  State<CampaignUrgentPage> createState() => _CampaignUrgentPageState();
+  State<CategoryCampaignPage> createState() => _CategoryCampaignPageState();
 }
 
-class _CampaignUrgentPageState extends State<CampaignUrgentPage> {
+class _CategoryCampaignPageState extends State<CategoryCampaignPage> {
   ValueNotifier<CampaignParams> params =
       ValueNotifier<CampaignParams>(CampaignParams());
   List<CampaignStatus> statuses = CampaignStatusExtension.allStatuses;
   final scrollController = ScrollController();
 
-  List<Category> categories = [
-    Category(
-      id: null,
-      name: "Todos",
-      description: null,
-      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
-    ),
-    Category(
-      id: "e31e98b7-6be3-43b4-af8e-ec0ac9cf0fcc",
-      name: "Médico",
-      description: null,
-      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
-    ),
-    Category(
-      id: "e31e98b7-6be3-43b4-af8e-ec0ac9cf0fcc",
-      name: "Médico",
-      description: null,
-      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
-    ),
-    Category(
-      id: "ebe15c90-13d7-4ec9-8fa5-d5900cc6dcc4",
-      name: "Olfã",
-      description: null,
-      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
-    ),
-    Category(
-      id: "278d5de0-7b6d-4aab-9453-b587c7911aef",
-      name: "Desporto",
-      description: null,
-      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
-    ),
-    Category(
-      id: "a7408d26-8e08-49b2-b404-4855a00020b8",
-      name: "Idosos",
-      description: null,
-      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
-    ),
-    Category(
-      id: "e949f3bd-5a94-44e0-bf6d-4728f0e9ea91",
-      name: "Educação",
-      description: null,
-      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
-    ),
-    Category(
-      id: "0279de80-27c5-4ddf-81ca-f4b5f12ec0dd",
-      name: "Animal",
-      description: null,
-      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
-    ),
-    Category(
-      id: "f2b24c2a-9771-4162-aa5d-8fa8a05d3cd2",
-      name: "Desastre",
-      description: null,
-      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
-    ),
-    Category(
-      id: "d822573c-14e5-4eca-99b4-52a35e5889b3",
-      name: "Outros",
-      description: null,
-      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
-    ),
+  List<FilterEntity> filters = [
+    FilterEntity(id: "1", name: "Todos"),
+    FilterEntity(id: "2", name: "Emergência"),
+    FilterEntity(id: "3", name: "Popular"),
+    FilterEntity(id: "4", name: "Recente"),
+    FilterEntity(id: "5", name: "Terminando em breve"),
   ];
 
   void setupScrollController() {
@@ -141,7 +88,7 @@ class _CampaignUrgentPageState extends State<CampaignUrgentPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
-        title: const Text('Campanhas Urgentes'),
+        title: Text(widget.category.name!),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.primaryColor,
@@ -205,14 +152,14 @@ class _CampaignUrgentPageState extends State<CampaignUrgentPage> {
                       onTap: () {
                         setState(() {
                           selectedIndex = index;
-                          params.value.categoryId = categories[index].id;
+                          params.value.categoryId = filters[index].id;
                           print("CATEGORIA ${params.value.categoryId}");
                           context
                               .read<CampaignUrgentCubit>()
                               .getUrgentCampaigns(
                                   isRefresh: true,
                                   params: CampaignParams(
-                                      categoryId: categories[index].id));
+                                      categoryId: filters[index].id));
                         });
                       },
                       child: Container(
@@ -226,7 +173,7 @@ class _CampaignUrgentPageState extends State<CampaignUrgentPage> {
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Center(
                           child: Text(
-                            categories[index].name!,
+                            filters[index].name!,
                             style: TextStyle(
                               color: (index == selectedIndex)
                                   ? AppColors.whiteColor
@@ -240,7 +187,7 @@ class _CampaignUrgentPageState extends State<CampaignUrgentPage> {
                   separatorBuilder: (context, index) {
                     return const SizedBox(width: 10);
                   },
-                  itemCount: categories.length,
+                  itemCount: filters.length,
                 ),
               ),
               const SizedBox(height: 5),
@@ -825,30 +772,12 @@ class EventContainer extends StatelessWidget {
   }
 }
 
-class Category {
-  String? id;
-  String? name;
-  String? description;
-  DateTime? createdAt;
+class FilterEntity {
+  final String? id;
+  final String name;
 
-  Category({
-    this.id,
-    this.name,
-    this.description,
-    this.createdAt,
+  FilterEntity({
+    required this.id,
+    required this.name,
   });
-
-  Category copyWith({
-    String? id,
-    String? name,
-    String? description,
-    DateTime? createdAt,
-  }) {
-    return Category(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      createdAt: createdAt ?? this.createdAt,
-    );
-  }
 }

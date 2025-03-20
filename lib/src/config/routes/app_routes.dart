@@ -20,4 +20,5 @@ class AppRoutes {
   static const String createCampaignSuccessRoute = "/createCampaignSuccess";
   static const String editMyCampaignRoute = "/editMyCampaign";
   static const String myCampaignSettingsRoute = "/myCampaignSettings";
+  static const String categoryCampaignsRoute = "/categoryCampaigns";
 }

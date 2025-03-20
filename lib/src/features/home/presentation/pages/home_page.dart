@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:utueji/src/features/categories/data/models/category_model.dart';
 import 'package:utueji/src/features/events/presentation/widgets/event_skeleton_widget.dart';
 import 'package:utueji/src/features/home/presentation/cubit/home_campaign_cubit/home_campaign_cubit.dart';
 import 'package:utueji/src/features/ongs/presentation/widgets/ong_skeleton_widget.dart';
@@ -32,27 +33,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<String> titles = [
-    "Médico",
-    "Educação",
-    "Olfã",
-    "Animal",
-    "Idosos",
-    "Desporto",
-    "Desastre",
-    "Outros",
-  ];
-  List<String> iconsPath = [
-    AppIcons.doctor,
-    AppIcons.graduationCap,
-    AppIcons.familyDress,
-    AppIcons.paw,
-    AppIcons.oldPeople,
-    AppIcons.tennis,
-    AppIcons.triangleWarning,
-    AppIcons.menuDots
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -261,33 +241,41 @@ class _HomePageState extends State<HomePage> {
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 itemBuilder: (context, index) {
-                  return Container(
-                    child: Column(
-                      children: [
-                        Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Container(
-                            width: 60,
-                            height: 60,
-                            padding: const EdgeInsets.all(18),
-                            child: SvgPicture.asset(
-                              iconsPath[index],
-                              width: 12,
-                              color: AppColors.primaryColor,
+                  return InkWell(
+                    onTap: () {
+                      Get.toNamed(
+                        AppRoutes.categoryCampaignsRoute,
+                        arguments: categories[index],
+                      );
+                    },
+                    child: Container(
+                      child: Column(
+                        children: [
+                          Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Container(
+                              width: 60,
+                              height: 60,
+                              padding: const EdgeInsets.all(18),
+                              child: SvgPicture.asset(
+                                categories[index].iconPath!,
+                                width: 12,
+                                color: AppColors.primaryColor,
+                              ),
                             ),
                           ),
-                        ),
-                        Text(titles[index].toString()),
-                      ],
+                          Text(categories[index].name.toString()),
+                        ],
+                      ),
                     ),
                   );
                 },
                 separatorBuilder: (context, index) {
                   return const SizedBox(width: 10);
                 },
-                itemCount: titles.length,
+                itemCount: categories.length,
               ),
             ),
             Container(
