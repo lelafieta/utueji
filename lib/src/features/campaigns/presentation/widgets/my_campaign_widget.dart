@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:utueji/src/config/routes/app_routes.dart';
 import 'package:http/http.dart' as http;
+import 'package:utueji/src/features/campaigns/domain/enums/campaign_status.dart';
 
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/images/app_images.dart';
@@ -194,37 +195,74 @@ class _MyCampaignWidgetState extends State<MyCampaignWidget> {
                         ),
                       ),
                     ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.history,
-                          color: AppColors.textColor,
-                          size: 18,
-                        ),
-                        SizedBox(width: 5),
-                        (diasRestantes == 0)
-                            ? Text(
-                                "Está acontecer",
+                    (widget.campaign.status == CampaignStatus.pending)
+                        ? Row(
+                            children: [
+                              Icon(
+                                Icons.history,
+                                color: Colors.orange,
+                                size: 18,
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                CampaignStatus.pending.name,
                                 style: const TextStyle(
                                   fontSize: 12,
+                                  color: Colors.orange,
                                 ),
                               )
-                            : (diasRestantes < 0)
-                                ? Text(
-                                    AppDateUtilsHelper.formatDate(
-                                        data: widget.campaign.endDate!),
+                            ],
+                          )
+                        : (widget.campaign.status == CampaignStatus.completed)
+                            ? Row(
+                                children: [
+                                  Icon(
+                                    Icons.history,
+                                    color: AppColors.success,
+                                    size: 18,
+                                  ),
+                                  SizedBox(width: 5),
+                                  Text(
+                                    CampaignStatus.completed.name,
                                     style: const TextStyle(
                                       fontSize: 12,
+                                      color: AppColors.success,
                                     ),
                                   )
-                                : Text(
-                                    "Faltando $diasRestantes dias",
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                    ),
-                                  )
-                      ],
-                    )
+                                ],
+                              )
+                            : Row(
+                                children: [
+                                  Icon(
+                                    Icons.history,
+                                    color: AppColors.textColor,
+                                    size: 18,
+                                  ),
+                                  SizedBox(width: 5),
+                                  (diasRestantes == 0)
+                                      ? Text(
+                                          "Está acontecer",
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                          ),
+                                        )
+                                      : (diasRestantes < 0)
+                                          ? Text(
+                                              AppDateUtilsHelper.formatDate(
+                                                  data:
+                                                      widget.campaign.endDate!),
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                              ),
+                                            )
+                                          : Text(
+                                              "Faltando $diasRestantes dias",
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                              ),
+                                            )
+                                ],
+                              )
                   ],
                 ),
               ),

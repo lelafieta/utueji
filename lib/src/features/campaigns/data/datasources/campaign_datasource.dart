@@ -295,9 +295,9 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
       CampaignParams params) async {
     final userId = supabase.auth.currentUser!.id;
 
-    final response = await supabase
-        .from(SupabaseConsts.campaigns)
-        .select('''
+    print("CHEGOU!!! AQUI ${params.categoryId}");
+
+    var query = supabase.from(SupabaseConsts.campaigns).select('''
       *, 
       user:profiles(*), 
       ong:ongs(*), 
@@ -307,11 +307,48 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
       updates:campaign_updates(*), 
       comments:campaign_comments(*, user:profiles(*)),
       midias:campaign_midias(*)
-    ''')
-        .eq('is_urgent', true)
-        .eq('is_activate', true)
-        .eq('user_id', userId)
-        .order('created_at');
+    ''').eq('is_urgent', true).eq('is_activate', true).eq('user_id', userId);
+
+    if (params.categoryId != null) {
+      query = query.eq('category_id', params.categoryId.toString());
+    }
+
+    if (params.nameFilter != null) {
+      query = query.ilike('name', '%${params.nameFilter}%');
+    }
+
+    if (params.title != null) {
+      query = query.ilike('title', '%${params.title}%');
+    }
+
+    if (params.description != null) {
+      query = query.ilike('description', '%${params.description}%');
+    }
+
+    if (params.status != null) {
+      if (params.status != CampaignStatus.all.name) {
+        query = query.eq('status', params.status.toString());
+      }
+    }
+
+    if (params.location != null) {
+      query = query.ilike('location', '%${params.location}%');
+    }
+
+    if (params.startDate != null && params.endDate != null) {
+      query = query
+          .gte('created_at', params.startDate!.toIso8601String())
+          .lte('created_at', params.endDate!.toIso8601String());
+    }
+
+    // Aplicando ordenação por data de criação
+    // query = query.order('created_at');
+
+    // Aplicando paginação diretamente na consulta final
+    final response = await query
+        .range((params.page! - 1) * params.limit!,
+            params.page! * params.limit! - 1)
+        .order("created_at", ascending: false);
 
     return response.map((event) => CampaignModel.fromJson(event)).toList();
   }
@@ -346,8 +383,6 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
   Future<List<CampaignEntity>> getLatestUrgentCampaigns(
       CampaignParams params) async {
     final userId = supabase.auth.currentUser!.id;
-
-    print("CEHGOU!!! AQUI");
 
     final response = await supabase
         .from(SupabaseConsts.campaigns)

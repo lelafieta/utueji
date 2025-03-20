@@ -137,6 +137,7 @@ class CampaignSkeletonWidget extends StatelessWidget {
                 ],
               ),
             ),
+            const SizedBox(height: 10),
           ],
         ),
       ),
