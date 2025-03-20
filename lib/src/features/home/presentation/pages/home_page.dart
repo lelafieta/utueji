@@ -309,8 +309,6 @@ class _HomePageState extends State<HomePage> {
             ),
             BlocBuilder<HomeCampaignCubit, HomeCampaignState>(
               builder: (context, state) {
-                print("ESTADO");
-                print(state);
                 if (state is HomeCampaignLoading) {
                   return HomeCampaignSkeletonWidget();
                 } else if (state is HomeCampaignError) {
