@@ -1,9 +1,11 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dotted_dashed_line/dotted_dashed_line.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import '../../../../config/routes/app_routes.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
@@ -19,6 +21,7 @@ import '../../domain/entities/campaign_params.dart';
 import '../../domain/enums/campaign_status.dart';
 import '../cubit/my_campaign_cubit/my_campaign_cubit.dart';
 import '../cubit/my_campaign_cubit/my_campaign_state.dart';
+import '../widgets/my_campaign_skeleton_widget.dart';
 import '../widgets/my_campaign_widget.dart';
 
 class MyCampaignPage extends StatefulWidget {
@@ -41,7 +44,7 @@ class _MyCampaignPageState extends State<MyCampaignPage> {
           context.read<MyCampaignCubit>().getAllMyCamapigns(
               isRefresh: false,
               params: CampaignParams(
-                status: params!.value.status,
+                status: params.value.status,
               ));
         }
       }
@@ -110,11 +113,10 @@ class _MyCampaignPageState extends State<MyCampaignPage> {
                         color: Colors.grey,
                       ),
                     ),
-                    suffixIcon: Container(
-                      padding: const EdgeInsets.all(12),
-                      child: SvgPicture.asset(
+                    suffixIcon: IconButton(
+                      onPressed: () {},
+                      icon: SvgPicture.asset(
                         AppIcons.microphone,
-                        width: 14,
                         color: Colors.grey,
                       ),
                     ),
@@ -177,7 +179,8 @@ class _MyCampaignPageState extends State<MyCampaignPage> {
                     //   return const Center(
                     //     child: CircularProgressIndicator(),
                     //   );
-                    // } else if (state is MyCampaignLoaded) {
+                    // }
+                    // else if (state is MyCampaignLoaded) {
                     //   return ListView.separated(
                     //     padding: const EdgeInsets.all(16),
                     //     itemBuilder: (context, index) {
@@ -193,8 +196,19 @@ class _MyCampaignPageState extends State<MyCampaignPage> {
                     //   );
                     // }
                     if (state is MyCampaignLoading && state.isFirstFetch) {
-                      return Center(
-                        child: CircularProgressIndicator(),
+                      return Skeletonizer(
+                        enabled: true,
+                        child: ListView.separated(
+                          padding: const EdgeInsets.all(16),
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return _campaignSkeletonWidget(context);
+                          },
+                          separatorBuilder: (context, index) {
+                            return const SizedBox(height: 10);
+                          },
+                          itemCount: 5,
+                        ),
                       );
                     }
                     List<CampaignEntity> campaigns = [];
@@ -213,9 +227,7 @@ class _MyCampaignPageState extends State<MyCampaignPage> {
                           final campaign = campaigns[index];
                           return MyCampaignWidget(campaign: campaign);
                         } else {
-                          return Center(
-                            child: CircularProgressIndicator(),
-                          );
+                          return MyCampaignSkeletonWidget();
                         }
                       },
                       separatorBuilder: (context, index) {
@@ -231,6 +243,97 @@ class _MyCampaignPageState extends State<MyCampaignPage> {
             ],
           );
         },
+      ),
+    );
+  }
+
+  Card _campaignSkeletonWidget(BuildContext context) {
+    return Card(
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              titleAlignment: ListTileTitleAlignment.center,
+              minVerticalPadding: 0,
+              leading: ClipRRect(
+                borderRadius: BorderRadius.circular(5),
+                child: Container(
+                  width: 60,
+                  height: 70,
+                  color: Colors.black12,
+                  child: Image.asset(
+                    AppImages.coverBackground,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              title: Text("Campaign",
+                  style: Theme.of(context).textTheme.titleSmall,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis),
+              subtitle: Text("Date"),
+              trailing: IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.share),
+              ),
+            ),
+            const DottedDashedLine(
+              height: 0,
+              width: double.infinity,
+              axis: Axis.horizontal,
+              dashColor: Colors.black26,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: RichText(
+                      text: TextSpan(
+                        style: DefaultTextStyle.of(context)
+                            .style
+                            .copyWith(fontSize: 12),
+                        children: [
+                          // const TextSpan(text: "Objectivo: "),
+                          TextSpan(
+                            style: const TextStyle(
+                              color: AppColors.primaryColor,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            text: "Money /",
+                          ),
+                          TextSpan(
+                            style: const TextStyle(color: Colors.black),
+                            text: " Money",
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.history,
+                        color: AppColors.textColor,
+                        size: 18,
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        "Está acontecer",
+                        style: const TextStyle(
+                          fontSize: 12,
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
