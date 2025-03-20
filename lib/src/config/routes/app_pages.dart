@@ -1,6 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:utueji/src/features/campaigns/presentation/pages/category_campaigns_page.dart';
 import 'package:utueji/src/features/campaigns/presentation/pages/my_campaign_settings_page.dart';
 import '../../features/auth/presentation/cubit/initial_cubit/initial_cubit.dart';
 import '../../features/auth/presentation/cubit/initial_cubit/initial_state.dart';
@@ -15,6 +16,7 @@ import '../../features/campaigns/presentation/pages/edit_my_campaign_page.dart';
 import '../../features/campaigns/presentation/pages/my_campaign_detail_page.dart';
 import '../../features/campaigns/presentation/pages/my_campaign_page.dart';
 import '../../features/campaigns/presentation/pages/campaign_urgent_page.dart';
+import '../../features/categories/domain/entities/category_entity.dart';
 import '../../features/chat/presentation/pages/chat_page.dart';
 import '../../features/events/domain/entities/event_entity.dart';
 import '../../features/events/presentation/pages/event_detail_page.dart';
@@ -356,6 +358,22 @@ class RouteManager {
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) {
             return MyCampaignSettingsPage(campaign: campaign);
+          },
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return SharedAxisTransition(
+              animation: animation,
+              secondaryAnimation: secondaryAnimation,
+              transitionType: SharedAxisTransitionType.vertical,
+              child: child,
+            );
+          },
+        );
+
+      case AppRoutes.categoryCampaignsRoute:
+        final category = routeSettings.arguments as CategoryEntity;
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return CategoryCampaignPage(category: category);
           },
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return SharedAxisTransition(

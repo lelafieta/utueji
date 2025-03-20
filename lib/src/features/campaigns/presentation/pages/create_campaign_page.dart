@@ -14,7 +14,10 @@ import 'package:utueji/src/config/routes/app_routes.dart';
 import 'package:utueji/src/features/campaigns/domain/entities/campaign_midia_entity.dart';
 
 import '../../../../config/themes/app_colors.dart';
+import '../../../../core/entities/category_entity.dart';
 import '../../../../core/resources/images/app_images.dart';
+import '../../../categories/data/models/category_model.dart';
+import '../../../categories/domain/entities/category_entity.dart';
 import '../../domain/entities/campaign_document_entity.dart';
 import '../../domain/entities/campaign_entity.dart';
 import '../cubit/campaign_action_cubit/campaign_action_cubit.dart';
@@ -42,7 +45,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
   final _formStepThreeKey = GlobalKey<FormBuilderState>();
 
   TextEditingController controllerLocation = TextEditingController();
-  Category? _selectedOptionCategory;
+  CategoryEntity? _selectedOptionCategory;
   String? _selectedOptionType;
   bool? _selectedOptionUrgent = false;
   TextEditingController title = TextEditingController();
@@ -58,56 +61,6 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
   Map<String, dynamic> formDataStepOne = {};
   Map<String, dynamic> formDataStepTwo = {};
   Map<String, dynamic> formDataStepThree = {};
-  List<Category> categories = [
-    Category(
-      id: "0279de80-27c5-4ddf-81ca-f4b5f12ec0dd",
-      name: "Animal",
-      description: null,
-      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
-    ),
-    Category(
-      id: "278d5de0-7b6d-4aab-9453-b587c7911aef",
-      name: "Desporto",
-      description: null,
-      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
-    ),
-    Category(
-      id: "a7408d26-8e08-49b2-b404-4855a00020b8",
-      name: "Idosos",
-      description: null,
-      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
-    ),
-    Category(
-      id: "d822573c-14e5-4eca-99b4-52a35e5889b3",
-      name: "Outros",
-      description: null,
-      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
-    ),
-    Category(
-      id: "e31e98b7-6be3-43b4-af8e-ec0ac9cf0fcc",
-      name: "Médico",
-      description: null,
-      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
-    ),
-    Category(
-      id: "e949f3bd-5a94-44e0-bf6d-4728f0e9ea91",
-      name: "Educação",
-      description: null,
-      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
-    ),
-    Category(
-      id: "ebe15c90-13d7-4ec9-8fa5-d5900cc6dcc4",
-      name: "Olfã",
-      description: null,
-      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
-    ),
-    Category(
-      id: "f2b24c2a-9771-4162-aa5d-8fa8a05d3cd2",
-      name: "Desastre",
-      description: null,
-      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
-    ),
-  ];
   List<String> types = [
     "Um Individuo",
     "Uma Família",
@@ -365,7 +318,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                       });
                     } else {
                       if (_selectedOptionCategory == null) {
-                        final category = Category(
+                        final category = CategoryEntity(
                             id: "empty",
                             name: "Empty",
                             createdAt: DateTime.now());
@@ -942,7 +895,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                     ),
                     alignment: Alignment.center,
                     child: Text(
-                      categories[index].name,
+                      categories[index].name!,
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           color: isSelected ? Colors.white : Colors.black),
                     ),
@@ -1275,34 +1228,6 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
           ),
         ],
       ),
-    );
-  }
-}
-
-class Category {
-  final String id;
-  final String name;
-  final String? description;
-  final DateTime createdAt;
-
-  Category({
-    required this.id,
-    required this.name,
-    this.description,
-    required this.createdAt,
-  });
-
-  Category copyWith({
-    String? id,
-    String? name,
-    String? description,
-    DateTime? createdAt,
-  }) {
-    return Category(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      createdAt: createdAt ?? this.createdAt,
     );
   }
 }
