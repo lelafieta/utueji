@@ -10,6 +10,7 @@ import '../../../../core/resources/images/app_images.dart';
 import '../../../../core/utils/app_date_utils_helper.dart';
 import '../../../../core/utils/app_utils.dart';
 import '../../../campaigns/presentation/cubit/campaign_cubit.dart';
+import '../../../campaigns/presentation/cubit/campaign_state.dart';
 import '../../../campaigns/presentation/cubit/campaign_urgent_cubit/campaign_urgent_cubit.dart';
 import '../../../campaigns/presentation/cubit/campaign_urgent_cubit/campaign_urgent_state.dart';
 import '../../../campaigns/presentation/widgets/campaign_widget.dart';

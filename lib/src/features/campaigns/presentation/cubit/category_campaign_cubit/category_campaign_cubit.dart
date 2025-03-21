@@ -14,7 +14,7 @@ class CategoryCampaignCubit extends Cubit<CategoryCampaignState> {
   int page = 1;
   int limit = 10;
 
-  Future<void> getUrgentCampaigns(
+  Future<void> getAllCategoryCampaigns(
       {bool isRefresh = false, CampaignParams? params}) async {
     if (state is CategoryCampaignLoading) return;
 
@@ -35,7 +35,7 @@ class CategoryCampaignCubit extends Cubit<CategoryCampaignState> {
     final result = await getAllCampaignsUseCase.call(CampaignParams(
         page: page,
         limit: limit,
-        status: params!.status,
+        filter: params!.filter,
         title: params.title,
         categoryId: params.categoryId));
 

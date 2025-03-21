@@ -26,3 +26,5 @@ lib/src/core/supabase/
 
 .flutter-plugins
 .flutter-plugins-dependencies
+node_modules/
+.gitignore
