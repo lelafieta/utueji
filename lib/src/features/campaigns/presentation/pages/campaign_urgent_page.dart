@@ -111,9 +111,7 @@ class _CampaignUrgentPageState extends State<CampaignUrgentPage> {
         if (scrollController.position.pixels != 0) {
           context.read<CampaignUrgentCubit>().getUrgentCampaigns(
               isRefresh: false,
-              params: CampaignParams(
-                categoryId: params.value.categoryId,
-              ));
+              params: CampaignParams(categoryId: params.value.categoryId));
         }
       }
     });

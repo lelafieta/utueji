@@ -57,11 +57,11 @@ class _CategoryCampaignPageState extends State<CategoryCampaignPage> {
     scrollController.addListener(() {
       if (scrollController.position.atEdge) {
         if (scrollController.position.pixels != 0) {
+          print(params.value.categoryId);
           context.read<CategoryCampaignCubit>().getAllCategoryCampaigns(
               isRefresh: false,
               params: CampaignParams(
-                  categoryId: params.value.categoryId,
-                  filter: params.value.filter));
+                  categoryId: widget.category.id, filter: params.value.filter));
         }
       }
     });
@@ -77,10 +77,11 @@ class _CategoryCampaignPageState extends State<CategoryCampaignPage> {
   @override
   void initState() {
     context.read<CategoryCampaignCubit>().getAllCategoryCampaigns(
-        isRefresh: true,
-        params: widget.category.id != null
-            ? CampaignParams(categoryId: widget.category.id)
-            : CampaignParams());
+          isRefresh: true,
+          params: widget.category.id != null
+              ? CampaignParams(categoryId: widget.category.id, filter: null)
+              : CampaignParams(),
+        );
     setupScrollController();
     super.initState();
   }
