@@ -9,6 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:utueji/src/features/campaigns/presentation/cubit/campaign_urgent_cubit/campaign_urgent_cubit.dart';
+import 'package:utueji/src/features/campaigns/presentation/cubit/category_campaign_cubit/category_campaign_state.dart';
 import 'package:utueji/src/features/campaigns/presentation/widgets/campaign_widget.dart';
 import '../../../../config/routes/app_routes.dart';
 import '../../../../config/themes/app_colors.dart';
@@ -24,7 +25,9 @@ import '../../../events/presentation/widgets/event_widget.dart';
 import '../../domain/entities/campaign_entity.dart';
 import '../../domain/entities/campaign_params.dart';
 import '../../domain/enums/campaign_status.dart';
+import '../cubit/campaign_cubit.dart';
 import '../cubit/campaign_urgent_cubit/campaign_urgent_state.dart';
+import '../cubit/category_campaign_cubit/category_campaign_cubit.dart';
 import '../cubit/my_campaign_cubit/my_campaign_cubit.dart';
 import '../widgets/campaign_skeleton_widget.dart';
 
@@ -54,7 +57,7 @@ class _CategoryCampaignPageState extends State<CategoryCampaignPage> {
     scrollController.addListener(() {
       if (scrollController.position.atEdge) {
         if (scrollController.position.pixels != 0) {
-          context.read<CampaignUrgentCubit>().getUrgentCampaigns(
+          context.read<CategoryCampaignCubit>().getAllCategoryCampaigns(
               isRefresh: false,
               params: CampaignParams(
                   categoryId: params.value.categoryId,
@@ -73,7 +76,7 @@ class _CategoryCampaignPageState extends State<CategoryCampaignPage> {
 
   @override
   void initState() {
-    context.read<CampaignUrgentCubit>().getUrgentCampaigns(
+    context.read<CategoryCampaignCubit>().getAllCategoryCampaigns(
         isRefresh: true,
         params: widget.category.id != null
             ? CampaignParams(categoryId: widget.category.id)
@@ -153,8 +156,8 @@ class _CategoryCampaignPageState extends State<CategoryCampaignPage> {
                           selectedIndex = index;
                           params.value.categoryId = filters[index].id;
                           context
-                              .read<CampaignUrgentCubit>()
-                              .getUrgentCampaigns(
+                              .read<CategoryCampaignCubit>()
+                              .getAllCategoryCampaigns(
                                   isRefresh: true,
                                   params: CampaignParams(
                                       categoryId: widget.category.id,
@@ -172,7 +175,7 @@ class _CategoryCampaignPageState extends State<CategoryCampaignPage> {
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Center(
                           child: Text(
-                            filters[index].name!,
+                            filters[index].name,
                             style: TextStyle(
                               color: (index == selectedIndex)
                                   ? AppColors.whiteColor
@@ -191,9 +194,11 @@ class _CategoryCampaignPageState extends State<CategoryCampaignPage> {
               ),
               const SizedBox(height: 5),
               Expanded(
-                child: BlocBuilder<CampaignUrgentCubit, CampaignUrgentState>(
+                child:
+                    BlocBuilder<CategoryCampaignCubit, CategoryCampaignState>(
                   builder: (context, state) {
-                    if (state is CampaignUrgentLoading && state.isFirstFetch) {
+                    if (state is CategoryCampaignLoading &&
+                        state.isFirstFetch) {
                       return Skeletonizer(
                         enabled: true,
                         child: ListView.separated(
@@ -211,10 +216,10 @@ class _CategoryCampaignPageState extends State<CategoryCampaignPage> {
                     }
                     List<CampaignEntity> campaigns = [];
                     bool isLoading = false;
-                    if (state is CampaignUrgentLoading) {
+                    if (state is CategoryCampaignLoading) {
                       campaigns = state.oldCampaigns;
                       isLoading = true;
-                    } else if (state is CampaignUrgentLoaded) {
+                    } else if (state is CategoryCampaignLoaded) {
                       campaigns = state.campaigns;
                     }
                     return ListView.separated(

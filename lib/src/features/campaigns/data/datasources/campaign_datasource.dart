@@ -275,17 +275,57 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
   @override
   Future<List<CampaignEntity>> getAllCampaigns(CampaignParams params) async {
     final userId = supabase.auth.currentUser!.id;
-    final response = await supabase.from(SupabaseConsts.campaigns).select('''
-      *, 
-      user:profiles(*), 
-      ong:ongs(*), 
-      category:categories(*), 
-      contributors:campaign_contributors(*, user:profiles(*)), 
-      documents:campaign_documents(*), 
-      updates:campaign_updates(*), 
-      comments:campaign_comments(*, user:profiles(*)),
-      midias:campaign_midias(*)
-    ''').eq('user_id', userId).eq('is_activate', true).order('created_at');
+
+    var query = supabase.from(SupabaseConsts.campaigns).select('''
+    *, 
+    user:profiles(*), 
+    ong:ongs(*), 
+    category:categories(*), 
+    contributors:campaign_contributors(*, user:profiles(*)), 
+    documents:campaign_documents(*), 
+    updates:campaign_updates(*), 
+    comments:campaign_comments(*, user:profiles(*)),
+    midias:campaign_midias(*)
+  ''').eq('is_activate', true).eq('user_id', userId);
+
+    if (params.categoryId != null) {
+      query = query.eq('category_id', params.categoryId.toString());
+    }
+
+    if (params.nameFilter != null) {
+      query = query.ilike('name', '%${params.nameFilter}%');
+    }
+
+    if (params.title != null) {
+      query = query.ilike('title', '%${params.title}%');
+    }
+
+    if (params.filter != null && params.filter != "1") {
+      print("CONSOLE: ${params.filter}");
+    }
+
+    if (params.description != null) {
+      query = query.ilike('description', '%${params.description}%');
+    }
+
+    if (params.status != null && params.status != CampaignStatus.all.name) {
+      query = query.eq('status', params.status.toString());
+    }
+
+    if (params.location != null) {
+      query = query.ilike('location', '%${params.location}%');
+    }
+
+    if (params.startDate != null && params.endDate != null) {
+      query = query
+          .gte('created_at', params.startDate!.toIso8601String())
+          .lte('created_at', params.endDate!.toIso8601String());
+    }
+
+    final response = await query
+        .range((params.page! - 1) * params.limit!,
+            params.page! * params.limit! - 1)
+        .order("created_at", ascending: false);
 
     return response.map((event) => CampaignModel.fromJson(event)).toList();
   }
@@ -294,8 +334,6 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
   Future<List<CampaignEntity>> getAllUrgentCampaigns(
       CampaignParams params) async {
     final userId = supabase.auth.currentUser!.id;
-
-    print("CHEGOU!!! AQUI ${params.categoryId}");
 
     var query = supabase.from(SupabaseConsts.campaigns).select('''
       *, 
@@ -319,6 +357,11 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
 
     if (params.title != null) {
       query = query.ilike('title', '%${params.title}%');
+    }
+
+    if (params.filter != null) {
+      print("CONSOLE: ${params.filter}");
+      // query = query.ilike('title', '%${params.title}%');
     }
 
     if (params.description != null) {
