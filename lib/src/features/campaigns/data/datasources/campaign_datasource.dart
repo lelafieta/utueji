@@ -277,16 +277,16 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
     final userId = supabase.auth.currentUser!.id;
 
     var query = supabase.from(SupabaseConsts.campaigns).select('''
-    *, 
-    user:profiles(*), 
-    ong:ongs(*), 
-    category:categories(*), 
-    contributors:campaign_contributors(*, user:profiles(*)), 
-    documents:campaign_documents(*), 
-    updates:campaign_updates(*), 
-    comments:campaign_comments(*, user:profiles(*)),
-    midias:campaign_midias(*)
-  ''').eq('is_activate', true).eq('user_id', userId);
+      *, 
+      user:profiles(*), 
+      ong:ongs(*), 
+      category:categories(*), 
+      contributors:campaign_contributors(*, user:profiles(*)), 
+      documents:campaign_documents(*), 
+      updates:campaign_updates(*), 
+      comments:campaign_comments(*, user:profiles(*)),
+      midias:campaign_midias(*)
+    ''').eq('is_activate', true).eq('user_id', userId);
 
     if (params.categoryId != null) {
       query = query.eq('category_id', params.categoryId.toString());
@@ -300,16 +300,19 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
       query = query.ilike('title', '%${params.title}%');
     }
 
-    if (params.filter != null && params.filter != "1") {
+    if (params.filter != null) {
       print("CONSOLE: ${params.filter}");
+      // query = query.ilike('title', '%${params.title}%');
     }
 
     if (params.description != null) {
       query = query.ilike('description', '%${params.description}%');
     }
 
-    if (params.status != null && params.status != CampaignStatus.all.name) {
-      query = query.eq('status', params.status.toString());
+    if (params.status != null) {
+      if (params.status != CampaignStatus.all.name) {
+        query = query.eq('status', params.status.toString());
+      }
     }
 
     if (params.location != null) {
@@ -327,7 +330,9 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
             params.page! * params.limit! - 1)
         .order("created_at", ascending: false);
 
-    return response.map((event) => CampaignModel.fromJson(event)).toList();
+    return response.map((event) {
+      return CampaignModel.fromJson(event);
+    }).toList();
   }
 
   @override

@@ -35,7 +35,7 @@ class CategoryCampaignCubit extends Cubit<CategoryCampaignState> {
     final result = await getAllCampaignsUseCase.call(CampaignParams(
         page: page,
         limit: limit,
-        filter: params!.filter,
+        status: params!.status,
         title: params.title,
         categoryId: params.categoryId));
 
