@@ -93,9 +93,9 @@ class CampaignWidget extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                  child: const Center(
+                                  child: Center(
                                     child: Text(
-                                      "EMERGÊNCIA",
+                                      "EMERGÊNCIA ${campaign.priority}",
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.w600,

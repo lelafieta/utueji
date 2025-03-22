@@ -274,9 +274,9 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
 
   @override
   Future<List<CampaignEntity>> getAllCampaigns(CampaignParams params) async {
-    final userId = supabase.auth.currentUser!.id;
+    // final userId = supabase.auth.currentUser!.id;
 
-    var query = supabase.from(SupabaseConsts.campaigns).select('''
+    var query = supabase.from('campaigns_with_contributors').select('''
       *, 
       user:profiles(*), 
       ong:ongs(*), 
@@ -286,7 +286,7 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
       updates:campaign_updates(*), 
       comments:campaign_comments(*, user:profiles(*)),
       midias:campaign_midias(*)
-    ''').eq('is_activate', true).eq('user_id', userId);
+    ''').eq('is_activate', true);
 
     if (params.categoryId != null) {
       query = query.eq('category_id', params.categoryId.toString());
@@ -301,7 +301,6 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
     }
 
     if (params.filter != null) {
-      print("CONSOLE: ${params.filter}");
       // query = query.ilike('title', '%${params.title}%');
     }
 
@@ -325,10 +324,44 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
           .lte('created_at', params.endDate!.toIso8601String());
     }
 
-    final response = await query
-        .range((params.page! - 1) * params.limit!,
-            params.page! * params.limit! - 1)
-        .order("created_at", ascending: false);
+    if (params.filter == "2") {
+      query = query.eq('priority', 1);
+    }
+    if (params.filter == "4") {
+      query = query..order('created_at', ascending: false);
+    }
+    // if (params.filter == "5") {
+    //   // query = query.lte('end_date', DateTime.now().toIso8601String());
+    //   query = query
+    //       .gte('end_date', DateTime.now().toIso8601String())
+    //       .order('end_date', ascending: true);
+    // }
+
+    if (params.filter == "3") {
+      // query = query.order('contributors_count', ascending: false);
+      final response = await query
+          .range((params.page! - 1) * params.limit!,
+              params.page! * params.limit! - 1)
+          .order('contributors_count', ascending: false);
+      ;
+
+      return response.map((event) {
+        return CampaignModel.fromJson(event);
+      }).toList();
+    } else if (params.filter == "5") {
+      final response = await query
+          .gte('end_date', DateTime.now().toIso8601String())
+          .range((params.page! - 1) * params.limit!,
+              params.page! * params.limit! - 1)
+          .order('end_date', ascending: true);
+
+      return response.map((event) {
+        return CampaignModel.fromJson(event);
+      }).toList();
+    }
+
+    final response = await query.range(
+        (params.page! - 1) * params.limit!, params.page! * params.limit! - 1);
 
     return response.map((event) {
       return CampaignModel.fromJson(event);
