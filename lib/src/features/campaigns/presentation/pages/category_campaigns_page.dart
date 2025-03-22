@@ -60,7 +60,10 @@ class _CategoryCampaignPageState extends State<CategoryCampaignPage> {
           context.read<CategoryCampaignCubit>().getAllCategoryCampaigns(
               isRefresh: false,
               params: CampaignParams(
-                  categoryId: widget.category.id, filter: params.value.filter));
+                categoryId: widget.category.id,
+                filter: params.value.filter,
+                title: params.value.title,
+              ));
         }
       }
     });
@@ -76,11 +79,10 @@ class _CategoryCampaignPageState extends State<CategoryCampaignPage> {
   @override
   void initState() {
     context.read<CategoryCampaignCubit>().getAllCategoryCampaigns(
-          isRefresh: true,
-          params: widget.category.id != null
-              ? CampaignParams(categoryId: widget.category.id, filter: null)
-              : CampaignParams(),
-        );
+        isRefresh: true,
+        params: CampaignParams(
+          categoryId: widget.category.id,
+        ));
     setupScrollController();
     super.initState();
   }
@@ -113,11 +115,15 @@ class _CategoryCampaignPageState extends State<CategoryCampaignPage> {
                 child: TextField(
                   onChanged: (value) {
                     params.value.title = value;
-                    context.read<MyCampaignCubit>().getAllMyCamapigns(
-                        isRefresh: true,
-                        params: CampaignParams(
-                            status: params.value.status,
-                            title: params.value.title));
+                    context
+                        .read<CategoryCampaignCubit>()
+                        .getAllCategoryCampaigns(
+                            isRefresh: true,
+                            params: CampaignParams(
+                              categoryId: widget.category.id,
+                              filter: params.value.filter,
+                              title: params.value.title,
+                            ));
                   },
                   decoration: InputDecoration(
                     hintText: "Pesquise campanhas, caridades...",
@@ -152,17 +158,19 @@ class _CategoryCampaignPageState extends State<CategoryCampaignPage> {
                   itemBuilder: (context, index) {
                     return InkWell(
                       onTap: () {
-                        setState(() {
-                          selectedIndex = index;
-                          params.value.filter = filters[index].id;
-                          context
-                              .read<CategoryCampaignCubit>()
-                              .getAllCategoryCampaigns(
-                                  isRefresh: true,
-                                  params: CampaignParams(
-                                      categoryId: widget.category.id,
-                                      filter: filters[index].id));
-                        });
+                        selectedIndex = index;
+                        setState(() {});
+                        params.value.filter = filters[index].id;
+                        context
+                            .read<CategoryCampaignCubit>()
+                            .getAllCategoryCampaigns(
+                              isRefresh: true,
+                              params: CampaignParams(
+                                categoryId: widget.category.id,
+                                filter: filters[index].id,
+                                title: params.value.title,
+                              ),
+                            );
                       },
                       child: Container(
                         height: 40,

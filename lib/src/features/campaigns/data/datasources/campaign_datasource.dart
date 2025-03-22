@@ -275,6 +275,9 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
   @override
   Future<List<CampaignEntity>> getAllCampaigns(CampaignParams params) async {
     // final userId = supabase.auth.currentUser!.id;
+    final agora = DateTime.now().toUtc();
+    final semanaFutura = agora.add(Duration(days: 7));
+    final umaSemanaAtras = agora.subtract(Duration(days: 7));
 
     var query = supabase.from('campaigns_with_contributors').select('''
       *, 
@@ -325,10 +328,10 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
     }
 
     if (params.filter == "2") {
-      query = query.eq('priority', 1);
+      query = query.eq('priority', 0);
     }
     if (params.filter == "4") {
-      query = query..order('created_at', ascending: false);
+      // query = query..order('created_at', ascending: true);
     }
     // if (params.filter == "5") {
     //   // query = query.lte('end_date', DateTime.now().toIso8601String());
@@ -349,15 +352,35 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
         return CampaignModel.fromJson(event);
       }).toList();
     } else if (params.filter == "5") {
-      final response = await query
-          .gte('end_date', DateTime.now().toIso8601String())
-          .range((params.page! - 1) * params.limit!,
-              params.page! * params.limit! - 1)
-          .order('end_date', ascending: true);
+      // final response = await query
+      //     .gte('end_date', DateTime.now().toIso8601String())
+      //     .range((params.page! - 1) * params.limit!,
+      //         params.page! * params.limit! - 1)
+      //     .order('end_date', ascending: false);
 
-      return response.map((event) {
-        return CampaignModel.fromJson(event);
-      }).toList();
+      // return response.map((event) {
+      //   return CampaignModel.fromJson(event);
+      // }).toList();
+
+      query = query
+          .gte('end_date', agora.toIso8601String())
+          .lte('end_date', semanaFutura.toIso8601String())
+        ..order('created_at', ascending: true);
+    } else if (params.filter == "4") {
+      // final response = await query
+      //     .range((params.page! - 1) * params.limit!,
+      //         params.page! * params.limit! - 1)
+      //     .order("created_at", ascending: false);
+
+      // return response.map((event) {
+      //   return CampaignModel.fromJson(event);
+      // }).toList();
+
+      query = query
+          .gte('created_at',
+              umaSemanaAtras.toIso8601String()) // Criadas há no máximo 7 dias
+          .lte('created_at', agora.toIso8601String()) // Até hoje
+        ..order('created_at', ascending: false);
     }
 
     final response = await query.range(
@@ -538,7 +561,6 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
           .lte('created_at', params.endDate!.toIso8601String());
     }
 
-    // Aplicando paginação diretamente na consulta final
     final response = await query.range(
         (params.page! - 1) * params.limit!, params.page! * params.limit! - 1);
 
