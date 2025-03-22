@@ -37,6 +37,7 @@ class CategoryCampaignCubit extends Cubit<CategoryCampaignState> {
         limit: limit,
         status: params!.status,
         title: params.title,
+        filter: params.filter,
         categoryId: params.categoryId));
 
     result.fold(

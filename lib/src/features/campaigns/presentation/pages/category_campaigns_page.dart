@@ -57,7 +57,6 @@ class _CategoryCampaignPageState extends State<CategoryCampaignPage> {
     scrollController.addListener(() {
       if (scrollController.position.atEdge) {
         if (scrollController.position.pixels != 0) {
-          print(params.value.categoryId);
           context.read<CategoryCampaignCubit>().getAllCategoryCampaigns(
               isRefresh: false,
               params: CampaignParams(
@@ -155,7 +154,7 @@ class _CategoryCampaignPageState extends State<CategoryCampaignPage> {
                       onTap: () {
                         setState(() {
                           selectedIndex = index;
-                          params.value.categoryId = filters[index].id;
+                          params.value.filter = filters[index].id;
                           context
                               .read<CategoryCampaignCubit>()
                               .getAllCategoryCampaigns(
