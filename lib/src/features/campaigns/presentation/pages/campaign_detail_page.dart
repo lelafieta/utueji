@@ -821,45 +821,17 @@ class _AboutWidgetState extends State<AboutWidget> {
                     child: (widget.campaign.midias!.isEmpty)
                         ? (widget.campaign.imageCoverUrl == null)
                             ? Image.asset(AppImages.coverBackground)
-                            : CarouselSlider.builder(
-                                itemCount: widget.campaign.midias!.length,
-                                itemBuilder: (BuildContext context,
-                                    int itemIndex, int _) {
-                                  final campaignMidia =
-                                      widget.campaign.midias![itemIndex];
-
-                                  return GestureDetector(
-                                    onTap: () => _openPreview(
-                                      context,
-                                      campaignMidia.midiaType!,
-                                      campaignMidia.midiaUrl!,
-                                    ),
-                                    child: Container(
-                                      color: AppColors.primaryColor,
-                                      width: double.infinity,
-                                      height: 200,
-                                      child: campaignMidia.midiaType == "video"
-                                          ? VideoThumbnail(
-                                              videoUrl: campaignMidia.midiaUrl!,
-                                            )
-                                          : CachedNetworkImage(
-                                              width: double.infinity,
-                                              height: 200,
-                                              fit: BoxFit.cover,
-                                              imageUrl: campaignMidia.midiaUrl!,
-                                            ),
-                                    ),
-                                  );
-                                },
-                                options: CarouselOptions(
-                                  height: 200,
-                                  aspectRatio: 16 / 9,
-                                  viewportFraction: 0.95,
-                                  initialPage: 0,
-                                  enableInfiniteScroll: true,
-                                  animateToClosest: true,
-                                  autoPlay: false,
-                                  scrollDirection: Axis.horizontal,
+                            : InkWell(
+                                onTap: () => _openPreview(
+                                  context,
+                                  "local",
+                                  AppImages.coverBackground,
+                                ),
+                                child: CachedNetworkImage(
+                                  imageUrl: widget.campaign.imageCoverUrl!,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) =>
+                                      const CircularProgressIndicator(),
                                 ),
                               )
                         : CarouselSlider.builder(
@@ -909,9 +881,34 @@ class _AboutWidgetState extends State<AboutWidget> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          widget.campaign.title!,
-                          style: Theme.of(context).textTheme.titleMedium,
+                        ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          title: Text(
+                            widget.campaign.title!,
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          subtitle: RichText(
+                            text: TextSpan(
+                              style: Theme.of(context).textTheme.bodyMedium,
+                              children: [
+                                TextSpan(
+                                  text: (widget.campaign.campaignType ==
+                                          "Um Individuo")
+                                      ? "Beneficiário: "
+                                      : "Intsituicao: ",
+                                ),
+                                TextSpan(
+                                  text:
+                                      (widget.campaign.beneficiaryName == null)
+                                          ? "Não especificado"
+                                          : widget.campaign.beneficiaryName!,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 10),
                         Text(
