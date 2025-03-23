@@ -56,12 +56,6 @@ class _CampaignUrgentPageState extends State<CampaignUrgentPage> {
       createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
     ),
     Category(
-      id: "e31e98b7-6be3-43b4-af8e-ec0ac9cf0fcc",
-      name: "Médico",
-      description: null,
-      createdAt: DateTime.parse("2025-02-17T18:59:13.474034Z"),
-    ),
-    Category(
       id: "ebe15c90-13d7-4ec9-8fa5-d5900cc6dcc4",
       name: "Olfã",
       description: null,
