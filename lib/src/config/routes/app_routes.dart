@@ -21,4 +21,5 @@ class AppRoutes {
   static const String editMyCampaignRoute = "/editMyCampaign";
   static const String myCampaignSettingsRoute = "/myCampaignSettings";
   static const String categoryCampaignsRoute = "/categoryCampaigns";
+  static const String paymentRoute = "/payment";
 }

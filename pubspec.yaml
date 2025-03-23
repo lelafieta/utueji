@@ -117,6 +117,8 @@ dependencies:
   speech_to_text: ^6.6.0
   http: ^1.2.2
   appinio_social_share: ^0.3.2
+  dio: ^5.8.0+1
+  webview_flutter: ^4.8.0
 
 dev_dependencies:
   flutter_test:

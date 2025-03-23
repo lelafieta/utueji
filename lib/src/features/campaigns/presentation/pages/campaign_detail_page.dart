@@ -1,16 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider_plus/carousel_slider_plus.dart';
-
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:utueji/src/config/routes/app_routes.dart';
 
-import 'package:intl/intl.dart';
 import 'package:video_player/video_player.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
 import '../../../../core/resources/images/app_images.dart';
@@ -64,7 +65,7 @@ class _CampaignDetailPageState extends State<CampaignDetailPage> {
                         pinned: true,
                         leading: IconButton(
                           onPressed: () {
-                            Get.back();
+                            Navigator.pop(context);
                           },
                           icon: Icon(
                             Icons.arrow_back,
@@ -412,7 +413,10 @@ class _CampaignDetailPageState extends State<CampaignDetailPage> {
                               ),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Get.toNamed(AppRoutes.paymentRoute,
+                                arguments: widget.campaign);
+                          },
                           child: const Text("Doar"),
                         ),
                       ),
