@@ -159,7 +159,7 @@ class _CategoryCampaignPageState extends State<CategoryCampaignPage> {
                     return InkWell(
                       onTap: () {
                         selectedIndex = index;
-                        setState(() {});
+
                         params.value.filter = filters[index].id;
                         context
                             .read<CategoryCampaignCubit>()
@@ -171,6 +171,7 @@ class _CategoryCampaignPageState extends State<CategoryCampaignPage> {
                                 title: params.value.title,
                               ),
                             );
+                        setState(() {});
                       },
                       child: Container(
                         height: 40,
