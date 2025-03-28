@@ -1,3 +1,5 @@
+import 'user_fcm_token_entity.dart';
+
 class UserEntity {
   final String? id;
   final String? fullName;
@@ -12,20 +14,21 @@ class UserEntity {
   final String? role;
   final String? firstName;
   final String? lastName;
+  final UserFcmTokenEntity? userFcmTokenEntity;
 
-  const UserEntity({
-    this.id,
-    this.fullName,
-    this.lastName,
-    this.firstName,
-    this.email,
-    this.avatarUrl,
-    this.phoneNumber,
-    this.bio,
-    this.createdAt,
-    this.updatedAt,
-    this.location,
-    this.isVerified,
-    this.role,
-  });
+  const UserEntity(
+      {this.id,
+      this.fullName,
+      this.lastName,
+      this.firstName,
+      this.email,
+      this.avatarUrl,
+      this.phoneNumber,
+      this.bio,
+      this.createdAt,
+      this.updatedAt,
+      this.location,
+      this.isVerified,
+      this.role,
+      this.userFcmTokenEntity});
 }

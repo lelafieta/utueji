@@ -28,6 +28,7 @@ import '../../features/feeds/presentation/pages/feed_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/ongs/domain/entities/ong_entity.dart';
 import '../../features/ongs/presentation/pages/ong_profile_page.dart';
+import '../../features/profile/presentation/pages/profile_page.dart';
 import '../../features/solidary/presentation/pages/solidary_page.dart';
 import '../../features/splash&onboarding/presentation/pages/on_boarding_page.dart';
 import 'app_routes.dart';
@@ -391,6 +392,21 @@ class RouteManager {
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) {
             return PaymentPage(campaign: campaign);
+          },
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return SharedAxisTransition(
+              animation: animation,
+              secondaryAnimation: secondaryAnimation,
+              transitionType: SharedAxisTransitionType.vertical,
+              child: child,
+            );
+          },
+        );
+
+      case AppRoutes.profileRoute:
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return ProfilePage();
           },
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return SharedAxisTransition(

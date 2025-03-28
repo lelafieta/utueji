@@ -23,14 +23,14 @@ class _SolidaryPageState extends State<SolidaryPage> {
   final List<String> iconPaths = [
     AppIcons.houseChimney,
     AppIcons.compassAlt,
-    AppIcons.handsHeart,
+    AppIcons.heartPartnerHandshake,
     AppIcons.comments,
   ];
 
   final List<String> iconPathsBold = [
     AppIcons.houseChimneyBold,
     AppIcons.compassAltBold,
-    AppIcons.handsHeartBold,
+    AppIcons.heartPartnerHandshakeBold,
     AppIcons.commentsBold,
   ];
 
@@ -47,8 +47,8 @@ class _SolidaryPageState extends State<SolidaryPage> {
     ),
     MenuItem(
       title: "Campanhas",
-      iconPath: AppIcons.handsHeart,
-      activeIconPath: AppIcons.handsHeartBold,
+      iconPath: AppIcons.heartPartnerHandshake,
+      activeIconPath: AppIcons.heartPartnerHandshakeBold,
     ),
     MenuItem(
       title: "Chat",
