@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import '../models/user_model.dart';
+import '../../../auth/data/models/user_model.dart';
 import 'i_user_datasource.dart';
 
 class UserDatasource extends IUserDataSource {
