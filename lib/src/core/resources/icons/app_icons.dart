@@ -37,4 +37,11 @@ class AppIcons {
   static const String instagram = "assets/icons/instagram.svg";
   static const String whatsapp = "assets/icons/whatsapp.svg";
   static const String link = "assets/icons/link.svg";
+
+  static const String heartPartnerHandshake =
+      "assets/icons/heart-partner-handshake.svg";
+  static const String heartPartnerHandshakeBold =
+      "assets/icons/heart-partner-handshake-bold.svg";
+
+  static const String handHoldingHeart = "assets/icons/hand-holding-heart.svg";
 }
