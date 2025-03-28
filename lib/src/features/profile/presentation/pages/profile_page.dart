@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:utueji/src/features/auth/presentation/cubit/auth_cubit.dart';
 
 class ProfilePage extends StatelessWidget {
   @override
@@ -119,7 +121,8 @@ class ProfilePage extends StatelessWidget {
                   style: TextStyle(
                       color: Colors.red, fontWeight: FontWeight.bold)),
               onTap: () {
-                Navigator.pushNamed(context, "/logout");
+                // Navigator.pushNamed(context, "/logout");
+                context.read<AuthCubit>().signOut();
               },
             ),
           ],

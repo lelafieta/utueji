@@ -1,9 +1,11 @@
 class LoginParameters {
-  final String email;
-  final String password;
+  String? email;
+  String? password;
+  String? phone;
 
   LoginParameters({
-    required this.email,
-    required this.password,
+    this.email,
+    this.password,
+    this.phone,
   });
 }

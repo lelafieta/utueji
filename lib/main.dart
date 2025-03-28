@@ -16,6 +16,7 @@ void main() async {
   // AppEntity.uid = SecureCacheHelper.secureStorage.read(key: "uid");
   SecureCacheHelper.init();
   AppEntity.uid = await SecureCacheHelper().getData(key: "uid");
+  AppEntity.name = await SecureCacheHelper().getData(key: "fullName");
   await initializeDateFormatting('pt_BR', null);
 
   runApp(const UtuejiApp());

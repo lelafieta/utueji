@@ -830,6 +830,42 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
               },
             ),
           ),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //     children: [
+          //       RichText(
+          //         text: TextSpan(
+          //           style: DefaultTextStyle.of(context)
+          //               .style
+          //               .copyWith(color: Colors.black),
+          //           children: [
+          //             TextSpan(
+          //               text: "Colaboração",
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //       Icon(Icons.info_outline_rounded)
+          //     ],
+          //   ),
+          // ),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          //   child: TextButton(
+          //     onPressed: () {
+          //       _bottomSheet();
+          //     },
+          //     child: Row(
+          //       children: [
+          //         Icon(Icons.add),
+          //         const SizedBox(width: 10),
+          //         Text("Adiciona Caridade"),
+          //       ],
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
@@ -1228,6 +1264,76 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
           ),
         ],
       ),
+    );
+  }
+
+  void _bottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (BuildContext context) {
+        return Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                Text("Esc"),
+                SizedBox(
+                  height: 40,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: AppColors.blackColor,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Center(
+                            child: Text(
+                              "Utilizador",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Container(
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: AppColors.blackColor,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Center(
+                            child: Text(
+                              "Utilizador",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    children: [],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

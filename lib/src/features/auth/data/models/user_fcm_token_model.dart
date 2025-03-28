@@ -27,4 +27,14 @@ class UserFcmTokenModel extends UserFcmTokenEntity {
       'created_at': createdAt.toIso8601String(),
     };
   }
+
+  /// Converte `UserFcmTokenModel` para uma entidade `UserFcmTokenEntity`
+  UserFcmTokenEntity toEntity() {
+    return UserFcmTokenEntity(
+      id: id,
+      userId: userId,
+      fcmToken: fcmToken,
+      createdAt: createdAt,
+    );
+  }
 }

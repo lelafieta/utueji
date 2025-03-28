@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/errors/failures.dart';
@@ -28,19 +29,35 @@ class AuthDataSource implements IAuthDataSource {
       }
       return UserModel.fromJson(user.toJson());
     } catch (e) {
+      print(e);
       throw ServerFailure(message: 'Erro inesperado ao tentar fazer login.');
     }
   }
 
   @override
-  Future<void> signOut() {
-    // TODO: implement signOut
-    throw UnimplementedError();
+  Future<Unit> signOut() async {
+    try {
+      await supabase.auth.signOut();
+      return unit;
+    } catch (e) {
+      throw ServerFailure(message: 'Erro ao fazer logout');
+    }
   }
 
   @override
   Future<UserModel?> signUp(String email, String password) {
     // TODO: implement signUp
     throw UnimplementedError();
+  }
+
+  @override
+  Future<Unit> signInWithOtp(String phone) async {
+    try {
+      await supabase.auth.signInWithOtp(phone: phone);
+      return unit;
+    } catch (e) {
+      print(e);
+      throw ServerFailure(message: 'Erro ao fazer Login $e');
+    }
   }
 }

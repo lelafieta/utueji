@@ -11,7 +11,11 @@ class Authenticated extends AuthState {
   Authenticated({required this.user});
 }
 
+class AuthOtpSendSms extends AuthState {}
+
 class AuthFailure extends AuthState {
   final String failure;
   AuthFailure({required this.failure});
 }
+
+class AuthSignedOut extends AuthState {}

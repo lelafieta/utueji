@@ -35,14 +35,29 @@ class AuthRespository extends IAuthRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> signOut() {
-    // TODO: implement signOut
-    throw UnimplementedError();
+  Future<Either<Failure, Unit>> signOut() async {
+    try {
+      await datasource.signOut();
+      return Right(unit);
+    } catch (e) {
+      debugPrint("object ${e}");
+      return Left(ServerFailure(message: e.toString()));
+    }
   }
 
   @override
   Future<Either<Failure, UserEntity>> signUp(String email, String password) {
     // TODO: implement signUp
     throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, Unit>> signInWithOtp(String phone) async {
+    try {
+      await datasource.signInWithOtp(phone);
+      return Right(unit);
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
   }
 }

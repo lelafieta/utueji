@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:utueji/src/app/app_entity.dart';
 import 'package:utueji/src/features/categories/data/models/category_model.dart';
 import 'package:utueji/src/features/events/presentation/widgets/event_skeleton_widget.dart';
 import 'package:utueji/src/features/home/presentation/cubit/home_campaign_cubit/home_campaign_cubit.dart';
@@ -14,6 +15,7 @@ import 'package:utueji/src/features/ongs/presentation/widgets/ong_skeleton_widge
 
 import '../../../../config/routes/app_routes.dart';
 import '../../../../config/themes/app_colors.dart';
+import '../../../../core/cache/secure_storage.dart';
 import '../../../../core/resources/icons/app_icons.dart';
 import '../../../../core/resources/images/app_images.dart';
 import '../../../campaigns/presentation/widgets/campaign_skeleton_widget.dart';
@@ -64,17 +66,25 @@ class _HomePageState extends State<HomePage> {
               onTap: () {
                 Get.toNamed(AppRoutes.profileRoute);
               },
-              child: Container(
-                width: 40,
-                height: 40,
-                margin: const EdgeInsets.only(left: 16),
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(100)),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(50),
-                  child: Image.asset(
-                    AppImages.me,
-                    fit: BoxFit.cover,
+              child: ClipOval(
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  margin: const EdgeInsets.only(left: 16),
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(100)),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(50),
+                    child:
+                        (SecureCacheHelper().getData(key: "avatarUrl") == null)
+                            ? Image.asset(
+                                AppImages.avatar,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.asset(
+                                AppImages.me,
+                                fit: BoxFit.cover,
+                              ),
                   ),
                 ),
               ),
@@ -116,7 +126,7 @@ class _HomePageState extends State<HomePage> {
                   child: Row(
                     children: [
                       Text(
-                        "Olá! Lela Fieta",
+                        "Olá! ${AppEntity.name}",
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                       const SizedBox(width: 5),
