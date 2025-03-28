@@ -1,10 +1,15 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:utueji/src/config/routes/app_routes.dart';
 import 'package:utueji/src/features/home/presentation/pages/home_page.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
+import '../../../auth/presentation/cubit/auth_cubit.dart';
+import '../../../auth/presentation/cubit/auth_state.dart';
 import '../../../campaigns/presentation/pages/my_campaign_page.dart';
 import '../../../chat/presentation/pages/chat_page.dart';
 import '../../../explore/presentation/pages/explore_page.dart';
@@ -75,12 +80,19 @@ class _SolidaryPageState extends State<SolidaryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: pages[_currentIndex], // Alterna entre as páginas
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {},
-      //   child: const Icon(Icons.add),
-      // ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      body: BlocListener<AuthCubit, AuthState>(
+        listener: (context, state) {
+          EasyLoading.dismiss();
+          if (state is AuthLoading) {
+            EasyLoading.show(status: "Processando...");
+          } else if (state is AuthFailure) {
+            EasyLoading.show(status: "${state.failure}");
+          } else if (state is AuthSignedOut) {
+            Get.toNamed(AppRoutes.loginRoute);
+          }
+        },
+        child: pages[_currentIndex],
+      ),
       bottomNavigationBar: AnimatedBottomNavigationBar.builder(
         itemCount: menuItems.length,
         tabBuilder: (int index, bool isActive) {

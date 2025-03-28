@@ -48,7 +48,7 @@ class UserModel extends UserEntity {
       'location': location,
       'is_verified': isVerified,
       'role': role,
-      // 'user_fcm': userFcmTokenEntity.toString()
+      //  'user_fcm': userFcmTokenEntity.t
     };
   }
 

@@ -12,4 +12,5 @@ class AppImages {
   static const String charity = "assets/images/charity.gif";
   static const String coverBackground = "assets/images/cover_background.png";
   static const String success = "assets/images/success.png";
+  static const String avatar = "assets/images/user.png";
 }

@@ -17,6 +17,7 @@ import '../features/auth/data/repositories/auth_repository.dart';
 import '../features/auth/domain/repositories/i_auth_repository.dart';
 import '../features/auth/domain/usecases/is_sign_in_usecase.dart';
 import '../features/auth/domain/usecases/sign_in_usecase.dart';
+import '../features/auth/domain/usecases/sign_in_with_otp_usecase.dart';
 import '../features/auth/domain/usecases/sign_out_usecase.dart';
 import '../features/auth/domain/usecases/sign_up_usecase.dart';
 import '../features/auth/presentation/cubit/auth_cubit.dart';
@@ -120,6 +121,7 @@ void _setUpCubits() {
       signInUseCase: instance(),
       signUpUseCase: instance(),
       signOutUseCase: instance(),
+      signInWithOtpUseCase: instance(),
       secureCacheHelper: instance()));
   instance.registerFactory(() => InitialCubit(isSignInUseCase: instance()));
   instance.registerFactory(
@@ -165,6 +167,9 @@ void _setUpUsecases() {
       () => SignOutUseCase(repository: instance()));
   instance.registerLazySingleton<IsSignInUseCase>(
       () => IsSignInUseCase(repository: instance()));
+  instance.registerLazySingleton<SignInWithOtpUseCase>(
+      () => SignInWithOtpUseCase(repository: instance()));
+
   instance.registerLazySingleton<CreateCampaignUseCase>(
       () => CreateCampaignUseCase(repository: instance()));
 
