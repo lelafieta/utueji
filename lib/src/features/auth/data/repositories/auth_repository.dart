@@ -60,4 +60,9 @@ class AuthRespository extends IAuthRepository {
       return Left(ServerFailure(message: e.toString()));
     }
   }
+
+  @override
+  Stream<UserEntity> authUser() {
+    return datasource.authUser();
+  }
 }

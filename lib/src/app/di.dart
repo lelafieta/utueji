@@ -7,7 +7,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-
 import '../core/cache/secure_storage.dart';
 import '../core/network/i_network_info.dart';
 import '../core/network/network_info.dart';
@@ -15,6 +14,7 @@ import '../features/auth/data/datasources/auth_datasource.dart';
 import '../features/auth/data/datasources/i_auth_datasource.dart';
 import '../features/auth/data/repositories/auth_repository.dart';
 import '../features/auth/domain/repositories/i_auth_repository.dart';
+import '../features/auth/domain/usecases/get_auth_user_usecase.dart';
 import '../features/auth/domain/usecases/is_sign_in_usecase.dart';
 import '../features/auth/domain/usecases/sign_in_usecase.dart';
 import '../features/auth/domain/usecases/sign_in_with_otp_usecase.dart';
@@ -78,12 +78,16 @@ import '../features/feeds/domain/repositories/i_feed_repository.dart';
 import '../features/feeds/domain/usecases/fetch_feeds_usecase.dart';
 import '../features/feeds/presentation/cubit/feed_cubit.dart';
 import '../features/home/presentation/cubit/home_campaign_cubit/home_campaign_cubit.dart';
+import '../features/home/presentation/cubit/home_profile_data_cubit/home_profile_data_cubit.dart';
 import '../features/ongs/data/datasources/i_ong_datasource.dart';
 import '../features/ongs/data/datasources/ong_datasource.dart';
 import '../features/ongs/data/repositories/ong_repository.dart';
 import '../features/ongs/domain/respositories/i_ong_repository.dart';
 import '../features/ongs/domain/usecases/fetch_latest_ongs_usecase.dart';
 import '../features/ongs/presentation/cubit/ong_cubit.dart';
+
+import '../features/users/data/repositories/user_repository.dart';
+import '../features/users/domain/repositories/i_user_repository.dart';
 
 GetIt instance = GetIt.instance;
 
@@ -156,6 +160,8 @@ void _setUpCubits() {
       createCampaignUseCase: instance(), updateCampaignUseCase: instance()));
   instance.registerFactory(
       () => CategoryCampaignCubit(getAllCampaignsUseCase: instance()));
+  instance.registerFactory(
+      () => HomeProfileDataCubit(getAuthUserUseCase: instance()));
 }
 
 void _setUpUsecases() {
@@ -218,6 +224,9 @@ void _setUpUsecases() {
       () => UpdateCampaignUpdateUseCase(repository: instance()));
   instance.registerLazySingleton<DeleteCampaignUpdateUseCase>(
       () => DeleteCampaignUpdateUseCase(repository: instance()));
+
+  instance.registerLazySingleton<GetAuthUserUseCase>(
+      () => GetAuthUserUseCase(repository: instance()));
 }
 
 void _setUpRepositories() {
@@ -237,6 +246,9 @@ void _setUpRepositories() {
       () => FavoriteRepository(datasource: instance()));
   instance.registerLazySingleton<IUpdateRepository>(
       () => UpdateRepository(datasource: instance(), netWorkInfo: instance()));
+
+  instance.registerLazySingleton<IUserRepository>(
+      () => UserRespository(datasource: instance()));
 }
 
 void _setUpDatasources() {

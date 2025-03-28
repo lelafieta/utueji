@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:utueji/src/core/supabase/supabase_consts.dart';
 
 import '../../../../core/errors/failures.dart';
 import '../models/user_model.dart';
@@ -59,5 +60,20 @@ class AuthDataSource implements IAuthDataSource {
       print(e);
       throw ServerFailure(message: 'Erro ao fazer Login $e');
     }
+  }
+
+  @override
+  Stream<UserModel> authUser() {
+    return supabase
+        .from(SupabaseConsts.profiles)
+        .stream(primaryKey: ["id"])
+        .eq("uuid", supabase.auth.currentUser!.id)
+        .map((event) {
+          if (event.isNotEmpty) {
+            return UserModel.fromJson(event.first);
+          } else {
+            throw ServerFailure(message: 'Usuário não encontrado.');
+          }
+        });
   }
 }
