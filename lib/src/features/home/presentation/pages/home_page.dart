@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -7,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:utueji/src/app/app_entity.dart';
 import 'package:utueji/src/features/categories/data/models/category_model.dart';
 import 'package:utueji/src/features/events/presentation/widgets/event_skeleton_widget.dart';
@@ -28,6 +30,7 @@ import '../../../ongs/presentation/cubit/ong_cubit.dart';
 import '../../../ongs/presentation/cubit/ong_state.dart';
 import '../../../ongs/presentation/widgets/ong_widget.dart';
 import '../cubit/home_campaign_cubit/home_campaign_state.dart';
+import '../cubit/home_profile_data_cubit/home_profile_data_cubit.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -66,26 +69,41 @@ class _HomePageState extends State<HomePage> {
               onTap: () {
                 Get.toNamed(AppRoutes.profileRoute);
               },
-              child: ClipOval(
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  margin: const EdgeInsets.only(left: 16),
-                  decoration:
-                      BoxDecoration(borderRadius: BorderRadius.circular(100)),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(50),
-                    child:
-                        (SecureCacheHelper().getData(key: "avatarUrl") == null)
-                            ? Image.asset(
-                                AppImages.avatar,
-                                fit: BoxFit.cover,
-                              )
-                            : Image.asset(
-                                AppImages.me,
-                                fit: BoxFit.cover,
-                              ),
-                  ),
+              child: Container(
+                width: 40,
+                height: 40,
+                margin: const EdgeInsets.only(left: 16),
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(100)),
+                child: BlocBuilder<HomeProfileDataCubit, HomeProfileDataState>(
+                  builder: (context, state) {
+                    if (state is HomeProfileDataLoaded) {
+                      final user = state.user;
+                      if (user.avatarUrl == null || user.avatarUrl!.isEmpty) {
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: Image.asset(
+                            AppImages.avatar,
+                            fit: BoxFit.cover,
+                          ),
+                        );
+                      }
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: CachedNetworkImage(
+                          imageUrl: user.avatarUrl!,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        ),
+                      );
+                    }
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                    );
+                  },
                 ),
               ),
             ),
@@ -125,9 +143,22 @@ class _HomePageState extends State<HomePage> {
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
                   child: Row(
                     children: [
-                      Text(
-                        "Olá! ${AppEntity.name}",
-                        style: Theme.of(context).textTheme.titleLarge,
+                      BlocBuilder<HomeProfileDataCubit, HomeProfileDataState>(
+                        builder: (context, state) {
+                          if (state is HomeProfileDataLoaded) {
+                            return Text(
+                              "Olá! ${state.user.fullName}",
+                              style: Theme.of(context).textTheme.titleLarge,
+                            );
+                          }
+                          return Skeletonizer(
+                            enabled: true,
+                            child: Text(
+                              "Olá! ${AppEntity.name} $state",
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                          );
+                        },
                       ),
                       const SizedBox(width: 5),
                       Image.asset(

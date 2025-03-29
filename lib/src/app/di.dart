@@ -29,13 +29,17 @@ import '../features/blogs/domain/repositories/i_blog_repository.dart';
 import '../features/blogs/domain/usecases/fetch_blogs_usecase.dart';
 import '../features/blogs/domain/usecases/fetch_latest_blogs_usecase.dart';
 import '../features/blogs/presentation/cubit/blog_cubit.dart';
+import '../features/campaigns/data/datasources/donation_datasource.dart';
 import '../features/campaigns/data/datasources/i_campaign_datasource.dart';
 import '../features/campaigns/data/datasources/campaign_datasource.dart';
+import '../features/campaigns/data/datasources/i_donation_datasource.dart';
 import '../features/campaigns/data/datasources/i_update_datasource.dart';
 import '../features/campaigns/data/datasources/update_datasource.dart';
 import '../features/campaigns/data/repositories/campaign_repository.dart';
+import '../features/campaigns/data/repositories/donation_repository.dart';
 import '../features/campaigns/data/repositories/update_repository.dart';
 import '../features/campaigns/domain/repositories/i_campaign_repository.dart';
+import '../features/campaigns/domain/repositories/i_donation_respository.dart';
 import '../features/campaigns/domain/repositories/i_update_repository.dart';
 import '../features/campaigns/domain/usecases/create_campaign_update_usecase.dart';
 import '../features/campaigns/domain/usecases/create_campaign_usecase.dart';
@@ -45,6 +49,7 @@ import '../features/campaigns/domain/usecases/get_all_campaigns_usecase.dart';
 import '../features/campaigns/domain/usecases/get_all_my_campaigns_usecase.dart';
 import '../features/campaigns/domain/usecases/get_all_urgent_campaigns_usecase.dart';
 import '../features/campaigns/domain/usecases/get_campaign_by_id_usecase.dart';
+import '../features/campaigns/domain/usecases/get_count_my_donations_usecase.dart';
 import '../features/campaigns/domain/usecases/get_latest_urgent_campaigns_usecase.dart';
 import '../features/campaigns/domain/usecases/update_campaign_update_usecase.dart';
 import '../features/campaigns/domain/usecases/update_campaign_usecase.dart';
@@ -86,6 +91,8 @@ import '../features/ongs/domain/respositories/i_ong_repository.dart';
 import '../features/ongs/domain/usecases/fetch_latest_ongs_usecase.dart';
 import '../features/ongs/presentation/cubit/ong_cubit.dart';
 
+import '../features/profile/presentation/cubit/count_donation_cubit/count_donation_cubit.dart';
+import '../features/profile/presentation/cubit/profile_cubit.dart';
 import '../features/users/data/repositories/user_repository.dart';
 import '../features/users/domain/repositories/i_user_repository.dart';
 
@@ -162,6 +169,10 @@ void _setUpCubits() {
       () => CategoryCampaignCubit(getAllCampaignsUseCase: instance()));
   instance.registerFactory(
       () => HomeProfileDataCubit(getAuthUserUseCase: instance()));
+  instance.registerFactory(() => ProfileCubit(getAuthUserUseCase: instance()));
+
+  instance.registerFactory(
+      () => CountDonationCubit(getCountMyDonationsUseCase: instance()));
 }
 
 void _setUpUsecases() {
@@ -227,6 +238,9 @@ void _setUpUsecases() {
 
   instance.registerLazySingleton<GetAuthUserUseCase>(
       () => GetAuthUserUseCase(repository: instance()));
+
+  instance.registerLazySingleton<GetCountMyDonationsUseCase>(
+      () => GetCountMyDonationsUseCase(repository: instance()));
 }
 
 void _setUpRepositories() {
@@ -249,6 +263,9 @@ void _setUpRepositories() {
 
   instance.registerLazySingleton<IUserRepository>(
       () => UserRespository(datasource: instance()));
+
+  instance.registerLazySingleton<IDonationRepository>(
+      () => DonationRepository(datasource: instance()));
 }
 
 void _setUpDatasources() {
@@ -271,4 +288,7 @@ void _setUpDatasources() {
 
   instance.registerLazySingleton<IUpdateDataSource>(
       () => UpdateDataSource(supabase: instance()));
+
+  instance.registerLazySingleton<IDonationDataSource>(
+      () => DonationDataSource(supabase: instance()));
 }

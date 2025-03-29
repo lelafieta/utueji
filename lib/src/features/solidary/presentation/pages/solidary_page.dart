@@ -13,6 +13,7 @@ import '../../../auth/presentation/cubit/auth_state.dart';
 import '../../../campaigns/presentation/pages/my_campaign_page.dart';
 import '../../../chat/presentation/pages/chat_page.dart';
 import '../../../explore/presentation/pages/explore_page.dart';
+import '../../../home/presentation/cubit/home_profile_data_cubit/home_profile_data_cubit.dart';
 
 class SolidaryPage extends StatefulWidget {
   final int? currentIndex;
