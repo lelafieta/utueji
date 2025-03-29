@@ -13,6 +13,10 @@ class DonationDataSource extends IDonationDataSource {
         .from(SupabaseConsts.campaignContributors)
         .stream(primaryKey: ['id'])
         .eq('user_id', supabase.auth.currentUser!.id)
-        .map((data) => data.length);
+        .map((data) {
+          print("TAMANHO");
+          print(data.length);
+          return data.length;
+        });
   }
 }

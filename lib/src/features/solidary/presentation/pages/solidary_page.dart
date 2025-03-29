@@ -14,6 +14,7 @@ import '../../../campaigns/presentation/pages/my_campaign_page.dart';
 import '../../../chat/presentation/pages/chat_page.dart';
 import '../../../explore/presentation/pages/explore_page.dart';
 import '../../../home/presentation/cubit/home_profile_data_cubit/home_profile_data_cubit.dart';
+import '../../../profile/presentation/cubit/count_donation_cubit/count_donation_cubit.dart';
 
 class SolidaryPage extends StatefulWidget {
   final int? currentIndex;
@@ -76,6 +77,7 @@ class _SolidaryPageState extends State<SolidaryPage> {
       _currentIndex = widget.currentIndex!;
     }
     super.initState();
+    context.read<CountDonationCubit>()..counter();
   }
 
   @override
