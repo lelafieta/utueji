@@ -67,7 +67,7 @@ class AuthDataSource implements IAuthDataSource {
     return supabase
         .from(SupabaseConsts.profiles)
         .stream(primaryKey: ["id"])
-        .eq("uuid", supabase.auth.currentUser!.id)
+        .eq("id", supabase.auth.currentUser!.id)
         .map((event) {
           if (event.isNotEmpty) {
             return UserModel.fromJson(event.first);

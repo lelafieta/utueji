@@ -20,7 +20,10 @@ import '../features/events/presentation/cubit/event_cubit.dart';
 import '../features/favorites/presentation/cubit/favorite_cubit.dart';
 import '../features/feeds/presentation/cubit/feed_cubit.dart';
 import '../features/home/presentation/cubit/home_campaign_cubit/home_campaign_cubit.dart';
+import '../features/home/presentation/cubit/home_profile_data_cubit/home_profile_data_cubit.dart';
 import '../features/ongs/presentation/cubit/ong_cubit.dart';
+import '../features/profile/presentation/cubit/count_donation_cubit/count_donation_cubit.dart';
+import '../features/profile/presentation/cubit/profile_cubit.dart';
 
 class UtuejiApp extends StatelessWidget {
   const UtuejiApp({super.key});
@@ -45,6 +48,12 @@ class UtuejiApp extends StatelessWidget {
         BlocProvider(create: (_) => di.instance<UpdateActionCubit>()),
         BlocProvider(create: (_) => di.instance<CampaignActionCubit>()),
         BlocProvider(create: (_) => di.instance<CategoryCampaignCubit>()),
+        BlocProvider(
+            create: (_) =>
+                di.instance<HomeProfileDataCubit>()..getUserProfile()),
+        BlocProvider(create: (_) => di.instance<ProfileCubit>()..getProfile()),
+        BlocProvider(
+            create: (_) => di.instance<CountDonationCubit>()..counter())
       ],
       child: GetMaterialApp(
         theme: AppTheme.lightTheme,
