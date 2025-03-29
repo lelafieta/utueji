@@ -52,8 +52,7 @@ class UtuejiApp extends StatelessWidget {
             create: (_) =>
                 di.instance<HomeProfileDataCubit>()..getUserProfile()),
         BlocProvider(create: (_) => di.instance<ProfileCubit>()..getProfile()),
-        BlocProvider(
-            create: (_) => di.instance<CountDonationCubit>()..counter())
+        BlocProvider(create: (_) => di.instance<CountDonationCubit>())
       ],
       child: GetMaterialApp(
         theme: AppTheme.lightTheme,
