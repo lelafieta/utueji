@@ -8,11 +8,13 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'src/core/firebase/firebase_services.dart';
+import 'src/core/firebase/local_notification_services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseServices().requestNotificationPermisions();
+  await LocalNotificationServices.init();
   await dotenv.load(fileName: ".env");
   await di.init();
 

@@ -8,7 +8,8 @@ class OngModel extends OngEntity {
     super.about,
     super.bio,
     super.coverImageUrl,
-    super.isVerified = false,
+    super.isVerified,
+    super.status,
     super.mission,
     super.name,
     super.phoneNumber,
@@ -31,6 +32,7 @@ class OngModel extends OngEntity {
       isVerified: map['is_verified'] == true,
       mission: map['mission'],
       name: map['name'],
+      status: map['status'],
       phoneNumber: map['phone_number'],
       profileImageUrl: map['profile_image_url'],
       servicesNumber: map['services_number'],
@@ -56,6 +58,7 @@ class OngModel extends OngEntity {
       'services_number': servicesNumber,
       'supports_number': supportsNumber,
       'user_id': userId,
+      'status': status,
       'vision': vision,
     };
   }

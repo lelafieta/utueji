@@ -154,7 +154,7 @@ class _HomePageState extends State<HomePage> {
                           return Skeletonizer(
                             enabled: true,
                             child: Text(
-                              "Olá! ${AppEntity.name} $state",
+                              "Olá! Lela Fieta",
                               style: Theme.of(context).textTheme.titleLarge,
                             ),
                           );

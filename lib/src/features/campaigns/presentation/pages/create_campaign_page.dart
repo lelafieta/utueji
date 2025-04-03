@@ -14,7 +14,7 @@ import 'package:utueji/src/config/routes/app_routes.dart';
 import 'package:utueji/src/features/campaigns/domain/entities/campaign_midia_entity.dart';
 
 import '../../../../config/themes/app_colors.dart';
-import '../../../../core/entities/category_entity.dart';
+import '../../../../core/firebase/local_notification_services.dart';
 import '../../../../core/resources/images/app_images.dart';
 import '../../../categories/data/models/category_model.dart';
 import '../../../categories/domain/entities/category_entity.dart';
@@ -358,14 +358,20 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
       ),
       body: BlocConsumer<CampaignActionCubit, CampaignActionState>(
         listener: (context, state) {
+          EasyLoading.dismiss();
           if (state is CampaignActionLoading) {
             EasyLoading.show(
                 status: "Criando uma campanha",
                 maskType: EasyLoadingMaskType.black);
           } else if (state is CampaignActionError) {
             EasyLoading.showError(state.message);
+          } else if (state is CampaignActionSuccess) {
+            LocalNotificationServices.sendNotification(
+              title: "Campanha Criada",
+              body: "Sua campanha foi criada com sucesso",
+            );
+            Get.toNamed(AppRoutes.createCampaignSuccessRoute);
           } else {
-            EasyLoading.dismiss();
             Get.toNamed(AppRoutes.createCampaignSuccessRoute);
           }
         },

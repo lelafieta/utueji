@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:utueji/src/config/routes/app_routes.dart';
 import 'package:utueji/src/features/auth/presentation/cubit/auth_cubit.dart';
 
 import '../../../../core/resources/images/app_images.dart';
@@ -154,7 +156,7 @@ class ProfilePage extends StatelessWidget {
                     subtitle: Text(
                         "Você pode alternar entre conta pessoal e conta comunitária a qualquer momento"),
                     onTap: () {
-                      Navigator.pushNamed(context, "/criar-ong");
+                      Get.toNamed(AppRoutes.createOngRoute);
                     },
                   ),
                   ListTile(

@@ -122,6 +122,7 @@ dependencies:
   firebase_in_app_messaging: ^0.7.5+7
   firebase_messaging: ^14.9.4
   flutter_local_notifications: ^18.0.1
+  form_builder_phone_field: ^2.0.1
 
 dev_dependencies:
   flutter_test:

@@ -47,7 +47,7 @@ class LocalNotificationServices {
     );
   }
 
-  static void sendNotification({String title = "", String body = ""}) {
+  static void sendNotification({String title = "title", String body = "body"}) {
     _showNotification(
       title: title,
       body: body,

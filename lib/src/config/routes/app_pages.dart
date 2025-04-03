@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:utueji/src/features/campaigns/presentation/pages/category_campaigns_page.dart';
 import 'package:utueji/src/features/campaigns/presentation/pages/my_campaign_settings_page.dart';
+import 'package:utueji/src/features/ongs/presentation/pages/create_ong_page.dart';
 import 'package:utueji/src/features/payment/presentation/pages/payment_page.dart';
 import '../../features/auth/presentation/cubit/initial_cubit/initial_cubit.dart';
 import '../../features/auth/presentation/cubit/initial_cubit/initial_state.dart';
@@ -407,6 +408,21 @@ class RouteManager {
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) {
             return ProfilePage();
+          },
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return SharedAxisTransition(
+              animation: animation,
+              secondaryAnimation: secondaryAnimation,
+              transitionType: SharedAxisTransitionType.vertical,
+              child: child,
+            );
+          },
+        );
+
+      case AppRoutes.createOngRoute:
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return CreateOngPage();
           },
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return SharedAxisTransition(
