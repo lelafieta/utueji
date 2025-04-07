@@ -470,27 +470,27 @@ class _CreateOngPageState extends State<CreateOngPage> {
             buildDocumentField(
               context,
               title: "Estatutos e Ato Constitutivo da ONG",
-              fieldName: "estatutos_ato_constitutivo",
+              fieldName: "statutes_constitutive_act",
             ),
             buildDocumentField(
               context,
               title: "Declaração de Idoneidade da ONG",
-              fieldName: "declaracao_idoneidade",
+              fieldName: "declaration_good_standing",
             ),
             buildDocumentField(
               context,
               title: "Ata de Assembleia de Constituição",
-              fieldName: "ata_constituicao",
+              fieldName: "minutes_constitutive_assembly",
             ),
             buildDocumentField(
               context,
               title: "Escritura Pública de Constituição",
-              fieldName: "escritura_publica",
+              fieldName: "public_deed",
             ),
             buildDocumentField(
               context,
               title: "Certificado de Registo da ONG (opcional)",
-              fieldName: "certificado_registo",
+              fieldName: "registration_certificate",
               required: false,
             ),
             buildDocumentField(
@@ -501,7 +501,7 @@ class _CreateOngPageState extends State<CreateOngPage> {
             buildDocumentField(
               context,
               title: "Bilhete de Identidade do Representante Legal",
-              fieldName: "bi_responsavel",
+              fieldName: "bi_representative",
             ),
           ],
         ),
