@@ -1,4 +1,6 @@
+import 'package:awesome_place_search/awesome_place_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -12,10 +14,12 @@ class CreateOngPage extends StatefulWidget {
 }
 
 class _CreateOngPageState extends State<CreateOngPage> {
+  final googleApiKey = dotenv.env["GOOGLE_API_KEY"];
   final _formStepOneKey = GlobalKey<FormBuilderState>();
   final _formStepTwoKey = GlobalKey<FormBuilderState>();
   final _formStepThreeKey = GlobalKey<FormBuilderState>();
   final _formStepFourKey = GlobalKey<FormBuilderState>();
+  TextEditingController controllerLocation = TextEditingController();
 
   int activeStep = 0;
 
@@ -53,6 +57,29 @@ class _CreateOngPageState extends State<CreateOngPage> {
     } else {
       print("Formulário inválido no passo $activeStep!");
     }
+  }
+
+  void _searchPlaces() {
+    AwesomePlaceSearch(
+      context: context,
+      apiKey: googleApiKey!,
+      countries: ["ao"],
+      errorText: "Alguma coisa correu mal",
+      hint: "Pesquisar uma localização",
+      dividerItemColor: Colors.grey.withOpacity(.5),
+      dividerItemWidth: .5,
+      elevation: 5,
+      indicatorColor: Colors.blue,
+      modalBorderRadius: 50.0,
+      onTap: (value) async {
+        final result = await value;
+        controllerLocation.text = result.description!;
+        // setState(() {
+        //   prediction = result;
+
+        // });
+      },
+    ).show();
   }
 
   Widget getStepContent(int step) {
@@ -136,7 +163,7 @@ class _CreateOngPageState extends State<CreateOngPage> {
                       .copyWith(color: Colors.black),
                   children: [
                     TextSpan(
-                      text: "Objetivo de arrecadar fundos ",
+                      text: "Nome da ONG",
                     ),
                     TextSpan(
                         text: "*",
@@ -145,22 +172,73 @@ class _CreateOngPageState extends State<CreateOngPage> {
                 ),
               ),
             ),
-            FormBuilderTextField(
-              name: "name",
-              decoration: InputDecoration(labelText: "Nome da ONG *"),
-              validator: FormBuilderValidators.required(),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: FormBuilderTextField(
+                name: "name",
+                decoration: InputDecoration(labelText: "Nome da ONG"),
+                validator: FormBuilderValidators.required(
+                  errorText: "Campo obrigatório",
+                ),
+              ),
             ),
-            FormBuilderTextField(
-              name: "bio",
-              decoration: InputDecoration(labelText: "Biografia *"),
-              maxLines: 3,
-              validator: FormBuilderValidators.required(),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: RichText(
+                text: TextSpan(
+                  style: DefaultTextStyle.of(context)
+                      .style
+                      .copyWith(color: Colors.black),
+                  children: [
+                    TextSpan(
+                      text: "Biografia",
+                    ),
+                    TextSpan(
+                        text: "*",
+                        style: TextStyle(color: Colors.red, fontSize: 16))
+                  ],
+                ),
+              ),
             ),
-            FormBuilderTextField(
-              name: "about",
-              decoration: InputDecoration(labelText: "Sobre *"),
-              maxLines: 4,
-              validator: FormBuilderValidators.required(),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: FormBuilderTextField(
+                name: "bio",
+                decoration: InputDecoration(hintText: "Biografia"),
+                maxLines: 3,
+                validator: FormBuilderValidators.required(
+                  errorText: "Campo obrigatório",
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: RichText(
+                text: TextSpan(
+                  style: DefaultTextStyle.of(context)
+                      .style
+                      .copyWith(color: Colors.black),
+                  children: [
+                    TextSpan(
+                      text: "Sobre a ONG",
+                    ),
+                    TextSpan(
+                        text: "*",
+                        style: TextStyle(color: Colors.red, fontSize: 16))
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: FormBuilderTextField(
+                name: "about",
+                decoration: InputDecoration(hintText: "Uma breve descrição"),
+                maxLines: 4,
+                validator: FormBuilderValidators.required(
+                  errorText: "Campo obrigatório",
+                ),
+              ),
             ),
           ],
         ),
@@ -174,30 +252,93 @@ class _CreateOngPageState extends State<CreateOngPage> {
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            FormBuilderTextField(
-              name: "phone_number",
-              decoration: InputDecoration(labelText: "Telefone *"),
-              validator: FormBuilderValidators.required(),
-              keyboardType: TextInputType.phone,
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: RichText(
+                text: TextSpan(
+                  style: DefaultTextStyle.of(context)
+                      .style
+                      .copyWith(color: Colors.black),
+                  children: [
+                    TextSpan(
+                      text: "Contacto da ONG",
+                    ),
+                    TextSpan(
+                        text: "*",
+                        style: TextStyle(color: Colors.red, fontSize: 16))
+                  ],
+                ),
+              ),
             ),
-            FormBuilderDropdown(
-              name: "status",
-              decoration: InputDecoration(labelText: "Status *"),
-              initialValue: "pending",
-              items: ['pending', 'active', 'inactive', 'failed', 'canceled']
-                  .map((status) => DropdownMenuItem(
-                        value: status,
-                        child: Text(status),
-                      ))
-                  .toList(),
-              validator: FormBuilderValidators.required(),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: FormBuilderTextField(
+                name: "phone_number",
+                decoration: InputDecoration(labelText: "Telefone"),
+                validator: FormBuilderValidators.required(
+                  errorText: "Campo obrigatório",
+                ),
+                keyboardType: TextInputType.phone,
+              ),
             ),
-            FormBuilderSwitch(
-              name: "is_verified",
-              title: Text("ONG verificada?"),
-              initialValue: false,
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: RichText(
+                text: TextSpan(
+                  style: DefaultTextStyle.of(context)
+                      .style
+                      .copyWith(color: Colors.black),
+                  children: [
+                    TextSpan(
+                      text: "Localização da ONG",
+                    ),
+                    TextSpan(
+                        text: "*",
+                        style: TextStyle(color: Colors.red, fontSize: 16))
+                  ],
+                ),
+              ),
             ),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: FormBuilderTextField(
+                name: "location",
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: FormBuilderValidators.required(
+                  errorText: 'Campo Obrigatório',
+                ),
+                controller: controllerLocation,
+                readOnly: true,
+                onTap: () {
+                  _searchPlaces();
+                },
+                decoration: InputDecoration(
+                  hintText: "Localização",
+                  suffixIcon: Icon(Icons.search),
+                ),
+              ),
+            ),
+
+            // FormBuilderDropdown(
+            //   name: "status",
+            //   decoration: InputDecoration(labelText: "Status *"),
+            //   initialValue: "pending",
+            //   items: ['pending', 'active', 'inactive', 'failed', 'canceled']
+            //       .map((status) => DropdownMenuItem(
+            //             value: status,
+            //             child: Text(status),
+            //           ))
+            //       .toList(),
+            //   validator: FormBuilderValidators.required(),
+            // ),
+            // FormBuilderSwitch(
+            //   name: "is_verified",
+            //   title: Text("ONG verificada?"),
+            //   initialValue: false,
+            // ),
           ],
         ),
       ),
@@ -210,30 +351,107 @@ class _CreateOngPageState extends State<CreateOngPage> {
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            FormBuilderFilePicker(
-              name: "profile_image_url",
-              decoration: InputDecoration(labelText: "Imagem de Perfil"),
-              maxFiles: 1,
-              previewImages: true,
-              allowedExtensions: ['jpg', 'jpeg', 'png'],
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: RichText(
+                text: TextSpan(
+                  style: DefaultTextStyle.of(context)
+                      .style
+                      .copyWith(color: Colors.black),
+                  children: [
+                    TextSpan(
+                      text: "Contacto da ONG",
+                    ),
+                    TextSpan(
+                        text: "*",
+                        style: TextStyle(color: Colors.red, fontSize: 16))
+                  ],
+                ),
+              ),
             ),
-            FormBuilderFilePicker(
-              name: "cover_image_url",
-              decoration: InputDecoration(labelText: "Imagem de Capa"),
-              maxFiles: 1,
-              previewImages: true,
-              allowedExtensions: ['jpg', 'jpeg', 'png'],
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: FormBuilderFilePicker(
+                name: "profile_image_url",
+                decoration: InputDecoration(labelText: "Imagem de Perfil"),
+                maxFiles: 1,
+                previewImages: true,
+                allowedExtensions: ['jpg', 'jpeg', 'png'],
+                typeSelectors: [
+                  TypeSelector(
+                    type: FileType.custom,
+                    selector: Row(
+                      children: <Widget>[
+                        Icon(Icons.add_circle),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text("Adicionar imagem"),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-            FormBuilderTextField(
-              name: "mission",
-              decoration: InputDecoration(labelText: "Missão"),
-              maxLines: 3,
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: FormBuilderFilePicker(
+                name: "cover_image_url",
+                decoration: InputDecoration(labelText: "Imagem de Capa"),
+                maxFiles: 1,
+                previewImages: true,
+                allowedExtensions: ['jpg', 'jpeg', 'png'],
+                typeSelectors: [
+                  TypeSelector(
+                    type: FileType.custom,
+                    selector: Row(
+                      children: <Widget>[
+                        Icon(Icons.add_circle),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text("Adicionar imagem"),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-            FormBuilderTextField(
-              name: "vision",
-              decoration: InputDecoration(labelText: "Visão"),
-              maxLines: 3,
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: RichText(
+                text: TextSpan(
+                  style: DefaultTextStyle.of(context)
+                      .style
+                      .copyWith(color: Colors.black),
+                  children: [
+                    TextSpan(
+                      text: "Detalhes da ONG",
+                    ),
+                    TextSpan(
+                        text: "*",
+                        style: TextStyle(color: Colors.red, fontSize: 16))
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: FormBuilderTextField(
+                name: "mission",
+                decoration: InputDecoration(hintText: "Nossa Missão"),
+                maxLines: 3,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: FormBuilderTextField(
+                name: "vision",
+                decoration: InputDecoration(hintText: "Nossa Visão"),
+                maxLines: 3,
+              ),
             ),
           ],
         ),
@@ -247,6 +465,7 @@ class _CreateOngPageState extends State<CreateOngPage> {
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             FormBuilderTextField(
               name: "services_number",
