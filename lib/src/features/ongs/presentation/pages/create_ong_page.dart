@@ -131,7 +131,7 @@ class _CreateOngPageState extends State<CreateOngPage> {
                 "Informações básicas",
                 "Contato e Verificação",
                 "Imagens e Missão",
-                "Sobre e Localização"
+                "Carregar documentos",
               ][activeStep],
             ),
           ),
@@ -467,26 +467,173 @@ class _CreateOngPageState extends State<CreateOngPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            FormBuilderTextField(
-              name: "services_number",
-              decoration: InputDecoration(labelText: "Número de serviços"),
-              keyboardType: TextInputType.number,
-            ),
-            FormBuilderTextField(
-              name: "supports_number",
-              decoration: InputDecoration(labelText: "Número de apoios"),
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
-            ),
-            FormBuilderTextField(
-              name: "location",
-              readOnly: true,
-              decoration: InputDecoration(
-                labelText: "Localização",
-                suffixIcon: Icon(Icons.search),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: RichText(
+                text: TextSpan(
+                  style: DefaultTextStyle.of(context)
+                      .style
+                      .copyWith(color: Colors.black),
+                  children: [
+                    TextSpan(
+                      text: "Estatutos e ato constitutivo da ONG",
+                    ),
+                    TextSpan(
+                        text: "*",
+                        style: TextStyle(color: Colors.red, fontSize: 16))
+                  ],
+                ),
               ),
-              onTap: () {
-                // Lógica de localização
-              },
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: FormBuilderFilePicker(
+                name: "status",
+                decoration: InputDecoration(labelText: "Carregar pdf"),
+                maxFiles: 1,
+                previewImages: true,
+                allowedExtensions: ['pdf'],
+                typeSelectors: [
+                  TypeSelector(
+                    type: FileType.custom,
+                    selector: Row(
+                      children: <Widget>[
+                        Icon(Icons.add_circle),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text("Carregar pdf"),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: RichText(
+                text: TextSpan(
+                  style: DefaultTextStyle.of(context)
+                      .style
+                      .copyWith(color: Colors.black),
+                  children: [
+                    TextSpan(
+                      text: "Declaração de idoneidade da ONG",
+                    ),
+                    TextSpan(
+                        text: "*",
+                        style: TextStyle(color: Colors.red, fontSize: 16))
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: FormBuilderFilePicker(
+                name: "status",
+                decoration: InputDecoration(labelText: "Carregar pdf"),
+                maxFiles: 1,
+                previewImages: true,
+                allowedExtensions: ['pdf'],
+                typeSelectors: [
+                  TypeSelector(
+                    type: FileType.custom,
+                    selector: Row(
+                      children: <Widget>[
+                        Icon(Icons.add_circle),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text("Carregar pdf"),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: RichText(
+                text: TextSpan(
+                  style: DefaultTextStyle.of(context)
+                      .style
+                      .copyWith(color: Colors.black),
+                  children: [
+                    TextSpan(
+                      text: "Ata deliberativa autorizando",
+                    ),
+                    TextSpan(
+                        text: "*",
+                        style: TextStyle(color: Colors.red, fontSize: 16))
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: FormBuilderFilePicker(
+                name: "status",
+                decoration: InputDecoration(labelText: "Carregar pdf"),
+                maxFiles: 1,
+                previewImages: true,
+                allowedExtensions: ['pdf'],
+                typeSelectors: [
+                  TypeSelector(
+                    type: FileType.custom,
+                    selector: Row(
+                      children: <Widget>[
+                        Icon(Icons.add_circle),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text("Carregar pdf"),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: RichText(
+                text: TextSpan(
+                  style: DefaultTextStyle.of(context)
+                      .style
+                      .copyWith(color: Colors.black),
+                  children: [
+                    TextSpan(
+                      text: "Número de Identificação Fiscal (NIF) da ONG",
+                    ),
+                    TextSpan(
+                        text: "*",
+                        style: TextStyle(color: Colors.red, fontSize: 16))
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: FormBuilderFilePicker(
+                name: "status",
+                decoration: InputDecoration(labelText: "Carregar pdf"),
+                maxFiles: 1,
+                previewImages: true,
+                allowedExtensions: ['pdf'],
+                typeSelectors: [
+                  TypeSelector(
+                    type: FileType.custom,
+                    selector: Row(
+                      children: <Widget>[
+                        Icon(Icons.add_circle),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text("Carregar pdf"),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
