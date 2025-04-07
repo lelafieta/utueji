@@ -467,177 +467,106 @@ class _CreateOngPageState extends State<CreateOngPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              child: RichText(
-                text: TextSpan(
-                  style: DefaultTextStyle.of(context)
-                      .style
-                      .copyWith(color: Colors.black),
-                  children: [
-                    TextSpan(
-                      text: "Estatutos e ato constitutivo da ONG",
-                    ),
-                    TextSpan(
-                        text: "*",
-                        style: TextStyle(color: Colors.red, fontSize: 16))
-                  ],
-                ),
-              ),
+            buildDocumentField(
+              context,
+              title: "Estatutos e Ato Constitutivo da ONG",
+              fieldName: "estatutos_ato_constitutivo",
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4.0),
-              child: FormBuilderFilePicker(
-                name: "status",
-                decoration: InputDecoration(labelText: "Carregar pdf"),
-                maxFiles: 1,
-                previewImages: true,
-                allowedExtensions: ['pdf'],
-                typeSelectors: [
-                  TypeSelector(
-                    type: FileType.custom,
-                    selector: Row(
-                      children: <Widget>[
-                        Icon(Icons.add_circle),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: Text("Carregar pdf"),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+            buildDocumentField(
+              context,
+              title: "Declaração de Idoneidade da ONG",
+              fieldName: "declaracao_idoneidade",
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              child: RichText(
-                text: TextSpan(
-                  style: DefaultTextStyle.of(context)
-                      .style
-                      .copyWith(color: Colors.black),
-                  children: [
-                    TextSpan(
-                      text: "Declaração de idoneidade da ONG",
-                    ),
-                    TextSpan(
-                        text: "*",
-                        style: TextStyle(color: Colors.red, fontSize: 16))
-                  ],
-                ),
-              ),
+            buildDocumentField(
+              context,
+              title: "Ata de Assembleia de Constituição",
+              fieldName: "ata_constituicao",
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4.0),
-              child: FormBuilderFilePicker(
-                name: "status",
-                decoration: InputDecoration(labelText: "Carregar pdf"),
-                maxFiles: 1,
-                previewImages: true,
-                allowedExtensions: ['pdf'],
-                typeSelectors: [
-                  TypeSelector(
-                    type: FileType.custom,
-                    selector: Row(
-                      children: <Widget>[
-                        Icon(Icons.add_circle),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: Text("Carregar pdf"),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+            buildDocumentField(
+              context,
+              title: "Escritura Pública de Constituição",
+              fieldName: "escritura_publica",
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              child: RichText(
-                text: TextSpan(
-                  style: DefaultTextStyle.of(context)
-                      .style
-                      .copyWith(color: Colors.black),
-                  children: [
-                    TextSpan(
-                      text: "Ata deliberativa autorizando",
-                    ),
-                    TextSpan(
-                        text: "*",
-                        style: TextStyle(color: Colors.red, fontSize: 16))
-                  ],
-                ),
-              ),
+            buildDocumentField(
+              context,
+              title: "Certificado de Registo da ONG (opcional)",
+              fieldName: "certificado_registo",
+              required: false,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4.0),
-              child: FormBuilderFilePicker(
-                name: "status",
-                decoration: InputDecoration(labelText: "Carregar pdf"),
-                maxFiles: 1,
-                previewImages: true,
-                allowedExtensions: ['pdf'],
-                typeSelectors: [
-                  TypeSelector(
-                    type: FileType.custom,
-                    selector: Row(
-                      children: <Widget>[
-                        Icon(Icons.add_circle),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: Text("Carregar pdf"),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+            buildDocumentField(
+              context,
+              title: "Número de Identificação Fiscal (NIF)",
+              fieldName: "nif",
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              child: RichText(
-                text: TextSpan(
-                  style: DefaultTextStyle.of(context)
-                      .style
-                      .copyWith(color: Colors.black),
-                  children: [
-                    TextSpan(
-                      text: "Número de Identificação Fiscal (NIF) da ONG",
-                    ),
-                    TextSpan(
-                        text: "*",
-                        style: TextStyle(color: Colors.red, fontSize: 16))
-                  ],
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4.0),
-              child: FormBuilderFilePicker(
-                name: "status",
-                decoration: InputDecoration(labelText: "Carregar pdf"),
-                maxFiles: 1,
-                previewImages: true,
-                allowedExtensions: ['pdf'],
-                typeSelectors: [
-                  TypeSelector(
-                    type: FileType.custom,
-                    selector: Row(
-                      children: <Widget>[
-                        Icon(Icons.add_circle),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: Text("Carregar pdf"),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+            buildDocumentField(
+              context,
+              title: "Bilhete de Identidade do Representante Legal",
+              fieldName: "bi_responsavel",
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildDocumentField(
+    BuildContext context, {
+    required String title,
+    required String fieldName,
+    bool required = true,
+    List<String> allowedExtensions = const ['pdf'],
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: RichText(
+            text: TextSpan(
+              style: DefaultTextStyle.of(context)
+                  .style
+                  .copyWith(color: Colors.black),
+              children: [
+                TextSpan(text: title),
+                if (required)
+                  TextSpan(
+                    text: " *",
+                    style: TextStyle(color: Colors.red, fontSize: 16),
+                  ),
+              ],
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: FormBuilderFilePicker(
+            name: fieldName,
+            decoration: InputDecoration(labelText: "Carregar arquivo"),
+            maxFiles: 1,
+            previewImages: true,
+            allowedExtensions: allowedExtensions,
+            typeSelectors: [
+              TypeSelector(
+                type: FileType.custom,
+                selector: Row(
+                  children: <Widget>[
+                    Icon(Icons.add_circle),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text("Selecionar arquivo"),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+            validator: required
+                ? FormBuilderValidators.compose([
+                    FormBuilderValidators.required(errorText: "Obrigatório"),
+                  ])
+                : null,
+          ),
+        ),
+      ],
     );
   }
 }
