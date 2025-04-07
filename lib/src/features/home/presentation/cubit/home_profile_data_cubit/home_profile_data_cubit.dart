@@ -17,6 +17,7 @@ class HomeProfileDataCubit extends Cubit<HomeProfileDataState> {
     final result = await getAuthUserUseCase.call(const NoParams());
 
     result.listen((user) {
+      print("objecttt");
       emit(HomeProfileDataLoaded(user: user));
     });
   }
