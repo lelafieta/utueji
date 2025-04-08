@@ -22,6 +22,7 @@ class _CreateOngPageState extends State<CreateOngPage> {
   TextEditingController controllerLocation = TextEditingController();
   TextEditingController controllerPhone = TextEditingController();
   TextEditingController controllerEmail = TextEditingController();
+  TextEditingController controllerWebsite = TextEditingController();
   TextEditingController controllerBio = TextEditingController();
   TextEditingController controllerName = TextEditingController();
   TextEditingController controllerAbout = TextEditingController();
@@ -95,12 +96,9 @@ class _CreateOngPageState extends State<CreateOngPage> {
       indicatorColor: Colors.blue,
       modalBorderRadius: 50.0,
       onTap: (value) async {
+        print(value);
         final result = await value;
         controllerLocation.text = result.description!;
-        // setState(() {
-        //   prediction = result;
-
-        // });
       },
     ).show();
   }
@@ -305,8 +303,19 @@ class _CreateOngPageState extends State<CreateOngPage> {
                 name: "phone_number",
                 controller: controllerPhone,
                 decoration: InputDecoration(labelText: "Telefone"),
-                validator: FormBuilderValidators.required(
-                  errorText: "Campo obrigatório",
+                validator: FormBuilderValidators.compose(
+                  [
+                    FormBuilderValidators.required(
+                      errorText: "Campo obrigatório",
+                    ),
+                    FormBuilderValidators.numeric(
+                      errorText: "Número inválido",
+                    ),
+                    FormBuilderValidators.minLength(
+                      9,
+                      errorText: "Número inválido",
+                    ),
+                  ],
                 ),
                 keyboardType: TextInputType.phone,
               ),
@@ -320,7 +329,7 @@ class _CreateOngPageState extends State<CreateOngPage> {
                       .copyWith(color: Colors.black),
                   children: [
                     TextSpan(
-                      text: "Email da ONG",
+                      text: "E-mail da ONG",
                     ),
                     TextSpan(
                         text: "*",
@@ -335,9 +344,42 @@ class _CreateOngPageState extends State<CreateOngPage> {
                 name: "email",
                 controller: controllerEmail,
                 decoration: InputDecoration(labelText: "E-mail"),
-                validator: FormBuilderValidators.required(
-                  errorText: "Campo obrigatório",
+                keyboardType: TextInputType.emailAddress,
+                validator: FormBuilderValidators.compose(
+                  [
+                    FormBuilderValidators.required(
+                      errorText: "Campo obrigatório",
+                    ),
+                    FormBuilderValidators.email(
+                      errorText: "E-mail inválido",
+                    ),
+                  ],
                 ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: RichText(
+                text: TextSpan(
+                  style: DefaultTextStyle.of(context)
+                      .style
+                      .copyWith(color: Colors.black),
+                  children: [
+                    TextSpan(
+                      text: "Website",
+                    ),
+                    TextSpan(
+                        text: " (Opcional)", style: TextStyle(fontSize: 12))
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: FormBuilderTextField(
+                name: "website",
+                controller: controllerWebsite,
+                decoration: InputDecoration(labelText: "www.helpe-me.com"),
                 keyboardType: TextInputType.emailAddress,
               ),
             ),

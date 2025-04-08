@@ -9,6 +9,7 @@ class OngEntity {
   final String? name;
   final String? email;
   final String? status;
+  final String? website;
   final String? phoneNumber;
   final String? profileImageUrl;
   final int? servicesNumber;
@@ -24,6 +25,7 @@ class OngEntity {
     this.about,
     this.bio,
     this.email,
+    this.website,
     this.coverImageUrl,
     this.status,
     this.isVerified = false,
