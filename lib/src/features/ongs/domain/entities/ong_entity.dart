@@ -7,6 +7,7 @@ class OngEntity {
   final bool isVerified;
   final String? mission;
   final String? name;
+  final String? email;
   final String? status;
   final String? phoneNumber;
   final String? profileImageUrl;
@@ -22,6 +23,7 @@ class OngEntity {
     this.updatedAt,
     this.about,
     this.bio,
+    this.email,
     this.coverImageUrl,
     this.status,
     this.isVerified = false,
