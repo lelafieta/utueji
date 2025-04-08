@@ -20,9 +20,32 @@ class _CreateOngPageState extends State<CreateOngPage> {
   final _formStepThreeKey = GlobalKey<FormBuilderState>();
   final _formStepFourKey = GlobalKey<FormBuilderState>();
   TextEditingController controllerLocation = TextEditingController();
+  TextEditingController controllerPhone = TextEditingController();
+  TextEditingController controllerEmail = TextEditingController();
+  TextEditingController controllerBio = TextEditingController();
+  TextEditingController controllerName = TextEditingController();
+  TextEditingController controllerAbout = TextEditingController();
+  TextEditingController controllerMission = TextEditingController();
+  TextEditingController controllerVision = TextEditingController();
+  TextEditingController controllerStatutes = TextEditingController();
+  TextEditingController controllerDeclaration = TextEditingController();
+  TextEditingController controllerAssembly = TextEditingController();
+  TextEditingController controllerPublicDeed = TextEditingController();
+  TextEditingController controllerRegistration = TextEditingController();
+  TextEditingController controllerNif = TextEditingController();
+  TextEditingController controllerBi = TextEditingController();
+  List<PlatformFile>? _selectedProfileFiles;
+  List<PlatformFile>? _selectedCoverFiles;
+  List<PlatformFile>? _selectedStatutesFiles;
+  List<PlatformFile>? _selectedDeclarationFiles;
+  List<PlatformFile>? _selectedAssemblyFiles;
+  List<PlatformFile>? _selectedPublicDeedFiles;
+  List<PlatformFile>? _selectedRegistrationFiles;
+  List<PlatformFile>? _selectedNifFiles;
+  List<PlatformFile>? _selectedBiFiles;
+  List<PlatformFile>? _selectedFilesStatutes;
 
   int activeStep = 0;
-
   void _handleBack() {
     if (activeStep > 0) {
       setState(() {
@@ -176,6 +199,7 @@ class _CreateOngPageState extends State<CreateOngPage> {
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: FormBuilderTextField(
                 name: "name",
+                controller: controllerName,
                 decoration: InputDecoration(labelText: "Nome da ONG"),
                 validator: FormBuilderValidators.required(
                   errorText: "Campo obrigatório",
@@ -204,6 +228,7 @@ class _CreateOngPageState extends State<CreateOngPage> {
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: FormBuilderTextField(
                 name: "bio",
+                controller: controllerBio,
                 decoration: InputDecoration(hintText: "Biografia"),
                 maxLines: 3,
                 validator: FormBuilderValidators.required(
@@ -233,6 +258,7 @@ class _CreateOngPageState extends State<CreateOngPage> {
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: FormBuilderTextField(
                 name: "about",
+                controller: controllerAbout,
                 decoration: InputDecoration(hintText: "Uma breve descrição"),
                 maxLines: 4,
                 validator: FormBuilderValidators.required(
@@ -276,6 +302,7 @@ class _CreateOngPageState extends State<CreateOngPage> {
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: FormBuilderTextField(
                 name: "phone_number",
+                controller: controllerPhone,
                 decoration: InputDecoration(labelText: "Telefone"),
                 validator: FormBuilderValidators.required(
                   errorText: "Campo obrigatório",
@@ -305,6 +332,7 @@ class _CreateOngPageState extends State<CreateOngPage> {
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: FormBuilderTextField(
                 name: "email",
+                controller: controllerEmail,
                 decoration: InputDecoration(labelText: "E-mail"),
                 validator: FormBuilderValidators.required(
                   errorText: "Campo obrigatório",
@@ -407,6 +435,11 @@ class _CreateOngPageState extends State<CreateOngPage> {
                 maxFiles: 1,
                 previewImages: true,
                 allowedExtensions: ['jpg', 'jpeg', 'png'],
+                onChanged: (val) {
+                  setState(() {
+                    _selectedProfileFiles = val;
+                  });
+                },
                 typeSelectors: [
                   TypeSelector(
                     type: FileType.custom,
@@ -431,6 +464,11 @@ class _CreateOngPageState extends State<CreateOngPage> {
                 maxFiles: 1,
                 previewImages: true,
                 allowedExtensions: ['jpg', 'jpeg', 'png'],
+                onChanged: (val) {
+                  setState(() {
+                    _selectedCoverFiles = val;
+                  });
+                },
                 typeSelectors: [
                   TypeSelector(
                     type: FileType.custom,
@@ -469,6 +507,7 @@ class _CreateOngPageState extends State<CreateOngPage> {
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: FormBuilderTextField(
                 name: "mission",
+                controller: controllerMission,
                 decoration: InputDecoration(hintText: "Nossa Missão"),
                 maxLines: 3,
               ),
@@ -477,6 +516,7 @@ class _CreateOngPageState extends State<CreateOngPage> {
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: FormBuilderTextField(
                 name: "vision",
+                controller: controllerVision,
                 decoration: InputDecoration(hintText: "Nossa Visão"),
                 maxLines: 3,
               ),
@@ -543,6 +583,7 @@ class _CreateOngPageState extends State<CreateOngPage> {
     required String fieldName,
     bool required = true,
     List<String> allowedExtensions = const ['pdf'],
+    Function(List<PlatformFile>?)? onChanged,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -573,6 +614,7 @@ class _CreateOngPageState extends State<CreateOngPage> {
             maxFiles: 1,
             previewImages: true,
             allowedExtensions: allowedExtensions,
+            onChanged: onChanged,
             typeSelectors: [
               TypeSelector(
                 type: FileType.custom,
