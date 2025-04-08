@@ -84,23 +84,32 @@ class _CreateOngPageState extends State<CreateOngPage> {
   }
 
   void _searchPlaces() {
-    AwesomePlaceSearch(
-      context: context,
-      apiKey: googleApiKey!,
-      countries: ["ao"],
-      errorText: "Alguma coisa correu mal",
-      hint: "Pesquisar uma localização",
-      dividerItemColor: Colors.grey.withOpacity(.5),
-      dividerItemWidth: .5,
-      elevation: 5,
-      indicatorColor: Colors.blue,
-      modalBorderRadius: 50.0,
-      onTap: (value) async {
-        print(value);
-        final result = await value;
-        controllerLocation.text = result.description!;
-      },
-    ).show();
+    // AwesomePlaceSearch(
+    //   context: context,
+    //   apiKey: googleApiKey!,
+    //   countries: ["ao"],
+    //   errorText: "Alguma coisa correu mal",
+    //   hint: "Pesquisar uma localização",
+    //   dividerItemColor: Colors.grey.withOpacity(.5),
+    //   dividerItemWidth: .5,
+    //   elevation: 5,
+    //   indicatorColor: Colors.blue,
+    //   modalBorderRadius: 50.0,
+    //   onTap: (value) async {
+    //     print(value);
+    //     final result = await value;
+    //     controllerLocation.text = result.description!;
+    //   },
+    // ).show();
+    showBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            width: double.infinity,
+            height: 100,
+            child: Text("data"),
+          );
+        });
   }
 
   Widget getStepContent(int step) {

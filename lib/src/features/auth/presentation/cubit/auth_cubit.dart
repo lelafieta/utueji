@@ -31,8 +31,15 @@ class AuthCubit extends Cubit<AuthState> {
 
     response.fold(
       (failure) => emit(AuthFailure(failure: failure.message.toString())),
-      (user) {
-        secureCacheHelper.saveData(key: "uid", value: user!.id!);
+      (user) async {
+        await secureCacheHelper.saveData(key: "uid", value: user!.id!);
+        await secureCacheHelper.saveData(
+            key: "fullName", value: user.fullName!);
+        await secureCacheHelper.saveData(
+            key: "avatarUrl", value: user.avatarUrl!);
+
+        AppEntity.currentUser = user;
+
         emit(Authenticated(user: user));
       },
     );

@@ -12,7 +12,7 @@ class AuthDataSource implements IAuthDataSource {
   AuthDataSource({required this.supabase});
   @override
   Future<bool> isSignIn() async {
-    return supabase.auth.currentSession != null;
+    return supabase.auth.currentUser != null;
   }
 
   @override
@@ -28,7 +28,14 @@ class AuthDataSource implements IAuthDataSource {
       if (user == null) {
         throw ServerFailure(message: 'Usuário não encontrado.');
       }
-      return UserModel.fromJson(user.toJson());
+
+      final profileResponse = await supabase
+          .from(SupabaseConsts.profiles)
+          .select()
+          .eq('id', user.id)
+          .single();
+
+      return UserModel.fromJson(profileResponse);
     } catch (e) {
       print(e);
       throw ServerFailure(message: 'Erro inesperado ao tentar fazer login.');

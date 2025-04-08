@@ -40,13 +40,30 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  SecureCacheHelper secureCacheHelper = SecureCacheHelper();
+  String fullName = "";
+  String avatarUrl = "";
   @override
   void initState() {
     super.initState();
+    getUserData();
     context.read<FavoriteCubit>().getAllFavorites();
     context.read<HomeCampaignCubit>().getLatestUrgentCampaigns();
     context.read<EventCubit>().getLatestEvents();
     context.read<OngCubit>().getLatestOngs();
+  }
+
+  Future<void> getUserData() async {
+    secureCacheHelper.getData(key: "fullName").then((value) {
+      setState(() {
+        fullName = value!;
+      });
+    });
+    secureCacheHelper.getData(key: "avatarUrl").then((value) {
+      setState(() {
+        avatarUrl = value!;
+      });
+    });
   }
 
   String formatarDataPersonalizada(DateTime data) {
@@ -75,36 +92,25 @@ class _HomePageState extends State<HomePage> {
                 margin: const EdgeInsets.only(left: 16),
                 decoration:
                     BoxDecoration(borderRadius: BorderRadius.circular(100)),
-                child: BlocBuilder<HomeProfileDataCubit, HomeProfileDataState>(
-                  builder: (context, state) {
-                    if (state is HomeProfileDataLoaded) {
-                      final user = state.user;
-                      if (user.avatarUrl == null || user.avatarUrl!.isEmpty) {
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(50),
-                          child: Image.asset(
-                            AppImages.avatar,
-                            fit: BoxFit.cover,
-                          ),
-                        );
-                      }
-                      return ClipRRect(
+                child: (AppEntity.currentUser!.avatarUrl!.isEmpty)
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: Image.asset(
+                          AppImages.avatar,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : ClipRRect(
                         borderRadius: BorderRadius.circular(50),
                         child: CachedNetworkImage(
-                          imageUrl: user.avatarUrl!,
+                          imageUrl: AppEntity.currentUser!.avatarUrl!,
                           fit: BoxFit.cover,
                           placeholder: (context, url) =>
                               const CircularProgressIndicator(),
                           errorWidget: (context, url, error) =>
                               const Icon(Icons.error),
                         ),
-                      );
-                    }
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                    );
-                  },
-                ),
+                      ),
               ),
             ),
             trailing: Container(
@@ -143,22 +149,9 @@ class _HomePageState extends State<HomePage> {
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
                   child: Row(
                     children: [
-                      BlocBuilder<HomeProfileDataCubit, HomeProfileDataState>(
-                        builder: (context, state) {
-                          if (state is HomeProfileDataLoaded) {
-                            return Text(
-                              "Olá! ${state.user.fullName}",
-                              style: Theme.of(context).textTheme.titleLarge,
-                            );
-                          }
-                          return Skeletonizer(
-                            enabled: true,
-                            child: Text(
-                              "Olá! Lela Fieta",
-                              style: Theme.of(context).textTheme.titleLarge,
-                            ),
-                          );
-                        },
+                      Text(
+                        "Olá! ${fullName}",
+                        style: Theme.of(context).textTheme.titleLarge,
                       ),
                       const SizedBox(width: 5),
                       Image.asset(
