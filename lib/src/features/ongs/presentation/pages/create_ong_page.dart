@@ -36,6 +36,7 @@ class _CreateOngPageState extends State<CreateOngPage> {
   TextEditingController controllerBi = TextEditingController();
   List<PlatformFile>? _selectedProfileFiles;
   List<PlatformFile>? _selectedCoverFiles;
+
   List<PlatformFile>? _selectedStatutesFiles;
   List<PlatformFile>? _selectedDeclarationFiles;
   List<PlatformFile>? _selectedAssemblyFiles;
@@ -43,7 +44,6 @@ class _CreateOngPageState extends State<CreateOngPage> {
   List<PlatformFile>? _selectedRegistrationFiles;
   List<PlatformFile>? _selectedNifFiles;
   List<PlatformFile>? _selectedBiFiles;
-  List<PlatformFile>? _selectedFilesStatutes;
 
   int activeStep = 0;
   void _handleBack() {
@@ -125,6 +125,7 @@ class _CreateOngPageState extends State<CreateOngPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Registro de ONG'),
+        centerTitle: false,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: _handleBack,
@@ -154,7 +155,7 @@ class _CreateOngPageState extends State<CreateOngPage> {
                 "Informações básicas",
                 "Contato e Verificação",
                 "Imagens e Missão",
-                "Carregar documentos",
+                "Documentos da ONG",
               ][activeStep],
             ),
           ),
@@ -337,7 +338,7 @@ class _CreateOngPageState extends State<CreateOngPage> {
                 validator: FormBuilderValidators.required(
                   errorText: "Campo obrigatório",
                 ),
-                keyboardType: TextInputType.phone,
+                keyboardType: TextInputType.emailAddress,
               ),
             ),
             Padding(
@@ -418,7 +419,7 @@ class _CreateOngPageState extends State<CreateOngPage> {
                       .copyWith(color: Colors.black),
                   children: [
                     TextSpan(
-                      text: "Contacto da ONG",
+                      text: "Imagens da ONG",
                     ),
                     TextSpan(
                         text: "*",
@@ -434,7 +435,11 @@ class _CreateOngPageState extends State<CreateOngPage> {
                 decoration: InputDecoration(labelText: "Imagem de Perfil"),
                 maxFiles: 1,
                 previewImages: true,
+                initialValue: _selectedProfileFiles,
                 allowedExtensions: ['jpg', 'jpeg', 'png'],
+                validator: FormBuilderValidators.required(
+                  errorText: "Campo obrigatório",
+                ),
                 onChanged: (val) {
                   setState(() {
                     _selectedProfileFiles = val;
@@ -463,7 +468,11 @@ class _CreateOngPageState extends State<CreateOngPage> {
                 decoration: InputDecoration(labelText: "Imagem de Capa"),
                 maxFiles: 1,
                 previewImages: true,
+                initialValue: _selectedCoverFiles,
                 allowedExtensions: ['jpg', 'jpeg', 'png'],
+                validator: FormBuilderValidators.required(
+                  errorText: "Campo obrigatório",
+                ),
                 onChanged: (val) {
                   setState(() {
                     _selectedCoverFiles = val;
@@ -510,6 +519,9 @@ class _CreateOngPageState extends State<CreateOngPage> {
                 controller: controllerMission,
                 decoration: InputDecoration(hintText: "Nossa Missão"),
                 maxLines: 3,
+                validator: FormBuilderValidators.required(
+                  errorText: "Campo obrigatório",
+                ),
               ),
             ),
             Padding(
@@ -519,6 +531,9 @@ class _CreateOngPageState extends State<CreateOngPage> {
                 controller: controllerVision,
                 decoration: InputDecoration(hintText: "Nossa Visão"),
                 maxLines: 3,
+                validator: FormBuilderValidators.required(
+                  errorText: "Campo obrigatório",
+                ),
               ),
             ),
           ],
@@ -539,37 +554,79 @@ class _CreateOngPageState extends State<CreateOngPage> {
               context,
               title: "Estatutos e Ato Constitutivo da ONG",
               fieldName: "statutes_constitutive_act",
+              initialValue: _selectedStatutesFiles,
+              onChanged: (val) {
+                setState(() {
+                  _selectedStatutesFiles = val;
+                });
+              },
             ),
             buildDocumentField(
               context,
               title: "Declaração de Idoneidade da ONG",
               fieldName: "declaration_good_standing",
+              initialValue: _selectedDeclarationFiles,
+              onChanged: (val) {
+                setState(() {
+                  _selectedDeclarationFiles = val;
+                });
+              },
             ),
             buildDocumentField(
               context,
               title: "Ata de Assembleia de Constituição",
               fieldName: "minutes_constitutive_assembly",
+              initialValue: _selectedAssemblyFiles,
+              onChanged: (val) {
+                setState(() {
+                  _selectedAssemblyFiles = val;
+                });
+              },
             ),
             buildDocumentField(
               context,
               title: "Escritura Pública de Constituição",
               fieldName: "public_deed",
+              initialValue: _selectedPublicDeedFiles,
+              onChanged: (val) {
+                setState(() {
+                  _selectedPublicDeedFiles = val;
+                });
+              },
             ),
             buildDocumentField(
               context,
               title: "Certificado de Registo da ONG (opcional)",
               fieldName: "registration_certificate",
+              initialValue: _selectedRegistrationFiles,
               required: false,
+              onChanged: (val) {
+                setState(() {
+                  _selectedRegistrationFiles = val;
+                });
+              },
             ),
             buildDocumentField(
               context,
               title: "Número de Identificação Fiscal (NIF)",
               fieldName: "nif",
+              initialValue: _selectedNifFiles,
+              onChanged: (val) {
+                setState(() {
+                  _selectedNifFiles = val;
+                });
+              },
             ),
             buildDocumentField(
               context,
               title: "Bilhete de Identidade do  Representante Legal",
               fieldName: "bi_representative",
+              initialValue: _selectedBiFiles,
+              onChanged: (val) {
+                setState(() {
+                  _selectedBiFiles = val;
+                });
+              },
             ),
           ],
         ),
@@ -584,6 +641,7 @@ class _CreateOngPageState extends State<CreateOngPage> {
     bool required = true,
     List<String> allowedExtensions = const ['pdf'],
     Function(List<PlatformFile>?)? onChanged,
+    List<PlatformFile>? initialValue,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -615,6 +673,7 @@ class _CreateOngPageState extends State<CreateOngPage> {
             previewImages: true,
             allowedExtensions: allowedExtensions,
             onChanged: onChanged,
+            initialValue: initialValue,
             typeSelectors: [
               TypeSelector(
                 type: FileType.custom,
