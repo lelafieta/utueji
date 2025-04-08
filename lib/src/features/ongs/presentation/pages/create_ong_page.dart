@@ -14,6 +14,7 @@ class CreateOngPage extends StatefulWidget {
 
 class _CreateOngPageState extends State<CreateOngPage> {
   final googleApiKey = dotenv.env["GOOGLE_API_KEY"];
+
   final _formStepOneKey = GlobalKey<FormBuilderState>();
   final _formStepTwoKey = GlobalKey<FormBuilderState>();
   final _formStepThreeKey = GlobalKey<FormBuilderState>();
@@ -291,6 +292,35 @@ class _CreateOngPageState extends State<CreateOngPage> {
                       .copyWith(color: Colors.black),
                   children: [
                     TextSpan(
+                      text: "Email da ONG",
+                    ),
+                    TextSpan(
+                        text: "*",
+                        style: TextStyle(color: Colors.red, fontSize: 16))
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: FormBuilderTextField(
+                name: "email",
+                decoration: InputDecoration(labelText: "E-mail"),
+                validator: FormBuilderValidators.required(
+                  errorText: "Campo obrigatório",
+                ),
+                keyboardType: TextInputType.phone,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: RichText(
+                text: TextSpan(
+                  style: DefaultTextStyle.of(context)
+                      .style
+                      .copyWith(color: Colors.black),
+                  children: [
+                    TextSpan(
                       text: "Localização da ONG",
                     ),
                     TextSpan(
@@ -300,7 +330,6 @@ class _CreateOngPageState extends State<CreateOngPage> {
                 ),
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: FormBuilderTextField(
