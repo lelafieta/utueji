@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:utueji/src/features/ongs/presentation/cubit/ong_action_cubit/ong_action_cubit.dart';
 import '../config/routes/app_pages.dart';
 import '../config/themes/app_theme.dart';
 import '../app/di.dart' as di;
@@ -57,7 +58,9 @@ class UtuejiApp extends StatelessWidget {
         BlocProvider(create: (_) => di.instance<CountDonationCubit>()),
         BlocProvider(
             create: (_) => di.instance<SolidaryCubit>()..getUserData()),
-        BlocProvider(create: (_) => di.instance<AuthDataCubit>()..getUserData())
+        BlocProvider(
+            create: (_) => di.instance<AuthDataCubit>()..getUserData()),
+        BlocProvider(create: (_) => di.instance<OngActionCubit>())
       ],
       child: GetMaterialApp(
         theme: AppTheme.lightTheme,

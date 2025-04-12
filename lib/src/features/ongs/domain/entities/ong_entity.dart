@@ -6,7 +6,7 @@ class OngEntity {
   final String? about;
   final String? bio;
   final String? coverImageUrl;
-  final bool isVerified;
+  final bool? isVerified;
   final String? mission;
   final String? name;
   final String? email;

@@ -7,7 +7,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:utueji/src/features/solidary/cubit/solidary_cubit.dart';
+
 import '../core/cache/secure_storage.dart';
 import '../core/network/i_network_info.dart';
 import '../core/network/network_info.dart';
@@ -90,11 +90,13 @@ import '../features/ongs/data/datasources/i_ong_datasource.dart';
 import '../features/ongs/data/datasources/ong_datasource.dart';
 import '../features/ongs/data/repositories/ong_repository.dart';
 import '../features/ongs/domain/respositories/i_ong_repository.dart';
+import '../features/ongs/domain/usecases/create_ong_usecase.dart';
 import '../features/ongs/domain/usecases/fetch_latest_ongs_usecase.dart';
+import '../features/ongs/presentation/cubit/ong_action_cubit/ong_action_cubit.dart';
 import '../features/ongs/presentation/cubit/ong_cubit.dart';
-
 import '../features/profile/presentation/cubit/count_donation_cubit/count_donation_cubit.dart';
 import '../features/profile/presentation/cubit/profile_cubit.dart';
+import '../features/solidary/cubit/solidary_cubit.dart';
 import '../features/users/data/repositories/user_repository.dart';
 import '../features/users/domain/repositories/i_user_repository.dart';
 
@@ -178,6 +180,7 @@ void _setUpCubits() {
 
   instance.registerFactory(() => SolidaryCubit(getAuthUserUseCase: instance()));
   instance.registerFactory(() => AuthDataCubit(getAuthUserUseCase: instance()));
+  instance.registerFactory(() => OngActionCubit(createOngUseCase: instance()));
 }
 
 void _setUpUsecases() {
@@ -246,6 +249,9 @@ void _setUpUsecases() {
 
   instance.registerLazySingleton<GetCountMyDonationsUseCase>(
       () => GetCountMyDonationsUseCase(repository: instance()));
+
+  instance.registerLazySingleton<CreateOngUseCase>(
+      () => CreateOngUseCase(repository: instance()));
 }
 
 void _setUpRepositories() {

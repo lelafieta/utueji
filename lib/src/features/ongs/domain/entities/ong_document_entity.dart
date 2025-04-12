@@ -7,7 +7,7 @@ class OngDocumentEntity {
   final String? minutesConstitutiveAssembly;
   final String? publicDeed;
   final String? registrationCertificate;
-  final String? tin;
+  final String? nif;
   final String? biRepresentative;
   final String? status;
   final DateTime? createdAt;
@@ -22,7 +22,7 @@ class OngDocumentEntity {
     this.minutesConstitutiveAssembly,
     this.publicDeed,
     this.registrationCertificate,
-    this.tin,
+    this.nif,
     this.biRepresentative,
     this.status,
     this.createdAt,

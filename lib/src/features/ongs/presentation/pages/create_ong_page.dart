@@ -1,11 +1,16 @@
 import 'package:awesome_place_search/awesome_place_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:utueji/src/features/ongs/domain/entities/ong_entity.dart';
+import 'package:utueji/src/features/ongs/presentation/cubit/ong_action_cubit/ong_action_cubit.dart';
 
 import '../../../../core/resources/images/app_images.dart';
+import '../../domain/entities/ong_document_entity.dart';
 
 class CreateOngPage extends StatefulWidget {
   @override
@@ -136,12 +141,35 @@ class _CreateOngPageState extends State<CreateOngPage> {
           "bi": _selectedBiFiles?.isNotEmpty == true
               ? _selectedBiFiles?.first.path
               : null,
-
-          // Outros
           "created_at": DateTime.now().toIso8601String(),
         };
 
-        print("Dados finais: ${ongData["registration"]}");
+        final ongEntity = OngEntity(
+          name: ongData["name"],
+          bio: ongData["bio"],
+          about: ongData["about"],
+          mission: ongData["mission"],
+          vision: ongData["vision"],
+          phoneNumber: ongData["phone_number"],
+          email: ongData["email"],
+          website: ongData["website"],
+          profileImageUrl: ongData["profile_image"],
+          coverImageUrl: ongData["cover_image"],
+          createdAt: DateTime.tryParse(ongData["created_at"]!),
+          ongDocument: OngDocumentEntity(
+            statutesConstitutiveAct: ongData["statutes"],
+            declarationGoodStanding: ongData["declaration"],
+            minutesConstitutiveAssembly: ongData["assembly"],
+            publicDeed: ongData["public_deed"],
+            registrationCertificate: ongData["registration"],
+            nif: ongData["nif"],
+            biRepresentative: ongData["bi"],
+            createdAt: DateTime.tryParse(ongData["created_at"]!),
+            status: "pending", // ou outro status padrão
+          ),
+        );
+
+        context.read<OngActionCubit>().createOng(ongEntity);
       }
     } else {
       print("Formulário inválido no passo $activeStep!");
@@ -220,27 +248,40 @@ class _CreateOngPageState extends State<CreateOngPage> {
           ],
         ),
       ),
-      body: Column(
-        children: [
-          ListTile(
-            leading: Image.asset(AppImages.ong, width: 45, height: 45),
-            title: Text("Passo ${activeStep + 1}/4"),
-            subtitle: Text(
-              [
-                "Informações básicas",
-                "Contato e Verificação",
-                "Imagens e Missão",
-                "Documentos da ONG",
-              ][activeStep],
+      body: BlocListener<OngActionCubit, OngActionState>(
+        listener: (context, state) {
+          print(state);
+          EasyLoading.dismiss();
+          if (state is OngActionLoading) {
+            EasyLoading.show(
+                status: "Loading", maskType: EasyLoadingMaskType.black);
+          } else if (state is OngActionSuccess) {
+            EasyLoading.showInfo(
+                "A sua organização em pendente, aguarde a aprovação ou rejeição. Vamos analizar os seus documentos.");
+          }
+        },
+        child: Column(
+          children: [
+            ListTile(
+              leading: Image.asset(AppImages.ong, width: 45, height: 45),
+              title: Text("Passo ${activeStep + 1}/4"),
+              subtitle: Text(
+                [
+                  "Informações básicas",
+                  "Contato e Verificação",
+                  "Imagens e Missão",
+                  "Documentos da ONG",
+                ][activeStep],
+              ),
             ),
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.only(bottom: 80),
-              child: getStepContent(activeStep),
-            ),
-          )
-        ],
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.only(bottom: 80),
+                child: getStepContent(activeStep),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
