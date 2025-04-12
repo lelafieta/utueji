@@ -421,7 +421,6 @@ class CampaignRemoteDataSource extends ICampaignRemoteDataSource {
     }
 
     if (params.filter != null) {
-      print("CONSOLE: ${params.filter}");
       // query = query.ilike('title', '%${params.title}%');
     }
 

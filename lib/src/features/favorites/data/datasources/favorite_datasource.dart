@@ -29,7 +29,6 @@ class FavoriteDataSource extends IFavoriteDataSource {
         .stream(primaryKey: ['id'])
         .eq('user_id', uid)
         .map((data) {
-          print("TEMPO REAL");
           return data.map((e) => FavoriteModel.fromJson(e)).toList();
         });
 
@@ -60,7 +59,6 @@ class FavoriteDataSource extends IFavoriteDataSource {
 
   @override
   Future<Unit> removeFavorite(FavoriteModel favorite) async {
-    print("PARAAREMOVERR ${favorite.toMap()}-${favorite.itemId}");
     try {
       final response = await supabase
           .from(SupabaseConsts.favorites)
@@ -69,10 +67,8 @@ class FavoriteDataSource extends IFavoriteDataSource {
           .eq('user_id', favorite.userId!);
       // .gt('age', 18);
 
-      print("REMOVEU!!! $response");
       return unit;
     } catch (e) {
-      print("NAAAOAOAOOA $e");
       throw ServerFailure(message: 'Erro inesperado ao tentar fazer login.');
     }
   }

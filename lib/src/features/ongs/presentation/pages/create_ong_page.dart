@@ -70,13 +70,78 @@ class _CreateOngPageState extends State<CreateOngPage> {
         setState(() => activeStep++);
       } else {
         // Submissão final
-        final allData = {
-          ...(_formStepOneKey.currentState?.value ?? {}),
-          ...(_formStepTwoKey.currentState?.value ?? {}),
-          ...(_formStepThreeKey.currentState?.value ?? {}),
-          ...(_formStepFourKey.currentState?.value ?? {}),
+        final ongData = {
+          // Informações gerais
+          "name": controllerName.text.trim().isNotEmpty
+              ? controllerName.text.trim()
+              : null,
+          "bio": controllerBio.text.trim().isNotEmpty
+              ? controllerBio.text.trim()
+              : null,
+          "about": controllerAbout.text.trim().isNotEmpty
+              ? controllerAbout.text.trim()
+              : null,
+          "mission": controllerMission.text.trim().isNotEmpty
+              ? controllerMission.text.trim()
+              : null,
+          "vision": controllerVision.text.trim().isNotEmpty
+              ? controllerVision.text.trim()
+              : null,
+
+          // Contato
+          "phone_number": controllerPhone.text.trim().isNotEmpty
+              ? controllerPhone.text.trim()
+              : null,
+          "email": controllerEmail.text.trim().isNotEmpty
+              ? controllerEmail.text.trim()
+              : null,
+          "website": controllerWebsite.text.trim().isNotEmpty
+              ? controllerWebsite.text.trim()
+              : null,
+
+          // Localização
+          "location": controllerLocation.text.trim().isNotEmpty
+              ? controllerLocation.text.trim()
+              : null,
+          // "latitude": selectedPlace?.latLng.latitude,
+          // "longitude": selectedPlace?.latLng.longitude,
+
+          // Imagens
+          "profile_image": _selectedProfileFiles?.isNotEmpty == true
+              ? _selectedProfileFiles?.first.path
+              : null,
+          "cover_image": _selectedCoverFiles?.isNotEmpty == true
+              ? _selectedCoverFiles?.first.path
+              : null,
+
+          // Documentos obrigatórios
+          "statutes": _selectedStatutesFiles?.isNotEmpty == true
+              ? _selectedStatutesFiles?.first.path
+              : null,
+          "declaration": _selectedDeclarationFiles?.isNotEmpty == true
+              ? _selectedDeclarationFiles?.first.path
+              : null,
+          "assembly": _selectedAssemblyFiles?.isNotEmpty == true
+              ? _selectedAssemblyFiles?.first.path
+              : null,
+          "public_deed": _selectedPublicDeedFiles?.isNotEmpty == true
+              ? _selectedPublicDeedFiles?.first.path
+              : null,
+          "registration": _selectedRegistrationFiles?.isNotEmpty == true
+              ? _selectedRegistrationFiles?.first.path
+              : null,
+          "nif": _selectedNifFiles?.isNotEmpty == true
+              ? _selectedNifFiles?.first.path
+              : null,
+          "bi": _selectedBiFiles?.isNotEmpty == true
+              ? _selectedBiFiles?.first.path
+              : null,
+
+          // Outros
+          "created_at": DateTime.now().toIso8601String(),
         };
-        print("Dados finais: $allData");
+
+        print("Dados finais: ${ongData["registration"]}");
       }
     } else {
       print("Formulário inválido no passo $activeStep!");
@@ -493,13 +558,14 @@ class _CreateOngPageState extends State<CreateOngPage> {
                     TextSpan(
                       text: "Imagens da ONG",
                     ),
-                    TextSpan(
-                        text: "*",
-                        style: TextStyle(color: Colors.red, fontSize: 16))
+                    // TextSpan(
+                    //     text: "*",
+                    //     style: TextStyle(color: Colors.red, fontSize: 16))
                   ],
                 ),
               ),
             ),
+            const SizedBox(height: 8),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 4.0),
               child: FormBuilderFilePicker(
@@ -509,9 +575,9 @@ class _CreateOngPageState extends State<CreateOngPage> {
                 previewImages: true,
                 initialValue: _selectedProfileFiles,
                 allowedExtensions: ['jpg', 'jpeg', 'png'],
-                validator: FormBuilderValidators.required(
-                  errorText: "Campo obrigatório",
-                ),
+                // validator: FormBuilderValidators.required(
+                //   errorText: "Campo obrigatório",
+                // ),
                 onChanged: (val) {
                   setState(() {
                     _selectedProfileFiles = val;
@@ -542,9 +608,9 @@ class _CreateOngPageState extends State<CreateOngPage> {
                 previewImages: true,
                 initialValue: _selectedCoverFiles,
                 allowedExtensions: ['jpg', 'jpeg', 'png'],
-                validator: FormBuilderValidators.required(
-                  errorText: "Campo obrigatório",
-                ),
+                // validator: FormBuilderValidators.required(
+                //   errorText: "Campo obrigatório",
+                // ),
                 onChanged: (val) {
                   setState(() {
                     _selectedCoverFiles = val;

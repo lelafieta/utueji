@@ -1,3 +1,5 @@
+import 'package:utueji/src/features/ongs/data/models/ong_document_model.dart';
+
 import '../../domain/entities/ong_entity.dart';
 
 class OngModel extends OngEntity {
@@ -20,6 +22,7 @@ class OngModel extends OngEntity {
     super.supportsNumber,
     super.userId,
     super.vision,
+    super.ongDocument,
   });
 
   factory OngModel.fromMap(Map<String, dynamic> map) {
@@ -43,6 +46,9 @@ class OngModel extends OngEntity {
       supportsNumber: map['supports_number']?.toDouble(),
       userId: map['user_id'],
       vision: map['vision'],
+      ongDocument: (map['ong_document'] != null)
+          ? OngDocumentModel.fromMap(map['ong_document'])
+          : map['ong_document'],
     );
   }
 

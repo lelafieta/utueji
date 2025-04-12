@@ -1,3 +1,5 @@
+import 'ong_document_entity.dart';
+
 class OngEntity {
   final String? id;
   final DateTime? createdAt;
@@ -17,25 +19,26 @@ class OngEntity {
   final String? userId;
   final String? vision;
   final DateTime? updatedAt;
+  final OngDocumentEntity? ongDocument;
 
-  OngEntity({
-    this.id,
-    this.createdAt,
-    this.updatedAt,
-    this.about,
-    this.bio,
-    this.email,
-    this.website,
-    this.coverImageUrl,
-    this.status,
-    this.isVerified = false,
-    this.mission,
-    this.name,
-    this.phoneNumber,
-    this.profileImageUrl,
-    this.servicesNumber,
-    this.supportsNumber,
-    this.userId,
-    this.vision,
-  });
+  OngEntity(
+      {this.id,
+      this.createdAt,
+      this.updatedAt,
+      this.about,
+      this.bio,
+      this.email,
+      this.website,
+      this.coverImageUrl,
+      this.status,
+      this.isVerified = false,
+      this.mission,
+      this.name,
+      this.phoneNumber,
+      this.profileImageUrl,
+      this.servicesNumber,
+      this.supportsNumber,
+      this.userId,
+      this.vision,
+      this.ongDocument});
 }

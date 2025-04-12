@@ -7,6 +7,7 @@ import 'package:utueji/src/config/routes/app_routes.dart';
 import 'package:utueji/src/features/auth/presentation/cubit/auth_cubit.dart';
 
 import '../../../../core/resources/images/app_images.dart';
+import '../../../auth/presentation/cubit/auth_data/auth_data_cubit.dart';
 import '../cubit/count_donation_cubit/count_donation_cubit.dart';
 import '../cubit/profile_cubit.dart';
 
@@ -26,10 +27,11 @@ class ProfilePage extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
-        child: BlocBuilder<ProfileCubit, ProfileState>(
+        child: BlocBuilder<AuthDataCubit, AuthDataState>(
           builder: (context, state) {
-            if (state is ProfileLoaded) {
-              final user = state.user;
+            print(state);
+            if (state is AuthDataLoaded) {
+              final user = state.currentUser;
               return Column(
                 children: [
                   // Avatar e nome do usuário
