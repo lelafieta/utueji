@@ -240,7 +240,79 @@ class _CreateOngPageState extends State<CreateOngPage> {
           children: [
             Expanded(
               child: ElevatedButton(
-                onPressed: _handleNext,
+                // onPressed: _handleNext,
+                onPressed: () {
+                  final ongData = {
+                    // Informações gerais
+                    "name": "Associação Esperança Viva2",
+                    "bio":
+                        "ONG voltada para o desenvolvimento comunitário e inclusão social.",
+                    "about":
+                        "Desde 2015, atuamos em comunidades carentes promovendo acesso à educação, saúde e cultura.",
+                    "mission":
+                        "Transformar vidas através do engajamento social.",
+                    "vision":
+                        "Ser referência em transformação social em Angola.",
+
+                    // Contato
+                    "phone_number": "+244931000000",
+                    "email": "contato@esperancaviva.org",
+                    "website": "https://www.esperancaviva.org",
+
+                    // Localização
+                    "location": "Luanda, Angola",
+
+                    // Imagens (simulando path de imagens salvas no cache ou assets)
+                    "profile_image":
+                        "/data/user/0/com.example.utueji/cache/file_picker/GRS WEB ATA.pdf",
+                    "cover_image":
+                        "/data/user/0/com.example.utueji/cache/file_picker/GRS WEB ATA.pdf",
+
+                    // Documentos obrigatórios (simulando paths de arquivos)
+                    "statutes":
+                        "/data/user/0/com.example.utueji/cache/file_picker/GRS WEB ATA.pdf",
+                    "declaration":
+                        "/data/user/0/com.example.utueji/cache/file_picker/GRS WEB ATA.pdf",
+                    "assembly":
+                        "/data/user/0/com.example.utueji/cache/file_picker/GRS WEB ATA.pdf",
+                    "public_deed":
+                        "/data/user/0/com.example.utueji/cache/file_picker/GRS WEB ATA.pdf",
+                    "registration":
+                        "/data/user/0/com.example.utueji/cache/file_picker/GRS WEB ATA.pdf",
+                    "nif":
+                        "/data/user/0/com.example.utueji/cache/file_picker/GRS WEB ATA.pdf",
+                    "bi":
+                        "/data/user/0/com.example.utueji/cache/file_picker/GRS WEB ATA.pdf",
+
+                    "created_at": DateTime.now().toIso8601String(),
+                  };
+                  final ongEntity = OngEntity(
+                    name: ongData["name"],
+                    bio: ongData["bio"],
+                    about: ongData["about"],
+                    mission: ongData["mission"],
+                    vision: ongData["vision"],
+                    phoneNumber: ongData["phone_number"],
+                    email: ongData["email"],
+                    website: ongData["website"],
+                    profileImageUrl: ongData["profile_image"],
+                    coverImageUrl: ongData["cover_image"],
+                    createdAt: DateTime.tryParse(ongData["created_at"]!),
+                    ongDocument: OngDocumentEntity(
+                      statutesConstitutiveAct: ongData["statutes"],
+                      declarationGoodStanding: ongData["declaration"],
+                      minutesConstitutiveAssembly: ongData["assembly"],
+                      publicDeed: ongData["public_deed"],
+                      registrationCertificate: ongData["registration"],
+                      nif: ongData["nif"],
+                      biRepresentative: ongData["bi"],
+                      createdAt: DateTime.tryParse(ongData["created_at"]!),
+                      status: "pending",
+                    ),
+                  );
+
+                  context.read<OngActionCubit>().createOng(ongEntity);
+                },
                 child:
                     Text(activeStep < 3 ? "Guardar & Continuar" : "Finalizar"),
               ),

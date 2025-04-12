@@ -26,16 +26,16 @@ class OngDataSource extends IOngDataSource {
     return ongs;
   }
 
-  Future<String?> uploadFile(File file, String path, String bgName) async {
+  Future<String?> uploadFile(File file, String path, String bdName) async {
     final storageResponse =
-        await supabase.storage.from(bgName).upload(path, file);
+        await supabase.storage.from(bdName).upload(path, file);
 
     if (storageResponse.isEmpty) {
       print('Erro ao subir arquivo: ${storageResponse}');
       return null;
     }
 
-    return supabase.storage.from('ongdocs').getPublicUrl(path);
+    return supabase.storage.from(bdName).getPublicUrl(path);
   }
 
   @override
@@ -70,74 +70,85 @@ class OngDataSource extends IOngDataSource {
 
       // Upload das imagens
       final profileImageUrl = ong.profileImageUrl != null
-          ? await uploadFile(File(ong.profileImageUrl!),
-              'images/${userId}_profile.png', 'ongprofile')
+          ? await uploadFile(
+              File(ong.profileImageUrl!),
+              'images/${userId}_${DateTime.timestamp()}_profile.png',
+              'ongprofile')
           : null;
 
       final coverImageUrl = ong.coverImageUrl != null
-          ? await uploadFile(File(ong.coverImageUrl!),
-              'images/${userId}_cover.png', 'ongprofile')
+          ? await uploadFile(
+              File(ong.coverImageUrl!),
+              'images/${userId}_${DateTime.timestamp()}_cover.png',
+              'ongprofile')
           : null;
 
       // Criar a ONG no Supabase
-      final ongInsert = await supabase
-          .from('ongs')
-          .insert({
-            'name': ong.name,
-            'bio': ong.bio,
-            'about': ong.about,
-            'mission': ong.mission,
-            'vision': ong.vision,
-            'phone_number': ong.phoneNumber,
-            'email': ong.email,
-            'website': ong.website,
-            'profile_image_url': profileImageUrl,
-            'cover_image_url': coverImageUrl,
-            'user_id': userId,
-          })
-          .select()
-          .single();
-
-      final ongId = ongInsert['id'];
-
-      // Upload dos documentos obrigatórios
-      final doc = ong.ongDocument!;
-      final statutesUrl = await uploadFile(
-          File(doc.status!), 'documents/${userId}_statutes.pdf', 'ongdocs');
-      final declarationUrl = await uploadFile(
-          File(doc.declarationGoodStanding!),
-          'documents/${userId}_declaration.pdf',
-          'ongdocs');
-      final assemblyUrl = await uploadFile(
-          File(doc.minutesConstitutiveAssembly!),
-          'documents/${userId}_assembly.pdf',
-          'ongdocs');
-      final publicDeedUrl = await uploadFile(File(doc.publicDeed!),
-          'documents/${userId}_public_deed.pdf', 'ongdocs');
-      final registrationUrl = doc.registrationCertificate != null
-          ? await uploadFile(File(doc.registrationCertificate!),
-              'documents/${userId}_registration.pdf', 'ongdocs')
-          : null;
-      final nifUrl = await uploadFile(
-          File(doc.nif!), 'documents/${userId}_nif.pdf', 'ongdocs');
-      final biUrl = await uploadFile(
-          File(doc.biRepresentative!), 'documents/${userId}_bi.pdf', 'ongdocs');
-
-      // Inserir os documentos na tabela `ongs_documents`
-      await supabase.from('ongs_documents').insert({
+      final ongInsert = await supabase.from('ongs').insert({
+        'name': ong.name,
+        'bio': ong.bio,
+        'about': ong.about,
+        'mission': ong.mission,
+        'vision': ong.vision,
+        'phone_number': ong.phoneNumber,
+        'email': ong.email,
+        'website': ong.website,
+        'profile_image_url': profileImageUrl,
+        'cover_image_url': coverImageUrl,
         'user_id': userId,
-        'ong_id': ongId,
-        'statutes_constitutive_act': statutesUrl,
-        'declaration_good_standing': declarationUrl,
-        'minutes_constitutive_assembly': assemblyUrl,
-        'public_deed': publicDeedUrl,
-        'registration_certificate': registrationUrl,
-        'nif': nifUrl,
-        'bi_representative': biUrl,
-        'status': 'pending',
       });
+      // .select()
+      // .single();
+
+      print(ongInsert);
+
+      // final ongId = ongInsert['id'];
+
+      print("criado com sucesso");
+
+      // // Upload dos documentos obrigatórios
+      // final doc = ong.ongDocument!;
+      // final statutesUrl = await uploadFile(
+      //     File(doc.status!), 'documents/${userId}_statutes.pdf', 'ongdocs');
+      // final declarationUrl = await uploadFile(
+      //     File(doc.declarationGoodStanding!),
+      //     'documents/${userId}_${DateTime.timestamp()}_declaration.pdf',
+      //     'ongdocs');
+      // final assemblyUrl = await uploadFile(
+      //     File(doc.minutesConstitutiveAssembly!),
+      //     'documents/${userId}_${DateTime.timestamp()}_assembly.pdf',
+      //     'ongdocs');
+      // final publicDeedUrl = await uploadFile(
+      //     File(doc.publicDeed!),
+      //     'documents/${userId}_${DateTime.timestamp()}_public_deed.pdf',
+      //     'ongdocs');
+      // final registrationUrl = doc.registrationCertificate != null
+      //     ? await uploadFile(
+      //         File(doc.registrationCertificate!),
+      //         'documents/${userId}_${DateTime.timestamp()}_registration.pdf',
+      //         'ongdocs')
+      //     : null;
+      // final nifUrl = await uploadFile(File(doc.nif!),
+      //     'documents/${userId}_${DateTime.timestamp()}_nif.pdf', 'ongdocs');
+      // final biUrl = await uploadFile(File(doc.biRepresentative!),
+      //     'documents/${userId}_${DateTime.timestamp()}_bi.pdf', 'ongdocs');
+
+      // // Inserir os documentos na tabela `ongs_documents`
+      // await supabase.from('ongs_documents').insert({
+      //   'user_id': userId,
+      //   'ong_id': ongId,
+      //   'statutes_constitutive_act': statutesUrl,
+      //   'declaration_good_standing': declarationUrl,
+      //   'minutes_constitutive_assembly': assemblyUrl,
+      //   'public_deed': publicDeedUrl,
+      //   'registration_certificate': registrationUrl,
+      //   'nif': nifUrl,
+      //   'bi_representative': biUrl,
+      //   // 'status': 'pending',
+      // });
       return unit;
     } catch (e) {
+      print("BUGOU!!! $e");
       throw e;
     }
   }
