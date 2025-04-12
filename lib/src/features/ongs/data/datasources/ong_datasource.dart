@@ -42,109 +42,78 @@ class OngDataSource extends IOngDataSource {
   @override
   Future<Unit> createOng(OngEntity ong) async {
     final uuid = Uuid().v4();
-    print('Ong Details:');
-    print('Name: ${ong.name}');
-    print('Bio: ${ong.bio}');
-    print('About: ${ong.about}');
-    print('Mission: ${ong.mission}');
-    print('Vision: ${ong.vision}');
-    print('Phone Number: ${ong.phoneNumber}');
-    print('Email: ${ong.email}');
-    print('Website: ${ong.website}');
-    print('Profile Image URL: ${ong.profileImageUrl}');
-    print('Cover Image URL: ${ong.coverImageUrl}');
-    if (ong.ongDocument != null) {
-      print('Ong Document Details:');
-      print('Status: ${ong.ongDocument!.statutesConstitutiveAct}');
-      print(
-          'Declaration Good Standing: ${ong.ongDocument!.declarationGoodStanding}');
-      print(
-          'Minutes Constitutive Assembly: ${ong.ongDocument!.minutesConstitutiveAssembly}');
-      print('Public Deed: ${ong.ongDocument!.publicDeed}');
-      print(
-          'Registration Certificate: ${ong.ongDocument!.registrationCertificate}');
-      print('NIF: ${ong.ongDocument!.nif}');
-      print('BI Representative: ${ong.ongDocument!.biRepresentative}');
-    }
+
     try {
       final userId = supabase.auth.currentUser?.id;
       if (userId == null) throw Exception("Usuário não autenticado");
 
-      // Upload das imagens
+      // Upload das imagens (perfil e capa)
       final profileImageUrl = ong.profileImageUrl != null
           ? await uploadFile(
               File(ong.profileImageUrl!),
               'images/${userId}_${DateTime.timestamp()}_profile.png',
-              'ongprofile')
+              'ongprofile',
+            )
           : null;
 
       final coverImageUrl = ong.coverImageUrl != null
           ? await uploadFile(
               File(ong.coverImageUrl!),
               'images/${userId}_${DateTime.timestamp()}_cover.png',
-              'ongprofile')
+              'ongprofile',
+            )
           : null;
 
-      // Criar a ONG no Supabase
-      final ongInsert = await supabase
-          .from('ongs')
-          .insert({
-            'name': ong.name,
-            'bio': ong.bio,
-            'about': ong.about,
-            'mission': ong.mission,
-            'vision': ong.vision,
-            'phone_number': ong.phoneNumber,
-            'email': ong.email,
-            'website': ong.website,
-            'profile_image_url': profileImageUrl,
-            'cover_image_url': coverImageUrl,
-            'user_id': userId,
-          })
-          .select()
-          .single();
-
-      print(ongInsert);
-
-      final ongId = ongInsert['id'];
-
-      print("criado com sucesso ${ongId}");
-
-      // // Upload dos documentos obrigatórios
+      // Upload dos documentos obrigatórios
       final doc = ong.ongDocument!;
       final statutesUrl = await uploadFile(File(doc.statutesConstitutiveAct!),
           'documents/${uuid}_${userId}_statutes.pdf', 'ongdocs');
+
       final declarationUrl = await uploadFile(
           File(doc.declarationGoodStanding!),
           'documents/${uuid}_${userId}_${DateTime.timestamp()}_declaration.pdf',
           'ongdocs');
+
       final assemblyUrl = await uploadFile(
           File(doc.minutesConstitutiveAssembly!),
           'documents/${uuid}_${userId}_${DateTime.timestamp()}_assembly.pdf',
           'ongdocs');
+
       final publicDeedUrl = await uploadFile(
           File(doc.publicDeed!),
           'documents/${uuid}_${userId}_${DateTime.timestamp()}_public_deed.pdf',
           'ongdocs');
+
       final registrationUrl = doc.registrationCertificate != null
           ? await uploadFile(
               File(doc.registrationCertificate!),
               'documents/${uuid}_${userId}_${DateTime.timestamp()}_registration.pdf',
               'ongdocs')
           : null;
+
       final nifUrl = await uploadFile(
           File(doc.nif!),
           'documents/${uuid}_${userId}_${DateTime.timestamp()}_nif.pdf',
           'ongdocs');
+
       final biUrl = await uploadFile(
           File(doc.biRepresentative!),
           'documents/${uuid}_${userId}_${DateTime.timestamp()}_bi.pdf',
           'ongdocs');
 
-      // Inserir os documentos na tabela `ongs_documents`
-      await supabase.from('ongs_documents').insert({
+      // Chamada da stored procedure
+      final result = await supabase.rpc('create_ong_with_documents', params: {
+        'name': ong.name,
+        'bio': ong.bio,
+        'about': ong.about,
+        'mission': ong.mission,
+        'vision': ong.vision,
+        'phone_number': ong.phoneNumber,
+        'email': ong.email,
+        'website': ong.website,
+        'profile_image_url': profileImageUrl,
+        'cover_image_url': coverImageUrl,
         'user_id': userId,
-        'ong_id': ongId,
         'statutes_constitutive_act': statutesUrl,
         'declaration_good_standing': declarationUrl,
         'minutes_constitutive_assembly': assemblyUrl,
@@ -152,8 +121,11 @@ class OngDataSource extends IOngDataSource {
         'registration_certificate': registrationUrl,
         'nif': nifUrl,
         'bi_representative': biUrl,
-        // 'status': 'pending',
       });
+
+      final ongId = result as String;
+      print("ONG criada com sucesso: $ongId");
+
       return unit;
     } catch (e) {
       print("BUGOU!!! $e");
