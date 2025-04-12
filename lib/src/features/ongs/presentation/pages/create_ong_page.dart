@@ -244,7 +244,7 @@ class _CreateOngPageState extends State<CreateOngPage> {
                 onPressed: () {
                   final ongData = {
                     // Informações gerais
-                    "name": "Associação Esperança Viva2",
+                    "name": "Associação Esperança Viva5",
                     "bio":
                         "ONG voltada para o desenvolvimento comunitário e inclusão social.",
                     "about":

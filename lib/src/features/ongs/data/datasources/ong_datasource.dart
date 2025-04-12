@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../../core/supabase/supabase_consts.dart';
 import '../../domain/entities/ong_entity.dart';
@@ -40,6 +41,7 @@ class OngDataSource extends IOngDataSource {
 
   @override
   Future<Unit> createOng(OngEntity ong) async {
+    final uuid = Uuid().v4();
     print('Ong Details:');
     print('Name: ${ong.name}');
     print('Bio: ${ong.bio}');
@@ -84,68 +86,74 @@ class OngDataSource extends IOngDataSource {
           : null;
 
       // Criar a ONG no Supabase
-      final ongInsert = await supabase.from('ongs').insert({
-        'name': ong.name,
-        'bio': ong.bio,
-        'about': ong.about,
-        'mission': ong.mission,
-        'vision': ong.vision,
-        'phone_number': ong.phoneNumber,
-        'email': ong.email,
-        'website': ong.website,
-        'profile_image_url': profileImageUrl,
-        'cover_image_url': coverImageUrl,
-        'user_id': userId,
-      });
-      // .select()
-      // .single();
+      final ongInsert = await supabase
+          .from('ongs')
+          .insert({
+            'name': ong.name,
+            'bio': ong.bio,
+            'about': ong.about,
+            'mission': ong.mission,
+            'vision': ong.vision,
+            'phone_number': ong.phoneNumber,
+            'email': ong.email,
+            'website': ong.website,
+            'profile_image_url': profileImageUrl,
+            'cover_image_url': coverImageUrl,
+            'user_id': userId,
+          })
+          .select()
+          .single();
 
       print(ongInsert);
 
-      // final ongId = ongInsert['id'];
+      final ongId = ongInsert['id'];
 
-      print("criado com sucesso");
+      print("criado com sucesso ${ongId}");
 
       // // Upload dos documentos obrigatórios
-      // final doc = ong.ongDocument!;
-      // final statutesUrl = await uploadFile(
-      //     File(doc.status!), 'documents/${userId}_statutes.pdf', 'ongdocs');
-      // final declarationUrl = await uploadFile(
-      //     File(doc.declarationGoodStanding!),
-      //     'documents/${userId}_${DateTime.timestamp()}_declaration.pdf',
-      //     'ongdocs');
-      // final assemblyUrl = await uploadFile(
-      //     File(doc.minutesConstitutiveAssembly!),
-      //     'documents/${userId}_${DateTime.timestamp()}_assembly.pdf',
-      //     'ongdocs');
-      // final publicDeedUrl = await uploadFile(
-      //     File(doc.publicDeed!),
-      //     'documents/${userId}_${DateTime.timestamp()}_public_deed.pdf',
-      //     'ongdocs');
-      // final registrationUrl = doc.registrationCertificate != null
-      //     ? await uploadFile(
-      //         File(doc.registrationCertificate!),
-      //         'documents/${userId}_${DateTime.timestamp()}_registration.pdf',
-      //         'ongdocs')
-      //     : null;
-      // final nifUrl = await uploadFile(File(doc.nif!),
-      //     'documents/${userId}_${DateTime.timestamp()}_nif.pdf', 'ongdocs');
-      // final biUrl = await uploadFile(File(doc.biRepresentative!),
-      //     'documents/${userId}_${DateTime.timestamp()}_bi.pdf', 'ongdocs');
+      final doc = ong.ongDocument!;
+      final statutesUrl = await uploadFile(File(doc.statutesConstitutiveAct!),
+          'documents/${uuid}_${userId}_statutes.pdf', 'ongdocs');
+      final declarationUrl = await uploadFile(
+          File(doc.declarationGoodStanding!),
+          'documents/${uuid}_${userId}_${DateTime.timestamp()}_declaration.pdf',
+          'ongdocs');
+      final assemblyUrl = await uploadFile(
+          File(doc.minutesConstitutiveAssembly!),
+          'documents/${uuid}_${userId}_${DateTime.timestamp()}_assembly.pdf',
+          'ongdocs');
+      final publicDeedUrl = await uploadFile(
+          File(doc.publicDeed!),
+          'documents/${uuid}_${userId}_${DateTime.timestamp()}_public_deed.pdf',
+          'ongdocs');
+      final registrationUrl = doc.registrationCertificate != null
+          ? await uploadFile(
+              File(doc.registrationCertificate!),
+              'documents/${uuid}_${userId}_${DateTime.timestamp()}_registration.pdf',
+              'ongdocs')
+          : null;
+      final nifUrl = await uploadFile(
+          File(doc.nif!),
+          'documents/${uuid}_${userId}_${DateTime.timestamp()}_nif.pdf',
+          'ongdocs');
+      final biUrl = await uploadFile(
+          File(doc.biRepresentative!),
+          'documents/${uuid}_${userId}_${DateTime.timestamp()}_bi.pdf',
+          'ongdocs');
 
-      // // Inserir os documentos na tabela `ongs_documents`
-      // await supabase.from('ongs_documents').insert({
-      //   'user_id': userId,
-      //   'ong_id': ongId,
-      //   'statutes_constitutive_act': statutesUrl,
-      //   'declaration_good_standing': declarationUrl,
-      //   'minutes_constitutive_assembly': assemblyUrl,
-      //   'public_deed': publicDeedUrl,
-      //   'registration_certificate': registrationUrl,
-      //   'nif': nifUrl,
-      //   'bi_representative': biUrl,
-      //   // 'status': 'pending',
-      // });
+      // Inserir os documentos na tabela `ongs_documents`
+      await supabase.from('ongs_documents').insert({
+        'user_id': userId,
+        'ong_id': ongId,
+        'statutes_constitutive_act': statutesUrl,
+        'declaration_good_standing': declarationUrl,
+        'minutes_constitutive_assembly': assemblyUrl,
+        'public_deed': publicDeedUrl,
+        'registration_certificate': registrationUrl,
+        'nif': nifUrl,
+        'bi_representative': biUrl,
+        // 'status': 'pending',
+      });
       return unit;
     } catch (e) {
       print("BUGOU!!! $e");
