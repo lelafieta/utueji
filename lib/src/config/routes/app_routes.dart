@@ -24,4 +24,5 @@ class AppRoutes {
   static const String paymentRoute = "/payment";
   static const String profileRoute = "/profile";
   static const String createOngRoute = "/createOng";
+  static const String successRegisterOng = "/successRegisterOng";
 }

@@ -372,7 +372,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
             );
             Get.toNamed(AppRoutes.createCampaignSuccessRoute);
           } else {
-            Get.toNamed(AppRoutes.createCampaignSuccessRoute);
+            // Get.toNamed(AppRoutes.createCampaignSuccessRoute);
           }
         },
         builder: (context, state) {

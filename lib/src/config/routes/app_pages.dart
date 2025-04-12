@@ -29,6 +29,7 @@ import '../../features/feeds/presentation/pages/feed_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/ongs/domain/entities/ong_entity.dart';
 import '../../features/ongs/presentation/pages/ong_profile_page.dart';
+import '../../features/ongs/presentation/pages/success_register_ong_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
 import '../../features/solidary/presentation/pages/solidary_page.dart';
 import '../../features/splash&onboarding/presentation/pages/on_boarding_page.dart';
@@ -433,7 +434,21 @@ class RouteManager {
             );
           },
         );
-
+      case AppRoutes.successRegisterOng:
+        final message = routeSettings.arguments as String;
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return SuccessRegisterOngPage(successMessage: message);
+          },
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return SharedAxisTransition(
+              animation: animation,
+              secondaryAnimation: secondaryAnimation,
+              transitionType: SharedAxisTransitionType.vertical,
+              child: child,
+            );
+          },
+        );
       default:
         return MaterialPageRoute(
           builder: (context) => const Text("Rota não existente"),

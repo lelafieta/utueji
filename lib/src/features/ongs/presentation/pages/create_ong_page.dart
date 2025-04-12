@@ -6,9 +6,12 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:get/get.dart';
+import 'package:utueji/src/config/routes/app_routes.dart';
 import 'package:utueji/src/features/ongs/domain/entities/ong_entity.dart';
 import 'package:utueji/src/features/ongs/presentation/cubit/ong_action_cubit/ong_action_cubit.dart';
 
+import '../../../../core/firebase/local_notification_services.dart';
 import '../../../../core/resources/images/app_images.dart';
 import '../../domain/entities/ong_document_entity.dart';
 
@@ -328,8 +331,15 @@ class _CreateOngPageState extends State<CreateOngPage> {
             EasyLoading.show(
                 status: "Loading", maskType: EasyLoadingMaskType.black);
           } else if (state is OngActionSuccess) {
-            EasyLoading.showInfo(
-                "A sua organização em pendente, aguarde a aprovação ou rejeição. Vamos analizar os seus documentos.");
+            LocalNotificationServices.sendNotification(
+              title: "ONG Registada",
+              body: "Aguarde a aprovação para começar as campanhas.",
+            );
+            Get.toNamed(AppRoutes.successRegisterOng,
+                arguments:
+                    "A sua organização em pendente, aguarde a aprovação ou rejeição. Vamos analizar os seus documentos.");
+            // EasyLoading.showInfo(
+            //     );
           }
         },
         child: Column(
@@ -671,9 +681,9 @@ class _CreateOngPageState extends State<CreateOngPage> {
                     TextSpan(
                       text: "Imagens da ONG",
                     ),
-                    // TextSpan(
-                    //     text: "*",
-                    //     style: TextStyle(color: Colors.red, fontSize: 16))
+                    TextSpan(
+                        text: "*",
+                        style: TextStyle(color: Colors.red, fontSize: 16))
                   ],
                 ),
               ),
@@ -688,9 +698,9 @@ class _CreateOngPageState extends State<CreateOngPage> {
                 previewImages: true,
                 initialValue: _selectedProfileFiles,
                 allowedExtensions: ['jpg', 'jpeg', 'png'],
-                // validator: FormBuilderValidators.required(
-                //   errorText: "Campo obrigatório",
-                // ),
+                validator: FormBuilderValidators.required(
+                  errorText: "Campo obrigatório",
+                ),
                 onChanged: (val) {
                   setState(() {
                     _selectedProfileFiles = val;
@@ -721,9 +731,9 @@ class _CreateOngPageState extends State<CreateOngPage> {
                 previewImages: true,
                 initialValue: _selectedCoverFiles,
                 allowedExtensions: ['jpg', 'jpeg', 'png'],
-                // validator: FormBuilderValidators.required(
-                //   errorText: "Campo obrigatório",
-                // ),
+                validator: FormBuilderValidators.required(
+                  errorText: "Campo obrigatório",
+                ),
                 onChanged: (val) {
                   setState(() {
                     _selectedCoverFiles = val;
