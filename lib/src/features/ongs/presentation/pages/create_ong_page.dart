@@ -71,10 +71,10 @@ class _CreateOngPageState extends State<CreateOngPage> {
       } else {
         // Submissão final
         final allData = {
-          ..._formStepOneKey.currentState!.value,
-          ..._formStepTwoKey.currentState!.value,
-          ..._formStepThreeKey.currentState!.value,
-          ..._formStepFourKey.currentState!.value,
+          ...(_formStepOneKey.currentState?.value ?? {}),
+          ...(_formStepTwoKey.currentState?.value ?? {}),
+          ...(_formStepThreeKey.currentState?.value ?? {}),
+          ...(_formStepFourKey.currentState?.value ?? {}),
         };
         print("Dados finais: $allData");
       }
@@ -84,32 +84,35 @@ class _CreateOngPageState extends State<CreateOngPage> {
   }
 
   void _searchPlaces() {
-    // AwesomePlaceSearch(
+    AwesomePlaceSearch(
+      context: context,
+      apiKey: googleApiKey!,
+      countries: ["ao"],
+      errorText: "Alguma coisa correu mal",
+      hint: "Pesquisar uma localização",
+      dividerItemColor: Colors.grey.withOpacity(.5),
+      dividerItemWidth: .5,
+      elevation: 5,
+      indicatorColor: Colors.blue,
+      modalBorderRadius: 50.0,
+      onTap: (value) async {
+        print(value);
+        final result = await value;
+        controllerLocation.text = result.description!;
+      },
+    ).show();
+    // showModalBottomSheet(
     //   context: context,
-    //   apiKey: googleApiKey!,
-    //   countries: ["ao"],
-    //   errorText: "Alguma coisa correu mal",
-    //   hint: "Pesquisar uma localização",
-    //   dividerItemColor: Colors.grey.withOpacity(.5),
-    //   dividerItemWidth: .5,
-    //   elevation: 5,
-    //   indicatorColor: Colors.blue,
-    //   modalBorderRadius: 50.0,
-    //   onTap: (value) async {
-    //     print(value);
-    //     final result = await value;
-    //     controllerLocation.text = result.description!;
+    //   builder: (context) {
+    //     return Container(
+    //       padding: EdgeInsets.all(16),
+    //       decoration: BoxDecoration(
+    //         color: Colors.white,
+    //         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+    //       ),
+    //     );
     //   },
-    // ).show();
-    showBottomSheet(
-        context: context,
-        builder: (context) {
-          return Container(
-            width: double.infinity,
-            height: 100,
-            child: Text("data"),
-          );
-        });
+    // );
   }
 
   Widget getStepContent(int step) {
@@ -419,16 +422,34 @@ class _CreateOngPageState extends State<CreateOngPage> {
                   errorText: 'Campo Obrigatório',
                 ),
                 controller: controllerLocation,
-                readOnly: true,
-                onTap: () {
-                  _searchPlaces();
-                },
+                readOnly: false,
+                onTap: () {},
                 decoration: InputDecoration(
                   hintText: "Localização",
                   suffixIcon: Icon(Icons.search),
                 ),
               ),
             ),
+
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(vertical: 8),
+            //   child: FormBuilderTextField(
+            //     name: "location",
+            //     autovalidateMode: AutovalidateMode.onUserInteraction,
+            //     validator: FormBuilderValidators.required(
+            //       errorText: 'Campo Obrigatório',
+            //     ),
+            //     controller: controllerLocation,
+            //     readOnly: true,
+            //     onTap: () {
+            //       _searchPlaces();
+            //     },
+            //     decoration: InputDecoration(
+            //       hintText: "Localização",
+            //       suffixIcon: Icon(Icons.search),
+            //     ),
+            //   ),
+            // ),
 
             // FormBuilderDropdown(
             //   name: "status",

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../config/routes/app_pages.dart';
 import '../config/themes/app_theme.dart';
 import '../app/di.dart' as di;
+import '../features/auth/presentation/cubit/auth_data/auth_data_cubit.dart';
 import '../features/blogs/presentation/cubit/blog_cubit.dart';
 import '../features/auth/presentation/cubit/auth_cubit.dart';
 import '../features/auth/presentation/cubit/initial_cubit/initial_cubit.dart';
@@ -24,6 +25,7 @@ import '../features/home/presentation/cubit/home_profile_data_cubit/home_profile
 import '../features/ongs/presentation/cubit/ong_cubit.dart';
 import '../features/profile/presentation/cubit/count_donation_cubit/count_donation_cubit.dart';
 import '../features/profile/presentation/cubit/profile_cubit.dart';
+import '../features/solidary/cubit/solidary_cubit.dart';
 
 class UtuejiApp extends StatelessWidget {
   const UtuejiApp({super.key});
@@ -52,7 +54,10 @@ class UtuejiApp extends StatelessWidget {
             create: (_) =>
                 di.instance<HomeProfileDataCubit>()..getUserProfile()),
         BlocProvider(create: (_) => di.instance<ProfileCubit>()..getProfile()),
-        BlocProvider(create: (_) => di.instance<CountDonationCubit>())
+        BlocProvider(create: (_) => di.instance<CountDonationCubit>()),
+        BlocProvider(
+            create: (_) => di.instance<SolidaryCubit>()..getUserData()),
+        BlocProvider(create: (_) => di.instance<AuthDataCubit>()..getUserData())
       ],
       child: GetMaterialApp(
         theme: AppTheme.lightTheme,

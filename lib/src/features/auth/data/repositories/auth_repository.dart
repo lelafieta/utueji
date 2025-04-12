@@ -62,7 +62,13 @@ class AuthRespository extends IAuthRepository {
   }
 
   @override
-  Stream<UserEntity> authUser() {
-    return datasource.authUser();
+  Future<Either<Failure, UserEntity>> authUser() async {
+    try {
+      UserEntity? response = await datasource.authUser();
+      return Right(response);
+    } catch (e) {
+      debugPrint("object ${e}");
+      return Left(ServerFailure(message: e.toString()));
+    }
   }
 }

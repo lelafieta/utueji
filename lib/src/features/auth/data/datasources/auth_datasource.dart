@@ -70,17 +70,18 @@ class AuthDataSource implements IAuthDataSource {
   }
 
   @override
-  Stream<UserModel> authUser() {
-    return supabase
-        .from(SupabaseConsts.profiles)
-        .stream(primaryKey: ["id"])
-        .eq("id", supabase.auth.currentUser!.id)
-        .map((event) {
-          if (event.isNotEmpty) {
-            return UserModel.fromJson(event.first);
-          } else {
-            throw ServerFailure(message: 'Usuário não encontrado.');
-          }
-        });
+  Future<UserModel> authUser() async {
+    try {
+      final profileResponse = await supabase
+          .from(SupabaseConsts.profiles)
+          .select()
+          .eq('id', supabase.auth.currentUser!.id)
+          .single();
+
+      return UserModel.fromJson(profileResponse);
+    } catch (e) {
+      print(e);
+      throw ServerFailure(message: 'Erro ao buscar usuário autenticado.');
+    }
   }
 }

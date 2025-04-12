@@ -7,6 +7,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:utueji/src/features/solidary/cubit/solidary_cubit.dart';
 import '../core/cache/secure_storage.dart';
 import '../core/network/i_network_info.dart';
 import '../core/network/network_info.dart';
@@ -21,6 +22,7 @@ import '../features/auth/domain/usecases/sign_in_with_otp_usecase.dart';
 import '../features/auth/domain/usecases/sign_out_usecase.dart';
 import '../features/auth/domain/usecases/sign_up_usecase.dart';
 import '../features/auth/presentation/cubit/auth_cubit.dart';
+import '../features/auth/presentation/cubit/auth_data/auth_data_cubit.dart';
 import '../features/auth/presentation/cubit/initial_cubit/initial_cubit.dart';
 import '../features/blogs/data/datasources/blog_datasource.dart';
 import '../features/blogs/data/datasources/i_blog_datasource.dart';
@@ -173,6 +175,9 @@ void _setUpCubits() {
 
   instance.registerFactory(
       () => CountDonationCubit(getCountMyDonationsUseCase: instance()));
+
+  instance.registerFactory(() => SolidaryCubit(getAuthUserUseCase: instance()));
+  instance.registerFactory(() => AuthDataCubit(getAuthUserUseCase: instance()));
 }
 
 void _setUpUsecases() {

@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:utueji/src/config/routes/app_routes.dart';
 import 'package:utueji/src/features/home/presentation/pages/home_page.dart';
+import 'package:utueji/src/features/profile/presentation/cubit/profile_cubit.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
 import '../../../auth/presentation/cubit/auth_cubit.dart';
@@ -15,6 +16,7 @@ import '../../../chat/presentation/pages/chat_page.dart';
 import '../../../explore/presentation/pages/explore_page.dart';
 import '../../../home/presentation/cubit/home_profile_data_cubit/home_profile_data_cubit.dart';
 import '../../../profile/presentation/cubit/count_donation_cubit/count_donation_cubit.dart';
+import '../../cubit/solidary_cubit.dart';
 
 class SolidaryPage extends StatefulWidget {
   final int? currentIndex;
@@ -78,63 +80,73 @@ class _SolidaryPageState extends State<SolidaryPage> {
     }
     super.initState();
     context.read<CountDonationCubit>()..counter();
+    context.read<ProfileCubit>()..getProfile();
+    // context.read<SolidaryCubit>()..getUserData();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocListener<AuthCubit, AuthState>(
-        listener: (context, state) {
-          EasyLoading.dismiss();
-          if (state is AuthLoading) {
-            EasyLoading.show(status: "Processando...");
-          } else if (state is AuthFailure) {
-            EasyLoading.show(status: "${state.failure}");
-          } else if (state is AuthSignedOut) {
-            Get.toNamed(AppRoutes.loginRoute);
-          }
-        },
-        child: pages[_currentIndex],
-      ),
-      bottomNavigationBar: AnimatedBottomNavigationBar.builder(
-        itemCount: menuItems.length,
-        tabBuilder: (int index, bool isActive) {
-          final menuItem = menuItems[index]; // Obtém o item do menu atual
-          final color = isActive ? AppColors.primaryColor : Colors.grey;
-
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SvgPicture.asset(
-                menuItem.currentIconPath,
-                width: 20,
-                height: 20,
-                colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-              ),
-              const SizedBox(height: 4), // Espaçamento entre ícone e texto
-              Text(
-                menuItem.title,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: color,
-                  fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-                ),
-              ),
-            ],
+      body: BlocBuilder<SolidaryCubit, SolidaryState>(
+        builder: (context, state) {
+          return BlocListener<AuthCubit, AuthState>(
+            listener: (context, state) {
+              EasyLoading.dismiss();
+              if (state is AuthLoading) {
+                EasyLoading.show(status: "Processando...");
+              } else if (state is AuthFailure) {
+                EasyLoading.show(status: "${state.failure}");
+              } else if (state is AuthSignedOut) {
+                Get.toNamed(AppRoutes.loginRoute);
+              }
+            },
+            child: pages[_currentIndex],
           );
         },
-        activeIndex: _currentIndex,
-        gapLocation: GapLocation.none,
-        notchSmoothness: NotchSmoothness.softEdge,
-        onTap: (index) => setState(() {
-          _currentIndex = index;
-
-          for (int i = 0; i < menuItems.length; i++) {
-            menuItems[i] = menuItems[i].copyWith(isActive: i == index);
-          }
-        }),
       ),
+      bottomNavigationBar: buttomNavigationBar(),
+    );
+  }
+
+  AnimatedBottomNavigationBar buttomNavigationBar() {
+    return AnimatedBottomNavigationBar.builder(
+      itemCount: menuItems.length,
+      tabBuilder: (int index, bool isActive) {
+        final menuItem = menuItems[index]; // Obtém o item do menu atual
+        final color = isActive ? AppColors.primaryColor : Colors.grey;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              menuItem.currentIconPath,
+              width: 20,
+              height: 20,
+              colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+            ),
+            const SizedBox(height: 4), // Espaçamento entre ícone e texto
+            Text(
+              menuItem.title,
+              style: TextStyle(
+                fontSize: 12,
+                color: color,
+                fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
+          ],
+        );
+      },
+      activeIndex: _currentIndex,
+      gapLocation: GapLocation.none,
+      notchSmoothness: NotchSmoothness.softEdge,
+      onTap: (index) => setState(() {
+        _currentIndex = index;
+
+        for (int i = 0; i < menuItems.length; i++) {
+          menuItems[i] = menuItems[i].copyWith(isActive: i == index);
+        }
+      }),
     );
   }
 }

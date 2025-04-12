@@ -15,8 +15,8 @@ class ProfileCubit extends Cubit<ProfileState> {
     emit(ProfileLoading());
     final result = await getAuthUserUseCase.call(const NoParams());
 
-    result.listen((user) {
-      emit(ProfileLoaded(user: user));
-    });
+    // result.listen((user) {
+    //   emit(ProfileLoaded(user: user));
+    // });
   }
 }

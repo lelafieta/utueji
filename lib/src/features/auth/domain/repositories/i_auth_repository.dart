@@ -10,5 +10,5 @@ abstract class IAuthRepository {
   Future<Either<Failure, Unit>> signOut();
   Future<Either<Failure, Unit>> signInWithOtp(String phone);
   Future<Either<Failure, bool>> isSignedIn();
-  Stream<UserEntity> authUser();
+  Future<Either<Failure, UserEntity>> authUser();
 }

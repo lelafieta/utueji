@@ -6,7 +6,7 @@ abstract class IAuthDataSource {
   Future<UserModel?> signIn(String email, String password);
   Future<UserModel?> signUp(String email, String password);
   Future<Unit> signInWithOtp(String phone);
-  Stream<UserModel> authUser();
+  Future<UserModel> authUser();
   Future<Unit> signOut();
   Future<bool> isSignIn();
 }
