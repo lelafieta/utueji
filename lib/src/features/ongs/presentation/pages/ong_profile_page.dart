@@ -3,16 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sliver_snap/widgets/sliver_snap.dart';
 import 'package:utueji/src/features/campaigns/presentation/widgets/campaign_skeleton_widget.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
 import '../../../../core/resources/images/app_images.dart';
 import '../../../../core/utils/app_date_utils_helper.dart';
-import '../../../../core/utils/app_utils.dart';
 import '../../../campaigns/presentation/cubit/campaign_cubit.dart';
 import '../../../campaigns/presentation/cubit/campaign_state.dart';
-import '../../../campaigns/presentation/cubit/campaign_urgent_cubit/campaign_urgent_cubit.dart';
-import '../../../campaigns/presentation/cubit/campaign_urgent_cubit/campaign_urgent_state.dart';
 import '../../../campaigns/presentation/widgets/campaign_widget.dart';
 import '../../../events/presentation/cubit/event_cubit.dart';
 import '../../../events/presentation/cubit/event_state.dart';
@@ -35,8 +33,159 @@ class _OngProfilePageState extends State<OngProfilePage> {
   ValueNotifier<Color> color = ValueNotifier(AppColors.whiteColor);
   List<String> menuList = ["Recentes", "Campanhas", "Eventos", "Blogs"];
   int selected = 0;
+
+  final ScrollController _scrollController = ScrollController();
+  final GlobalKey _item8Key = GlobalKey();
+
+  bool _showSticky = false;
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_checkItem8Visibility);
+  }
+
+  void _checkItem8Visibility() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_item8Key.currentContext == null) return;
+
+      final RenderBox box =
+          _item8Key.currentContext!.findRenderObject() as RenderBox;
+      final offset = box.localToGlobal(Offset.zero);
+
+      setState(() {
+        _showSticky = offset.dy <= 0;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_checkItem8Visibility);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    // return SingleChildScrollView(
+    //   child: Column(
+    //     children: [
+    //       Container(
+    //         width: double.infinity,
+    //         height: 200,
+    //         color: Colors.red,
+    //         child: Stack(),
+    //       ),
+    //     ],
+    //   ),
+    // );
+
+    return SingleChildScrollView(
+      child: Column(
+        children: [],
+      ),
+    );
+
+    return Stack(
+      children: [
+        ListView.builder(
+          controller: _scrollController,
+          itemCount: 100,
+          itemBuilder: (context, index) {
+            if (index == 50) {
+              return Container(
+                key: _item8Key,
+                padding: const EdgeInsets.all(16),
+                color: Colors.orange.shade200,
+                child: const Text(
+                  '8',
+                  style: TextStyle(fontSize: 22),
+                ),
+              );
+            }
+            return Container(
+              padding: const EdgeInsets.all(16),
+              child: Text('Item $index'),
+            );
+          },
+        ),
+        if (_showSticky)
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              color: Colors.orange,
+              padding: const EdgeInsets.all(16),
+              child: const Text(
+                '8',
+                style: TextStyle(fontSize: 22, color: Colors.white),
+              ),
+            ),
+          ),
+      ],
+    );
+
+    // return SliverSnap(
+    //   onCollapseStateChanged: (isCollapsed, scrollingOffset, maxExtent) {},
+    //   collapsedBackgroundColor: Colors.black,
+    //   expandedBackgroundColor: Colors.transparent,
+    //   backdropWidget: Container(
+    //     color: Colors.red,
+    //   ),
+    //   bottom: const PreferredSize(
+    //     preferredSize: Size.fromHeight(50),
+    //     child: Icon(
+    //       Icons.directions_boat,
+    //       color: Colors.blue,
+    //       size: 45,
+    //     ),
+    //   ),
+    //   expandedContentHeight: 500,
+    //   expandedContent: Column(
+    //     children: [
+    //       Container(
+    //         width: double.infinity,
+    //         height: 200,
+    //         color: Colors.yellow,
+    //         child: Stack(
+    //           children: [
+    //             SizedBox(
+    //               width: double.infinity,
+    //               height: double.infinity,
+    //               child: CachedNetworkImage(
+    //                 imageUrl: widget.ong.coverImageUrl!,
+    //                 fit: BoxFit.cover,
+    //                 progressIndicatorBuilder:
+    //                     (context, url, downloadProgress) =>
+    //                         CircularProgressIndicator(
+    //                             value: downloadProgress.progress),
+    //                 errorWidget: (context, url, error) =>
+    //                     const Icon(Icons.error),
+    //               ),
+    //             ),
+    //             Positioned(
+    //               left: 0,
+    //               right: 0,
+    //               bottom: 0,
+    //               top: 0,
+    //               child: Container(
+    //                 color: Colors.black26,
+    //               ),
+    //             )
+    //           ],
+    //         ),
+    //       ),
+    //     ],
+    //   ),
+    //   collapsedContent:
+    //       const Icon(Icons.car_crash, color: Colors.green, size: 45),
+    //   body: const Material(
+    //     elevation: 7,
+    //     child: Placeholder(),
+    //   ),
+    // );
+
     return NestedScrollView(
       headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
         if (innerBoxIsScrolled) {
@@ -523,65 +672,9 @@ class _OngProfilePageState extends State<OngProfilePage> {
               Container(
                 width: double.infinity,
                 height: 45,
-                decoration: BoxDecoration(
-                    // border: Border(
-                    //   bottom: BorderSide(
-                    //     width: 2,
-                    //     color: Colors.black12,
-                    //   ),
-                    // ),
-                    ),
-                child: ListView.separated(
-                  physics: const ClampingScrollPhysics(),
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        setState(() {
-                          selected = index;
-                        });
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                        ),
-                        decoration: BoxDecoration(
-                          border: (index == selected)
-                              ? const Border(
-                                  bottom: BorderSide(
-                                    width: 2,
-                                    color: Colors.black,
-                                  ),
-                                )
-                              : Border.all(width: 0, color: Colors.transparent),
-                        ),
-                        child: Center(
-                          child: Text(
-                            menuList[index].toString(),
-                            style: (index != selected)
-                                ? Theme.of(context).textTheme.bodyMedium
-                                : Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return const SizedBox(
-                      width: 10,
-                    );
-                  },
-                  itemCount: menuList.length,
-                ),
+                decoration: BoxDecoration(),
               ),
-              _menuWidget(),
+              // _menuWidget(),
             ],
           ),
         ),
