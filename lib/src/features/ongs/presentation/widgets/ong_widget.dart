@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -48,21 +49,26 @@ class OngWidget extends StatelessWidget {
               ),
               title: Row(
                 children: [
-                  Text(
-                    "${ong.name}",
-                    overflow: TextOverflow.ellipsis,
+                  Flexible(
+                    child: Text(
+                      "${ong.name}",
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                   const SizedBox(width: 5),
-                  Expanded(
-                    child: SvgPicture.asset(
-                      width: 16,
-                      AppIcons.shieldTrust,
-                      color: AppColors.blueColor,
-                    ),
+                  SvgPicture.asset(
+                    width: 16,
+                    AppIcons.shieldTrust,
+                    color: AppColors.blueColor,
                   ),
                 ],
               ),
-              subtitle: Text("${ong.bio}"),
+              subtitle: Text(
+                "${ong.bio}",
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             Container(
               padding: const EdgeInsets.all(10),
