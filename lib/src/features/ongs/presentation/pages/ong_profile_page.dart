@@ -38,8 +38,8 @@ class _OngProfilePageState extends State<OngProfilePage> {
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _topoKey = GlobalKey();
 
-  bool _showSticky = false;
-  bool _showStickyTopo = false;
+  ValueNotifier<bool> _showSticky = ValueNotifier(false);
+  ValueNotifier<bool> _showStickyTopo = ValueNotifier(false);
   final GlobalKey _stickyKey = GlobalKey();
   @override
   void initState() {
@@ -64,15 +64,11 @@ class _OngProfilePageState extends State<OngProfilePage> {
         final isNowStickyTopo = offsetTopo.dy <= kToolbarHeight;
 
         if (_showSticky != isNowSticky) {
-          setState(() {
-            _showSticky = isNowSticky;
-          });
+          _showSticky.value = isNowSticky;
         }
 
         if (_showStickyTopo != isNowStickyTopo) {
-          setState(() {
-            _showStickyTopo = isNowStickyTopo;
-          });
+          _showStickyTopo.value = isNowStickyTopo;
         }
       });
     });
@@ -625,117 +621,122 @@ class _OngProfilePageState extends State<OngProfilePage> {
                     ),
                   ),
 
-                  // ListView.builder(
-                  //   shrinkWrap: true,
-                  //   physics: const NeverScrollableScrollPhysics(),
-                  //   itemCount: 40,
-                  //   itemBuilder: (context, index) {
-                  //     return ListTile(
-                  //       leading: CircleAvatar(
-                  //         child: Text('${index + 1}'),
-                  //       ),
-                  //       title: Text('Item ${index + 1}'),
-                  //       subtitle: Text('Subtitle for item ${index + 1}'),
-                  //     );
-                  //   },
-                  // )
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: 40,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        leading: CircleAvatar(
+                          child: Text('${index + 1}'),
+                        ),
+                        title: Text('Item ${index + 1}'),
+                        subtitle: Text('Subtitle for item ${index + 1}'),
+                      );
+                    },
+                  )
 
-                  _menuWidget(),
+                  // _menuWidget(),
                 ],
               ),
             ),
-            if (_showStickyTopo)
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: Material(
-                  elevation: 4,
-                  color: AppColors.primaryColor,
-                  child: Container(
-                    width: double.infinity,
-                    // height: 50,
-                    // color: Colors.red,
-                    child: SafeArea(
-                      child: ListTile(
-                        leading: IconButton(
-                          onPressed: () {
-                            Get.back();
-                          },
-                          icon: Icon(
-                            Icons.arrow_back,
-                            color: Colors.white,
-                          ),
-                        ),
-                        title: Text(
-                          widget.ong.name!,
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        trailing: IconButton(
-                          onPressed: () {
-                            Get.back();
-                          },
-                          icon: Icon(
-                            Icons.share,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            if (_showSticky)
-              Positioned(
-                top: 60,
-                left: 0,
-                right: 0,
-                child: Material(
-                  elevation: 4,
-                  color: AppColors.primaryColor,
-                  child: Container(
-                    width: double.infinity,
-                    // height: 50,
-                    // color: Colors.red,
-                    child: SafeArea(
-                      child: TabBar(
-                        isScrollable: true,
-                        indicator: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: AppColors.whiteColor,
-                              width: 3,
+            ValueListenableBuilder<bool>(
+              valueListenable: _showStickyTopo,
+              builder: (context, showStickyTopo, child) {
+                if (showStickyTopo) {
+                  return Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    child: Material(
+                      elevation: 4,
+                      color: AppColors.primaryColor,
+                      child: Container(
+                        width: double.infinity,
+                        child: SafeArea(
+                          child: ListTile(
+                            leading: IconButton(
+                              onPressed: () {
+                                Get.back();
+                              },
+                              icon: Icon(
+                                Icons.arrow_back,
+                                color: Colors.white,
+                              ),
+                            ),
+                            title: Text(
+                              widget.ong.name!,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            trailing: IconButton(
+                              onPressed: () {
+                                Get.back();
+                              },
+                              icon: Icon(
+                                Icons.share,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
-                        labelColor: AppColors.whiteColor,
-                        unselectedLabelColor: Colors.white60,
-                        indicatorColor: AppColors.primaryColor,
-                        automaticIndicatorColorAdjustment: true,
-                        tabs: [
-                          Tab(
-                            // icon:
-                            //     Icon(Icons.access_time, color: AppColors.blackColor),
-                            text: 'Recentes',
-                          ),
-                          Tab(
-                            // icon: Icon(Icons.campaign, color: AppColors.blackColor),
-                            text: 'Campanhas',
-                          ),
-                          Tab(
-                            // icon: Icon(Icons.event, color: AppColors.blackColor),
-                            text: 'Eventos',
-                          ),
-                          Tab(
-                            // icon: Icon(Icons.article, color: AppColors.blackColor),
-                            text: 'Blogs',
-                          ),
-                        ],
                       ),
                     ),
-                  ),
-                ),
-              ),
+                  );
+                }
+                return SizedBox.shrink();
+              },
+            ),
+            ValueListenableBuilder<bool>(
+              valueListenable: _showSticky,
+              builder: (context, showSticky, child) {
+                if (showSticky) {
+                  return Positioned(
+                    top: 60,
+                    left: 0,
+                    right: 0,
+                    child: Material(
+                      elevation: 4,
+                      color: AppColors.primaryColor,
+                      child: Container(
+                        width: double.infinity,
+                        child: SafeArea(
+                          child: TabBar(
+                            isScrollable: true,
+                            indicator: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: AppColors.whiteColor,
+                                  width: 3,
+                                ),
+                              ),
+                            ),
+                            labelColor: AppColors.whiteColor,
+                            unselectedLabelColor: Colors.white60,
+                            indicatorColor: AppColors.primaryColor,
+                            automaticIndicatorColorAdjustment: true,
+                            tabs: [
+                              Tab(
+                                text: 'Recentes',
+                              ),
+                              Tab(
+                                text: 'Campanhas',
+                              ),
+                              Tab(
+                                text: 'Eventos',
+                              ),
+                              Tab(
+                                text: 'Blogs',
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }
+                return SizedBox.shrink();
+              },
+            ),
           ],
         ),
       ),
