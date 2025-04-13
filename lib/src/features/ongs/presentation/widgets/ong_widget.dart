@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:utueji/src/config/routes/app_routes.dart';
@@ -32,21 +33,32 @@ class OngWidget extends StatelessWidget {
               titleAlignment: ListTileTitleAlignment.center,
               leading: ClipRRect(
                 borderRadius: BorderRadius.circular(50),
-                child: CachedNetworkImage(
-                  imageUrl: ong.profileImageUrl!,
-                  placeholder: (context, url) =>
-                      const CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
-                ),
+                child: (ong.profileImageUrl == null)
+                    ? Image.asset(AppImages.coverBackground)
+                    : CachedNetworkImage(
+                        imageUrl: ong.profileImageUrl!,
+                        width: 55,
+                        height: 55,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) =>
+                            const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      ),
               ),
               title: Row(
                 children: [
-                  Text("${ong.name}"),
+                  Text(
+                    "${ong.name}",
+                    overflow: TextOverflow.ellipsis,
+                  ),
                   const SizedBox(width: 5),
-                  SvgPicture.asset(
-                    width: 16,
-                    AppIcons.shieldTrust,
-                    color: AppColors.blueColor,
+                  Expanded(
+                    child: SvgPicture.asset(
+                      width: 16,
+                      AppIcons.shieldTrust,
+                      color: AppColors.blueColor,
+                    ),
                   ),
                 ],
               ),
