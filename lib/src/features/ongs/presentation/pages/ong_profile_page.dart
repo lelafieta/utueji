@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:sliver_snap/widgets/sliver_snap.dart';
 import 'package:utueji/src/features/campaigns/presentation/widgets/campaign_skeleton_widget.dart';
 import '../../../../config/themes/app_colors.dart';
@@ -35,9 +36,10 @@ class _OngProfilePageState extends State<OngProfilePage> {
   int selected = 0;
 
   final ScrollController _scrollController = ScrollController();
-  final GlobalKey _item8Key = GlobalKey();
+  final GlobalKey _topoKey = GlobalKey();
 
   bool _showSticky = false;
+  bool _showStickyTopo = false;
   final GlobalKey _stickyKey = GlobalKey();
   @override
   void initState() {
@@ -49,16 +51,27 @@ class _OngProfilePageState extends State<OngProfilePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (_stickyKey.currentContext == null) return;
+        if (_topoKey.currentContext == null) return;
 
         final RenderBox box =
             _stickyKey.currentContext!.findRenderObject() as RenderBox;
+        final RenderBox boxTopo =
+            _topoKey.currentContext!.findRenderObject() as RenderBox;
         final offset = box.localToGlobal(Offset.zero);
+        final offsetTopo = boxTopo.localToGlobal(Offset.zero);
 
         final isNowSticky = offset.dy <= kToolbarHeight;
+        final isNowStickyTopo = offsetTopo.dy <= kToolbarHeight;
 
         if (_showSticky != isNowSticky) {
           setState(() {
             _showSticky = isNowSticky;
+          });
+        }
+
+        if (_showStickyTopo != isNowStickyTopo) {
+          setState(() {
+            _showStickyTopo = isNowStickyTopo;
           });
         }
       });
@@ -107,26 +120,41 @@ class _OngProfilePageState extends State<OngProfilePage> {
                           left: 0,
                           right: 0,
                           bottom: 50,
-                          child: Container(
-                            color: Colors.yellow,
-                            child: SizedBox(
-                              width: double.infinity,
-                              height: double.infinity,
-                              child: CachedNetworkImage(
-                                imageUrl: widget.ong.coverImageUrl!,
-                                fit: BoxFit.cover,
-                                progressIndicatorBuilder:
-                                    (context, url, downloadProgress) =>
-                                        Container(
-                                  width: 50,
-                                  height: 50,
-                                  child: CircularProgressIndicator(
-                                      value: downloadProgress.progress),
+                          child: Stack(
+                            children: [
+                              Container(
+                                // color: Colors.yellow,
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                  child: CachedNetworkImage(
+                                    imageUrl: widget.ong.coverImageUrl!,
+                                    fit: BoxFit.cover,
+                                    progressIndicatorBuilder:
+                                        (context, url, downloadProgress) =>
+                                            Container(
+                                      width: 50,
+                                      height: 50,
+                                      child: CircularProgressIndicator(
+                                          value: downloadProgress.progress),
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
+                                  ),
                                 ),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
                               ),
-                            ),
+                              Positioned(
+                                left: 0,
+                                right: 0,
+                                top: 0,
+                                bottom: 0,
+                                child: Container(
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                  color: Colors.black26.withOpacity(.5),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         Positioned(
@@ -165,6 +193,30 @@ class _OngProfilePageState extends State<OngProfilePage> {
                             ),
                           ),
                         ),
+                        Positioned(
+                          child: SafeArea(
+                            child: ListTile(
+                              leading: IconButton(
+                                onPressed: () {
+                                  Get.back();
+                                },
+                                icon: Icon(
+                                  Icons.arrow_back,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              trailing: IconButton(
+                                onPressed: () {
+                                  Get.back();
+                                },
+                                icon: Icon(
+                                  Icons.share,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -190,6 +242,7 @@ class _OngProfilePageState extends State<OngProfilePage> {
                     ),
                   ),
                   Padding(
+                    key: _topoKey,
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(widget.ong.bio!),
                   ),
@@ -584,9 +637,50 @@ class _OngProfilePageState extends State<OngProfilePage> {
                 ],
               ),
             ),
-            if (_showSticky)
+            if (_showStickyTopo)
               Positioned(
                 top: 0,
+                left: 0,
+                right: 0,
+                child: Material(
+                  elevation: 4,
+                  color: AppColors.primaryColor,
+                  child: Container(
+                    width: double.infinity,
+                    // height: 50,
+                    // color: Colors.red,
+                    child: SafeArea(
+                      child: ListTile(
+                        leading: IconButton(
+                          onPressed: () {
+                            Get.back();
+                          },
+                          icon: Icon(
+                            Icons.arrow_back,
+                            color: Colors.white,
+                          ),
+                        ),
+                        title: Text(
+                          widget.ong.name!,
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        trailing: IconButton(
+                          onPressed: () {
+                            Get.back();
+                          },
+                          icon: Icon(
+                            Icons.share,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            if (_showSticky)
+              Positioned(
+                top: 60,
                 left: 0,
                 right: 0,
                 child: Material(
@@ -640,45 +734,45 @@ class _OngProfilePageState extends State<OngProfilePage> {
       ),
     );
 
-    return Stack(
-      children: [
-        ListView.builder(
-          controller: _scrollController,
-          itemCount: 100,
-          itemBuilder: (context, index) {
-            if (index == 50) {
-              return Container(
-                key: _item8Key,
-                padding: const EdgeInsets.all(16),
-                color: Colors.orange.shade200,
-                child: const Text(
-                  '8',
-                  style: TextStyle(fontSize: 22),
-                ),
-              );
-            }
-            return Container(
-              padding: const EdgeInsets.all(16),
-              child: Text('Item $index'),
-            );
-          },
-        ),
-        if (_showSticky)
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              color: Colors.orange,
-              padding: const EdgeInsets.all(16),
-              child: const Text(
-                '8',
-                style: TextStyle(fontSize: 22, color: Colors.white),
-              ),
-            ),
-          ),
-      ],
-    );
+    // return Stack(
+    //   children: [
+    //     ListView.builder(
+    //       controller: _scrollController,
+    //       itemCount: 100,
+    //       itemBuilder: (context, index) {
+    //         if (index == 50) {
+    //           return Container(
+    //             key: _item8Key,
+    //             padding: const EdgeInsets.all(16),
+    //             color: Colors.orange.shade200,
+    //             child: const Text(
+    //               '8',
+    //               style: TextStyle(fontSize: 22),
+    //             ),
+    //           );
+    //         }
+    //         return Container(
+    //           padding: const EdgeInsets.all(16),
+    //           child: Text('Item $index'),
+    //         );
+    //       },
+    //     ),
+    //     if (_showSticky)
+    //       Positioned(
+    //         top: 0,
+    //         left: 0,
+    //         right: 0,
+    //         child: Container(
+    //           color: Colors.orange,
+    //           padding: const EdgeInsets.all(16),
+    //           child: const Text(
+    //             '8',
+    //             style: TextStyle(fontSize: 22, color: Colors.white),
+    //           ),
+    //         ),
+    //       ),
+    //   ],
+    // );
 
     // return SliverSnap(
     //   onCollapseStateChanged: (isCollapsed, scrollingOffset, maxExtent) {},
