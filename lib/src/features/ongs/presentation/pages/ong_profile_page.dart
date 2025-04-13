@@ -38,6 +38,7 @@ class _OngProfilePageState extends State<OngProfilePage> {
   final GlobalKey _item8Key = GlobalKey();
 
   bool _showSticky = false;
+  final GlobalKey _stickyKey = GlobalKey();
   @override
   void initState() {
     super.initState();
@@ -46,14 +47,20 @@ class _OngProfilePageState extends State<OngProfilePage> {
 
   void _checkItem8Visibility() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_item8Key.currentContext == null) return;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_stickyKey.currentContext == null) return;
 
-      final RenderBox box =
-          _item8Key.currentContext!.findRenderObject() as RenderBox;
-      final offset = box.localToGlobal(Offset.zero);
+        final RenderBox box =
+            _stickyKey.currentContext!.findRenderObject() as RenderBox;
+        final offset = box.localToGlobal(Offset.zero);
 
-      setState(() {
-        _showSticky = offset.dy <= 0;
+        final isNowSticky = offset.dy <= kToolbarHeight;
+
+        if (_showSticky != isNowSticky) {
+          setState(() {
+            _showSticky = isNowSticky;
+          });
+        }
       });
     });
   }
@@ -80,432 +87,554 @@ class _OngProfilePageState extends State<OngProfilePage> {
     //   ),
     // );
 
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return DefaultTabController(
+      length: 4,
+      child: Scaffold(
+        body: Stack(
           children: [
-            Container(
-              width: double.infinity,
-              height: 200,
-              color: Colors.red,
-              child: Stack(
+            SingleChildScrollView(
+              controller: _scrollController,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 50,
-                    child: Container(
-                      color: Colors.yellow,
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: double.infinity,
-                        child: CachedNetworkImage(
-                          imageUrl: widget.ong.coverImageUrl!,
-                          fit: BoxFit.cover,
-                          progressIndicatorBuilder:
-                              (context, url, downloadProgress) => Container(
-                            width: 50,
-                            height: 50,
-                            child: CircularProgressIndicator(
-                                value: downloadProgress.progress),
-                          ),
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: 100,
-                    left: 16,
-                    bottom: 0,
-                    child: Container(
-                      width: 100,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(50),
-                        child: Container(
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            border: Border.all(width: 6),
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          child: ClipOval(
-                            child: CachedNetworkImage(
-                              imageUrl: widget.ong.coverImageUrl!,
-                              fit: BoxFit.cover,
-                              progressIndicatorBuilder:
-                                  (context, url, downloadProgress) =>
-                                      CircularProgressIndicator(
-                                          value: downloadProgress.progress),
-                              errorWidget: (context, url, error) =>
-                                  const Icon(Icons.error),
+                  Container(
+                    width: double.infinity,
+                    height: 200,
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 50,
+                          child: Container(
+                            color: Colors.yellow,
+                            child: SizedBox(
+                              width: double.infinity,
+                              height: double.infinity,
+                              child: CachedNetworkImage(
+                                imageUrl: widget.ong.coverImageUrl!,
+                                fit: BoxFit.cover,
+                                progressIndicatorBuilder:
+                                    (context, url, downloadProgress) =>
+                                        Container(
+                                  width: 50,
+                                  height: 50,
+                                  child: CircularProgressIndicator(
+                                      value: downloadProgress.progress),
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                              ),
                             ),
                           ),
                         ),
-                      ),
+                        Positioned(
+                          top: 100,
+                          left: 16,
+                          bottom: 0,
+                          child: Container(
+                            width: 100,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: Container(
+                                width: 50,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  border: Border.all(
+                                    width: 5,
+                                    color: Theme.of(context)
+                                        .scaffoldBackgroundColor,
+                                  ),
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                                child: ClipOval(
+                                  child: CachedNetworkImage(
+                                    imageUrl: widget.ong.profileImageUrl!,
+                                    fit: BoxFit.cover,
+                                    progressIndicatorBuilder: (context, url,
+                                            downloadProgress) =>
+                                        CircularProgressIndicator(
+                                            value: downloadProgress.progress),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  Text(
-                    widget.ong.name!,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium!
-                        .copyWith(fontWeight: FontWeight.bold),
+                  const SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      children: [
+                        Text(
+                          widget.ong.name!,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium!
+                              .copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(width: 5),
+                        SvgPicture.asset(
+                          width: 16,
+                          AppIcons.shieldTrust,
+                          color: AppColors.blueColor,
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(width: 5),
-                  SvgPicture.asset(
-                    width: 16,
-                    AppIcons.shieldTrust,
-                    color: AppColors.blueColor,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(widget.ong.bio!),
                   ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(widget.ong.bio!),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Row(
-                children: [
-                  Text(
-                    "1.000",
-                    style: TextStyle(color: Colors.black),
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Row(
+                      children: [
+                        Text(
+                          "1.000",
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          "Suportes",
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          "|",
+                          style: TextStyle(
+                              color: Colors.black, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          "230",
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          "Serviços",
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ],
+                    ),
                   ),
-                  SizedBox(width: 8),
-                  Text(
-                    "Suportes",
-                    style: TextStyle(color: Colors.black),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            style: ButtonStyle(
+                              foregroundColor: MaterialStateProperty.all(
+                                  AppColors.whiteColor),
+                              backgroundColor: MaterialStateProperty.all(
+                                  AppColors.primaryColor),
+                              side: const MaterialStatePropertyAll(
+                                BorderSide(
+                                  color: AppColors.primaryColor,
+                                ),
+                              ),
+                            ),
+                            onPressed: () {},
+                            child: const Text(
+                              "Juntar-se",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: OutlinedButton(
+                            style: ButtonStyle(
+                              foregroundColor: MaterialStateProperty.all(
+                                  AppColors.blackColor),
+                              side: const MaterialStatePropertyAll(
+                                BorderSide(
+                                  color: Colors.black12,
+                                  width: 2,
+                                ),
+                              ),
+                            ),
+                            onPressed: () {},
+                            child: const Text(
+                              "Chat",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        OutlinedButton(
+                          style: ButtonStyle(
+                            foregroundColor:
+                                MaterialStateProperty.all(AppColors.blackColor),
+                            minimumSize: const MaterialStatePropertyAll(
+                              Size(50, 50),
+                            ),
+                            side: const MaterialStatePropertyAll(
+                              BorderSide(
+                                color: Colors.black12,
+                                width: 2,
+                              ),
+                            ),
+                          ),
+                          onPressed: () {},
+                          child: const Icon(Icons.phone),
+                        )
+                      ],
+                    ),
                   ),
-                  SizedBox(width: 10),
-                  Text(
-                    "|",
-                    style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold),
+                  const SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      "Sobre",
+                      style: Theme.of(context).textTheme.titleMedium!,
+                    ),
                   ),
-                  SizedBox(width: 10),
-                  Text(
-                    "230",
-                    style: TextStyle(color: Colors.black),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text(widget.ong.about!),
                   ),
-                  SizedBox(width: 8),
-                  Text(
-                    "Serviços",
-                    style: TextStyle(color: Colors.black),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 15, horizontal: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Card(
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              height: 150,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    width: 30,
+                                    height: 30,
+                                    padding: const EdgeInsets.all(5),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primaryColor,
+                                      borderRadius: BorderRadius.circular(50),
+                                    ),
+                                    child: SvgPicture.asset(
+                                      AppIcons.lightbulbOn,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    "Visão",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall!
+                                        .copyWith(fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    widget.ong.vision!,
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Card(
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              height: 150,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    width: 30,
+                                    height: 30,
+                                    padding: const EdgeInsets.all(5),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primaryColor,
+                                      borderRadius: BorderRadius.circular(50),
+                                    ),
+                                    child: SvgPicture.asset(
+                                      AppIcons.bullseyeArrow,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    "Missão",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall!
+                                        .copyWith(fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    widget.ong.mission!,
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      style: ButtonStyle(
-                        foregroundColor:
-                            MaterialStateProperty.all(AppColors.whiteColor),
-                        backgroundColor:
-                            MaterialStateProperty.all(AppColors.primaryColor),
-                        side: const MaterialStatePropertyAll(
-                          BorderSide(
+                  Container(
+                    padding: const EdgeInsets.only(left: 16, right: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Impactos feitos",
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        TextButton(onPressed: () {}, child: Text("Ver mais"))
+                      ],
+                    ),
+                  ),
+                  BlocBuilder<OngCubit, OngState>(
+                    builder: (context, state) {
+                      if (state is OngLoading) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (state is OngLoaded) {
+                        if (state.ongs.isEmpty) {
+                          return Center(child: Text("Sem ongs registadas"));
+                        }
+                        return SizedBox(
+                          height: 150,
+                          child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            shrinkWrap: true,
+                            physics: const ClampingScrollPhysics(),
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            itemBuilder: (context, index) {
+                              return ClipRRect(
+                                borderRadius: BorderRadius.circular(5),
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      width: 150,
+                                      decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      left: 0,
+                                      right: 0,
+                                      top: 0,
+                                      bottom: 0,
+                                      child: Image.asset(
+                                        AppImages.image1,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    Positioned(
+                                      left: 0,
+                                      right: 0,
+                                      top: 0,
+                                      bottom: 0,
+                                      child: Container(
+                                        color: Colors.black26,
+                                      ),
+                                    ),
+                                    Positioned(
+                                      left: 0,
+                                      right: 0,
+                                      bottom: 0,
+                                      child: Container(
+                                        height: 55,
+                                        decoration: const BoxDecoration(
+                                          gradient: LinearGradient(
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
+                                            colors: [
+                                              Colors.transparent,
+                                              Colors.black,
+                                            ],
+                                          ),
+                                        ),
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "Covid Test",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                              Text(
+                                                "11 Agosto 2025",
+                                                style: TextStyle(
+                                                  color: Colors.white70,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  fontSize: 10,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            separatorBuilder: (context, index) {
+                              return const SizedBox(width: 10);
+                            },
+                            itemCount: 15,
+                          ),
+                        );
+                      }
+                      return const Text("data");
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  // Container(
+                  //   width: double.infinity,
+                  //   height: 45,
+                  //   decoration: BoxDecoration(),
+                  // ),
+                  Container(
+                    key: _stickyKey,
+                    width: double.infinity,
+                    // height: 50,
+                    // color: Colors.red,
+
+                    child: TabBar(
+                      isScrollable: true,
+                      indicator: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
                             color: AppColors.primaryColor,
+                            width: 3,
                           ),
                         ),
                       ),
-                      onPressed: () {},
-                      child: const Text(
-                        "Juntar-se",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
+                      labelColor: AppColors.primaryColor,
+                      unselectedLabelColor: Colors.black45,
+                      indicatorColor: AppColors.primaryColor,
+                      automaticIndicatorColorAdjustment: true,
+                      tabs: [
+                        Tab(
+                          // icon:
+                          //     Icon(Icons.access_time, color: AppColors.blackColor),
+                          text: 'Recentes',
+                        ),
+                        Tab(
+                          // icon: Icon(Icons.campaign, color: AppColors.blackColor),
+                          text: 'Campanhas',
+                        ),
+                        Tab(
+                          // icon: Icon(Icons.event, color: AppColors.blackColor),
+                          text: 'Eventos',
+                        ),
+                        Tab(
+                          // icon: Icon(Icons.article, color: AppColors.blackColor),
+                          text: 'Blogs',
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: OutlinedButton(
-                      style: ButtonStyle(
-                        foregroundColor:
-                            MaterialStateProperty.all(AppColors.blackColor),
-                        side: const MaterialStatePropertyAll(
-                          BorderSide(
-                            color: Colors.black12,
-                            width: 2,
-                          ),
+
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: 40,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        leading: CircleAvatar(
+                          child: Text('${index + 1}'),
                         ),
-                      ),
-                      onPressed: () {},
-                      child: const Text(
-                        "Chat",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  OutlinedButton(
-                    style: ButtonStyle(
-                      foregroundColor:
-                          MaterialStateProperty.all(AppColors.blackColor),
-                      minimumSize: const MaterialStatePropertyAll(
-                        Size(50, 50),
-                      ),
-                      side: const MaterialStatePropertyAll(
-                        BorderSide(
-                          color: Colors.black12,
-                          width: 2,
-                        ),
-                      ),
-                    ),
-                    onPressed: () {},
-                    child: const Icon(Icons.phone),
+                        title: Text('Item ${index + 1}'),
+                        subtitle: Text('Subtitle for item ${index + 1}'),
+                      );
+                    },
                   )
                 ],
               ),
             ),
-            const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                "Sobre",
-                style: Theme.of(context).textTheme.titleMedium!,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(widget.ong.about!),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Card(
-                      color: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        height: 150,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: 30,
-                              height: 30,
-                              padding: const EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                color: AppColors.primaryColor,
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                              child: SvgPicture.asset(
-                                AppIcons.lightbulbOn,
-                                color: Colors.white,
-                              ),
+            if (_showSticky)
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: Material(
+                  elevation: 4,
+                  color: AppColors.primaryColor,
+                  child: Container(
+                    width: double.infinity,
+                    // height: 50,
+                    // color: Colors.red,
+                    child: SafeArea(
+                      child: TabBar(
+                        isScrollable: true,
+                        indicator: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color: AppColors.whiteColor,
+                              width: 3,
                             ),
-                            const SizedBox(height: 5),
-                            Text(
-                              "Visão",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall!
-                                  .copyWith(fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 5),
-                            Text(
-                              widget.ong.vision!,
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Card(
-                      color: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        height: 150,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: 30,
-                              height: 30,
-                              padding: const EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                color: AppColors.primaryColor,
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                              child: SvgPicture.asset(
-                                AppIcons.bullseyeArrow,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(height: 5),
-                            Text(
-                              "Missão",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall!
-                                  .copyWith(fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 5),
-                            Text(
-                              widget.ong.mission!,
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.only(left: 16, right: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Impactos feitos",
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  TextButton(onPressed: () {}, child: Text("Ver mais"))
-                ],
-              ),
-            ),
-            BlocBuilder<OngCubit, OngState>(
-              builder: (context, state) {
-                if (state is OngLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (state is OngLoaded) {
-                  if (state.ongs.isEmpty) {
-                    return Center(child: Text("Sem ongs registadas"));
-                  }
-                  return SizedBox(
-                    height: 150,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      shrinkWrap: true,
-                      physics: const ClampingScrollPhysics(),
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      itemBuilder: (context, index) {
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(5),
-                          child: Stack(
-                            children: [
-                              Container(
-                                width: 150,
-                                decoration: BoxDecoration(
-                                  color: Colors.red,
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                              ),
-                              Positioned(
-                                left: 0,
-                                right: 0,
-                                top: 0,
-                                bottom: 0,
-                                child: Image.asset(
-                                  AppImages.image1,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              Positioned(
-                                left: 0,
-                                right: 0,
-                                top: 0,
-                                bottom: 0,
-                                child: Container(
-                                  color: Colors.black26,
-                                ),
-                              ),
-                              Positioned(
-                                left: 0,
-                                right: 0,
-                                bottom: 0,
-                                child: Container(
-                                  height: 55,
-                                  decoration: const BoxDecoration(
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      colors: [
-                                        Colors.transparent,
-                                        Colors.black,
-                                      ],
-                                    ),
-                                  ),
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Covid Test",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                        Text(
-                                          "11 Agosto 2025",
-                                          style: TextStyle(
-                                            color: Colors.white70,
-                                            overflow: TextOverflow.ellipsis,
-                                            fontSize: 10,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
                           ),
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return const SizedBox(width: 10);
-                      },
-                      itemCount: 15,
+                        ),
+                        labelColor: AppColors.whiteColor,
+                        unselectedLabelColor: Colors.white60,
+                        indicatorColor: AppColors.primaryColor,
+                        automaticIndicatorColorAdjustment: true,
+                        tabs: [
+                          Tab(
+                            // icon:
+                            //     Icon(Icons.access_time, color: AppColors.blackColor),
+                            text: 'Recentes',
+                          ),
+                          Tab(
+                            // icon: Icon(Icons.campaign, color: AppColors.blackColor),
+                            text: 'Campanhas',
+                          ),
+                          Tab(
+                            // icon: Icon(Icons.event, color: AppColors.blackColor),
+                            text: 'Eventos',
+                          ),
+                          Tab(
+                            // icon: Icon(Icons.article, color: AppColors.blackColor),
+                            text: 'Blogs',
+                          ),
+                        ],
+                      ),
                     ),
-                  );
-                }
-                return const Text("data");
-              },
-            ),
-            const SizedBox(height: 10),
-            Container(
-              width: double.infinity,
-              height: 45,
-              decoration: BoxDecoration(),
-            ),
+                  ),
+                ),
+              ),
           ],
         ),
       ),
