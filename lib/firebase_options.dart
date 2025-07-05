@@ -50,19 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAFH33VHG0JbR1ZxY_Q0gUlnjuij5Y68IQ',
-    appId: '1:257812198370:android:1f6b7a8b31511f4f2c7fbb',
-    messagingSenderId: '257812198370',
-    projectId: 'solidary-431e5',
-    storageBucket: 'solidary-431e5.firebasestorage.app',
+    apiKey: 'AIzaSyCE3ziJ_vSTVRnWAyrECtDPdzY8E2jXzXc',
+    appId: '1:363495233933:android:d50c938ad9cbfad81805c4',
+    messagingSenderId: '363495233933',
+    projectId: 'solidary-a4d05',
+    storageBucket: 'solidary-a4d05.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyA4w9U7STKoXYkNCUc3aUzQ36t-LcshdeI',
-    appId: '1:257812198370:ios:29dfca4a3fbce0d12c7fbb',
-    messagingSenderId: '257812198370',
-    projectId: 'solidary-431e5',
-    storageBucket: 'solidary-431e5.firebasestorage.app',
+    apiKey: 'AIzaSyCwACybZYxEur3ud3p9dD6pILuPyBUa9HQ',
+    appId: '1:363495233933:ios:03a18b625f0d5bbf1805c4',
+    messagingSenderId: '363495233933',
+    projectId: 'solidary-a4d05',
+    storageBucket: 'solidary-a4d05.firebasestorage.app',
     iosBundleId: 'com.example.utueji',
   );
+
 }

@@ -92,8 +92,7 @@ dependencies:
   tab_container: ^3.5.3
   shared_preferences: ^2.5.3
   flutter_launcher_icons: ^0.14.4
-  roundcheckbox: ^2.0.5
-  pdf_render: ^1.4.7
+  roundcheckbox: ^2.0.5  
   flutter_cached_pdfview: ^0.4.3
   internet_connection_checker_plus: ^2.7.2
   bottom_sheet: ^4.0.4
