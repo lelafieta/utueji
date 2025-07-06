@@ -9,14 +9,40 @@
 
 import 'package:flutter/widgets.dart';
 
+class $AssetsFontsGen {
+  const $AssetsFontsGen();
+
+  /// Directory path: assets/fonts/Poppins
+  $AssetsFontsPoppinsGen get poppins => const $AssetsFontsPoppinsGen();
+}
+
 class $AssetsIconsGen {
   const $AssetsIconsGen();
+
+  /// File path: assets/icons/animal-paw-print-20-filled.svg
+  String get animalPawPrint20Filled =>
+      'assets/icons/animal-paw-print-20-filled.svg';
 
   /// File path: assets/icons/bell.svg
   String get bell => 'assets/icons/bell.svg';
 
   /// File path: assets/icons/bullseye-arrow.svg
   String get bullseyeArrow => 'assets/icons/bullseye-arrow.svg';
+
+  /// File path: assets/icons/campaign-filled.svg
+  String get campaignFilled => 'assets/icons/campaign-filled.svg';
+
+  /// File path: assets/icons/campaign.svg
+  String get campaign => 'assets/icons/campaign.svg';
+
+  /// File path: assets/icons/category-alt.svg
+  String get categoryAlt => 'assets/icons/category-alt.svg';
+
+  /// File path: assets/icons/charity.svg
+  String get charity => 'assets/icons/charity.svg';
+
+  /// File path: assets/icons/child.svg
+  String get child => 'assets/icons/child.svg';
 
   /// File path: assets/icons/comment-alt.svg
   String get commentAlt => 'assets/icons/comment-alt.svg';
@@ -36,6 +62,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/doctor.svg
   String get doctor => 'assets/icons/doctor.svg';
 
+  /// File path: assets/icons/elderly.svg
+  String get elderly => 'assets/icons/elderly.svg';
+
   /// File path: assets/icons/envelope.svg
   String get envelope => 'assets/icons/envelope.svg';
 
@@ -50,6 +79,9 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/google-icon.svg
   String get googleIcon => 'assets/icons/google-icon.svg';
+
+  /// File path: assets/icons/graduation-cap-solid.svg
+  String get graduationCapSolid => 'assets/icons/graduation-cap-solid.svg';
 
   /// File path: assets/icons/graduation-cap.svg
   String get graduationCap => 'assets/icons/graduation-cap.svg';
@@ -95,6 +127,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/link.svg
   String get link => 'assets/icons/link.svg';
 
+  /// File path: assets/icons/medicine-chest.svg
+  String get medicineChest => 'assets/icons/medicine-chest.svg';
+
   /// File path: assets/icons/menu-dots.svg
   String get menuDots => 'assets/icons/menu-dots.svg';
 
@@ -110,11 +145,18 @@ class $AssetsIconsGen {
   /// File path: assets/icons/paw.svg
   String get paw => 'assets/icons/paw.svg';
 
+  /// File path: assets/icons/people-community-20-filled.svg
+  String get peopleCommunity20Filled =>
+      'assets/icons/people-community-20-filled.svg';
+
   /// File path: assets/icons/search.svg
   String get search => 'assets/icons/search.svg';
 
   /// File path: assets/icons/shield-trust.svg
   String get shieldTrust => 'assets/icons/shield-trust.svg';
+
+  /// File path: assets/icons/sport-soccer-24-filled.svg
+  String get sportSoccer24Filled => 'assets/icons/sport-soccer-24-filled.svg';
 
   /// File path: assets/icons/square-plus.svg
   String get squarePlus => 'assets/icons/square-plus.svg';
@@ -125,6 +167,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/triangle-warning.svg
   String get triangleWarning => 'assets/icons/triangle-warning.svg';
 
+  /// File path: assets/icons/warning.svg
+  String get warning => 'assets/icons/warning.svg';
+
   /// File path: assets/icons/whatsapp.svg
   String get whatsapp => 'assets/icons/whatsapp.svg';
 
@@ -133,19 +178,27 @@ class $AssetsIconsGen {
 
   /// List of all assets
   List<String> get values => [
+    animalPawPrint20Filled,
     bell,
     bullseyeArrow,
+    campaignFilled,
+    campaign,
+    categoryAlt,
+    charity,
+    child,
     commentAlt,
     commentsBold,
     comments,
     compassAltBold,
     compassAlt,
     doctor,
+    elderly,
     envelope,
     eye,
     facebook,
     familyDress,
     googleIcon,
+    graduationCapSolid,
     graduationCap,
     handHoldingHeart,
     handsHeartBold,
@@ -160,16 +213,20 @@ class $AssetsIconsGen {
     key,
     lightbulbOn,
     link,
+    medicineChest,
     menuDots,
     microphone,
     oldPeople,
     paperPlane,
     paw,
+    peopleCommunity20Filled,
     search,
     shieldTrust,
+    sportSoccer24Filled,
     squarePlus,
     tennis,
     triangleWarning,
+    warning,
     whatsapp,
     x,
   ];
@@ -251,10 +308,39 @@ class $AssetsImagesGen {
   ];
 }
 
+class $AssetsFontsPoppinsGen {
+  const $AssetsFontsPoppinsGen();
+
+  /// File path: assets/fonts/Poppins/Poppins-Bold.ttf
+  String get poppinsBold => 'assets/fonts/Poppins/Poppins-Bold.ttf';
+
+  /// File path: assets/fonts/Poppins/Poppins-ExtraBold.ttf
+  String get poppinsExtraBold => 'assets/fonts/Poppins/Poppins-ExtraBold.ttf';
+
+  /// File path: assets/fonts/Poppins/Poppins-Medium.ttf
+  String get poppinsMedium => 'assets/fonts/Poppins/Poppins-Medium.ttf';
+
+  /// File path: assets/fonts/Poppins/Poppins-Regular.ttf
+  String get poppinsRegular => 'assets/fonts/Poppins/Poppins-Regular.ttf';
+
+  /// File path: assets/fonts/Poppins/Poppins-SemiBold.ttf
+  String get poppinsSemiBold => 'assets/fonts/Poppins/Poppins-SemiBold.ttf';
+
+  /// List of all assets
+  List<String> get values => [
+    poppinsBold,
+    poppinsExtraBold,
+    poppinsMedium,
+    poppinsRegular,
+    poppinsSemiBold,
+  ];
+}
+
 class Assets {
   const Assets._();
 
   static const String aEnv = '.env';
+  static const $AssetsFontsGen fonts = $AssetsFontsGen();
   static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
   static const String mapConfig = 'assets/map_config.json';

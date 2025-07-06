@@ -21,9 +21,13 @@ class CampaignWidget extends StatelessWidget {
       onTap: () {
         Get.toNamed(AppRoutes.campaignDetail, arguments: campaign);
       },
-      child: Card(
-        shape: RoundedRectangleBorder(
+      child: Container(
+        padding: EdgeInsets.all(10),
+        margin: EdgeInsets.only(right: 16.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
           borderRadius: BorderRadius.circular(10),
+          border: Border.all(width: 0.5, color: Colors.black26),
         ),
         child: Column(
           children: [
@@ -104,7 +108,7 @@ class CampaignWidget extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                              )
+                              ),
                       ],
                     ),
                   ),
@@ -126,39 +130,38 @@ class CampaignWidget extends StatelessWidget {
                             ClipRRect(
                               borderRadius: BorderRadius.circular(50),
                               child: AppUtils.favoriteWidget(
-                                  context: context,
-                                  itemId: campaign.id!,
-                                  itemType: "campaign"),
+                                context: context,
+                                itemId: campaign.id!,
+                                itemType: "campaign",
+                              ),
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
+                        const SizedBox(height: 10),
                         RichText(
                           text: TextSpan(
                             style: DefaultTextStyle.of(context).style,
                             children: [
                               TextSpan(
                                 text: AppUtils.formatCurrency(
-                                    campaign.fundsRaised!),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleSmall!
+                                  campaign.fundsRaised!,
+                                ),
+                                style: Theme.of(context).textTheme.titleSmall!
                                     .copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
                               ),
                               const TextSpan(text: " / "),
                               TextSpan(
-                                  text: AppUtils.formatCurrency(
-                                      campaign.fundraisingGoal!))
+                                text: AppUtils.formatCurrency(
+                                  campaign.fundraisingGoal!,
+                                ),
+                              ),
                             ],
                           ),
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
+                        const SizedBox(height: 10),
                         Stack(
                           children: [
                             Container(
@@ -171,26 +174,26 @@ class CampaignWidget extends StatelessWidget {
                             ),
                             Positioned(
                               child: FAProgressBar(
-                                  currentValue: AppFuncionsUtilsHelper
-                                      .calculateFundraisingPercentage(
-                                          campaign.fundsRaised,
-                                          campaign.fundraisingGoal),
-                                  backgroundColor: AppColors.strokeColor,
-                                  progressColor: Colors.black,
-                                  changeProgressColor: Colors.red,
-                                  size: 15,
-                                  displayTextStyle: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 10,
-                                    color: Colors.white,
-                                  ),
-                                  displayText: '%'),
+                                currentValue:
+                                    AppFuncionsUtilsHelper.calculateFundraisingPercentage(
+                                      campaign.fundsRaised,
+                                      campaign.fundraisingGoal,
+                                    ),
+                                backgroundColor: AppColors.strokeColor,
+                                progressColor: Colors.black,
+                                changeProgressColor: Colors.red,
+                                size: 15,
+                                displayTextStyle: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 10,
+                                  color: Colors.white,
+                                ),
+                                displayText: '%',
+                              ),
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
+                        const SizedBox(height: 10),
                         Container(
                           child: Row(
                             children: [
@@ -198,7 +201,9 @@ class CampaignWidget extends StatelessWidget {
                                 child: InkWell(
                                   onTap: () {
                                     AppUtils.contributorUsers(
-                                        context, campaign.contributors!);
+                                      context,
+                                      campaign.contributors!,
+                                    );
                                   },
                                   child: Row(
                                     children: [
@@ -209,38 +214,30 @@ class CampaignWidget extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              const Icon(
-                                Icons.timelapse_rounded,
-                                size: 16,
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
+                              const Icon(Icons.timelapse_rounded, size: 16),
+                              const SizedBox(width: 5),
                               (AppDateUtilsHelper.daysRemainingUntil(
-                                          campaign.endDate!) ==
+                                        campaign.endDate!,
+                                      ) ==
                                       0)
                                   ? Text(
                                       "Está acontecer",
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                      ),
+                                      style: const TextStyle(fontSize: 12),
                                     )
                                   : (AppDateUtilsHelper.daysRemainingUntil(
-                                              campaign.endDate!) <
-                                          0)
-                                      ? Text(
-                                          AppDateUtilsHelper.formatDate(
-                                              data: campaign.endDate!),
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                          ),
-                                        )
-                                      : Text(
-                                          "Faltando ${AppDateUtilsHelper.daysRemainingUntil(campaign.endDate!)} dias",
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                          ),
-                                        )
+                                          campaign.endDate!,
+                                        ) <
+                                        0)
+                                  ? Text(
+                                      AppDateUtilsHelper.formatDate(
+                                        data: campaign.endDate!,
+                                      ),
+                                      style: const TextStyle(fontSize: 12),
+                                    )
+                                  : Text(
+                                      "Faltando ${AppDateUtilsHelper.daysRemainingUntil(campaign.endDate!)} dias",
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
                             ],
                           ),
                         ),
@@ -255,19 +252,19 @@ class CampaignWidget extends StatelessWidget {
                         style: ButtonStyle(
                           shape:
                               MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                AppValues.s10,
-                              ), // Define o raio da borda aqui
-                            ),
-                          ),
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    AppValues.s10,
+                                  ), // Define o raio da borda aqui
+                                ),
+                              ),
                         ),
                         onPressed: () {},
                         child: Text("Doar"),
                       ),
                     ),
                   ),
-                  SizedBox(height: 10)
+                  SizedBox(height: 10),
                 ],
               ),
             ),

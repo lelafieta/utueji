@@ -1,15 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider_plus/carousel_slider_plus.dart';
-import 'package:flutter/cupertino.dart';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:skeletonizer/skeletonizer.dart';
-import 'package:utueji/src/app/app_entity.dart';
 import 'package:utueji/src/features/categories/data/models/category_model.dart';
 import 'package:utueji/src/features/events/presentation/widgets/event_skeleton_widget.dart';
 import 'package:utueji/src/features/home/presentation/cubit/home_campaign_cubit/home_campaign_cubit.dart';
@@ -31,7 +26,6 @@ import '../../../ongs/presentation/cubit/ong_state.dart';
 import '../../../ongs/presentation/widgets/ong_widget.dart';
 import '../../../solidary/cubit/solidary_cubit.dart';
 import '../cubit/home_campaign_cubit/home_campaign_state.dart';
-import '../cubit/home_profile_data_cubit/home_profile_data_cubit.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -68,7 +62,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   String formatarDataPersonalizada(DateTime data) {
-    String diaSemana = DateFormat.EEEE('pt_BR').format(data); // Sábado
+    String diaSemana = DateFormat.EEEE('pt_BR').format(data);
     String dia = DateFormat.d().format(data); // 11
     String mes = DateFormat.MMMM('pt_BR').format(data); // Abril
     String horaMinuto = DateFormat('HH:mm').format(data); // 10:35
@@ -91,14 +85,15 @@ class _HomePageState extends State<HomePage> {
                   },
                   child: (state is GetUserDataSuccessState)
                       ? (state.user.avatarUrl!.isEmpty)
-                          ? Image.asset(AppImages.avatar)
-                          : Container(
-                              margin: EdgeInsets.only(left: 16),
-                              child: CircleAvatar(
-                                backgroundImage: CachedNetworkImageProvider(
-                                    state.user.avatarUrl!),
-                              ),
-                            )
+                            ? Image.asset(AppImages.avatar)
+                            : Container(
+                                margin: EdgeInsets.only(left: 16),
+                                child: CircleAvatar(
+                                  backgroundImage: CachedNetworkImageProvider(
+                                    state.user.avatarUrl!,
+                                  ),
+                                ),
+                              )
                       : SizedBox.shrink(),
                 ),
                 trailing: Container(
@@ -134,8 +129,10 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     const SizedBox(height: 10),
                     Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 5,
+                      ),
                       child: Row(
                         children: [
                           (state is GetUserDataSuccessState)
@@ -145,27 +142,26 @@ class _HomePageState extends State<HomePage> {
                                 )
                               : Text("Olá! Ajuda-me"),
                           const SizedBox(width: 5),
-                          Image.asset(
-                            AppImages.wave,
-                            width: 16,
-                          ),
+                          Image.asset(AppImages.wave, width: 16),
                         ],
                       ),
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 5),
+                        horizontal: 16,
+                        vertical: 5,
+                      ),
                       child: Text(
                         "Sua mudança torna algumas vidas melhores",
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineSmall!
+                        style: Theme.of(context).textTheme.headlineSmall!
                             .copyWith(color: Colors.black),
                       ),
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 5),
+                        horizontal: 16,
+                        vertical: 5,
+                      ),
                       child: TextField(
                         decoration: InputDecoration(
                           hintText: "Pesquise campanhas, caridades...",
@@ -191,141 +187,185 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      child: CarouselSlider(
-                        options: CarouselOptions(
-                          height: 150.0,
-                          enableInfiniteScroll: false,
-                          padEnds: false,
-                          viewportFraction: 0.93,
-                        ),
-                        items: [1, 2, 3, 4, 5].map((i) {
-                          return Container(
-                            width: double.infinity,
-                            margin: const EdgeInsets.symmetric(horizontal: 16),
-                            decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                colors: [
-                                  Colors.blue,
-                                  AppColors.primaryColor,
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                    padding: const EdgeInsets.all(10),
-                                    child: const Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "JUNTOS",
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Icon(
-                                              Icons.star,
-                                              size: 16,
-                                              color: Colors.white,
-                                            ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Text(
-                                              "PODEMOS",
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w100,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Text(
-                                          "OFEREÇA\nO SEU TEMPO",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20,
-                                              fontStyle: FontStyle.italic),
-                                        ),
-                                        Text(
-                                          "Trabalho em equipe faz o sonho funcionar",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w100,
-                                            fontSize: 10,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Image.asset(AppImages.child)
-                              ],
-                            ),
-                          );
-                        }).toList(),
+                      width: double.infinity,
+                      height: 150,
+                      margin: EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    const SizedBox(height: 15),
-                    SizedBox(
-                      height: 90,
+                    // Container(
+                    //   padding: const EdgeInsets.symmetric(vertical: 20),
+                    //   child: CarouselSlider(
+                    //     options: CarouselOptions(
+                    //       height: 150.0,
+                    //       enableInfiniteScroll: false,
+                    //       padEnds: false,
+                    //       viewportFraction: 0.93,
+                    //     ),
+                    //     items: [1, 2, 3, 4, 5].map((i) {
+                    //       return Container(
+                    //         width: double.infinity,
+                    //         margin: const EdgeInsets.symmetric(horizontal: 16),
+                    //         decoration: BoxDecoration(
+                    //           gradient: const LinearGradient(
+                    //             colors: [Colors.blue, AppColors.primaryColor],
+                    //           ),
+                    //           borderRadius: BorderRadius.circular(10),
+                    //         ),
+                    //         child: Row(
+                    //           children: [
+                    //             Expanded(
+                    //               child: Container(
+                    //                 padding: const EdgeInsets.all(10),
+                    //                 child: const Column(
+                    //                   crossAxisAlignment:
+                    //                       CrossAxisAlignment.start,
+                    //                   mainAxisAlignment:
+                    //                       MainAxisAlignment.spaceBetween,
+                    //                   children: [
+                    //                     Row(
+                    //                       children: [
+                    //                         Text(
+                    //                           "JUNTOS",
+                    //                           style: TextStyle(
+                    //                             color: Colors.white,
+                    //                           ),
+                    //                         ),
+                    //                         SizedBox(width: 10),
+                    //                         Icon(
+                    //                           Icons.star,
+                    //                           size: 16,
+                    //                           color: Colors.white,
+                    //                         ),
+                    //                         SizedBox(width: 10),
+                    //                         Text(
+                    //                           "PODEMOS",
+                    //                           style: TextStyle(
+                    //                             color: Colors.white,
+                    //                             fontWeight: FontWeight.w100,
+                    //                           ),
+                    //                         ),
+                    //                       ],
+                    //                     ),
+                    //                     Text(
+                    //                       "OFEREÇA\nO SEU TEMPO",
+                    //                       style: TextStyle(
+                    //                         color: Colors.white,
+                    //                         fontWeight: FontWeight.bold,
+                    //                         fontSize: 20,
+                    //                         fontStyle: FontStyle.italic,
+                    //                       ),
+                    //                     ),
+                    //                     Text(
+                    //                       "Trabalho em equipe faz o sonho funcionar",
+                    //                       style: TextStyle(
+                    //                         color: Colors.white,
+                    //                         fontWeight: FontWeight.w100,
+                    //                         fontSize: 10,
+                    //                       ),
+                    //                     ),
+                    //                   ],
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //             Image.asset(AppImages.child),
+                    //           ],
+                    //         ),
+                    //       );
+                    //     }).toList(),
+                    //   ),
+                    // ),
+
+                    // SizedBox(
+                    //   height: 90,
+                    //   child: ListView.separated(
+                    //     shrinkWrap: true,
+                    //     physics: const ClampingScrollPhysics(),
+                    //     scrollDirection: Axis.horizontal,
+                    //     padding: const EdgeInsets.symmetric(horizontal: 16),
+                    //     itemBuilder: (context, index) {
+                    //       return InkWell(
+                    //         onTap: () {
+                    //           Get.toNamed(
+                    //             AppRoutes.categoryCampaignsRoute,
+                    //             arguments: categories[index],
+                    //           );
+                    //         },
+                    //         child: Container(
+                    //           child: Column(
+                    //             children: [
+                    //               Card(
+                    //                 shape: RoundedRectangleBorder(
+                    //                   borderRadius: BorderRadius.circular(8),
+                    //                 ),
+                    //                 child: Container(
+                    //                   width: 60,
+                    //                   height: 60,
+                    //                   padding: const EdgeInsets.all(18),
+                    //                   child: SvgPicture.asset(
+                    //                     categories[index].iconPath!,
+                    //                     width: 12,
+                    //                     color: AppColors.primaryColor,
+                    //                   ),
+                    //                 ),
+                    //               ),
+                    //               Text(categories[index].name.toString()),
+                    //             ],
+                    //           ),
+                    //         ),
+                    //       );
+                    //     },
+                    //     separatorBuilder: (context, index) {
+                    //       return const SizedBox(width: 10);
+                    //     },
+                    //     itemCount: categories.length,
+                    //   ),
+                    // ),
+                    Container(
+                      height: 120,
+                      padding: EdgeInsets.symmetric(vertical: 16.0),
                       child: ListView.separated(
-                        shrinkWrap: true,
-                        physics: const ClampingScrollPhysics(),
                         scrollDirection: Axis.horizontal,
                         padding: const EdgeInsets.symmetric(horizontal: 16),
+                        itemCount: categories.length,
+                        separatorBuilder: (_, __) => const SizedBox(width: 12),
                         itemBuilder: (context, index) {
-                          return InkWell(
-                            onTap: () {
-                              Get.toNamed(
-                                AppRoutes.categoryCampaignsRoute,
-                                arguments: categories[index],
-                              );
-                            },
-                            child: Container(
-                              child: Column(
-                                children: [
-                                  Card(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Container(
-                                      width: 60,
-                                      height: 60,
-                                      padding: const EdgeInsets.all(18),
-                                      child: SvgPicture.asset(
-                                        categories[index].iconPath!,
-                                        width: 12,
-                                        color: AppColors.primaryColor,
-                                      ),
-                                    ),
-                                  ),
-                                  Text(categories[index].name.toString()),
-                                ],
+                          final category = categories[index];
+                          return Column(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(12),
+                                width: 50,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: category.color!.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: SvgPicture.asset(
+                                  category.iconPath!,
+                                  width: 25,
+                                  height: 25,
+                                  color: category.color,
+                                ),
                               ),
-                            ),
+                              const SizedBox(height: 8),
+                              Text(
+                                category.name!,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
                           );
                         },
-                        separatorBuilder: (context, index) {
-                          return const SizedBox(width: 10);
-                        },
-                        itemCount: categories.length,
                       ),
                     ),
+
                     Container(
-                      padding:
-                          const EdgeInsets.only(left: 16, right: 16, top: 16),
+                      padding: const EdgeInsets.only(left: 16, right: 16),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -334,10 +374,11 @@ class _HomePageState extends State<HomePage> {
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
                           TextButton(
-                              onPressed: () {
-                                Get.toNamed(AppRoutes.campaignUrgentsRoute);
-                              },
-                              child: Text("Ver mais"))
+                            onPressed: () {
+                              Get.toNamed(AppRoutes.campaignUrgentsRoute);
+                            },
+                            child: Text("Ver mais"),
+                          ),
                         ],
                       ),
                     ),
@@ -349,18 +390,20 @@ class _HomePageState extends State<HomePage> {
                           return Text("${state.message}");
                         } else if (state is HomeCampaignLoaded) {
                           if (state.campaigns.isEmpty) {
-                            return const Center(
-                              child: Text("Sem campanhas"),
-                            );
+                            return const Center(child: Text("Sem campanhas"));
                           }
 
                           return CarouselSlider.builder(
                             itemCount: state.campaigns.length,
-                            itemBuilder: (BuildContext context, int itemIndex,
-                                int pageViewIndex) {
-                              final camapaign = state.campaigns[itemIndex];
-                              return CampaignWidget(campaign: camapaign);
-                            },
+                            itemBuilder:
+                                (
+                                  BuildContext context,
+                                  int itemIndex,
+                                  int pageViewIndex,
+                                ) {
+                                  final camapaign = state.campaigns[itemIndex];
+                                  return CampaignWidget(campaign: camapaign);
+                                },
                             options: CarouselOptions(
                               height: 420,
                               aspectRatio: 16 / 9,
@@ -371,8 +414,9 @@ class _HomePageState extends State<HomePage> {
                               reverse: false,
                               autoPlay: false,
                               autoPlayInterval: const Duration(seconds: 3),
-                              autoPlayAnimationDuration:
-                                  const Duration(milliseconds: 800),
+                              autoPlayAnimationDuration: const Duration(
+                                milliseconds: 800,
+                              ),
                               autoPlayCurve: Curves.fastOutSlowIn,
                               enlargeCenterPage: false,
                               enlargeFactor: 0.3,
@@ -383,6 +427,7 @@ class _HomePageState extends State<HomePage> {
                         return Text("ERRRO ${state}");
                       },
                     ),
+
                     // SizedBoxAppUtils.
                     //   height: 400,
                     //   child: ListView.separated(
@@ -594,10 +639,12 @@ class _HomePageState extends State<HomePage> {
                     //     itemCount: titles.length,
                     //   ),
                     // ),
-
                     Container(
-                      padding:
-                          const EdgeInsets.only(left: 16, right: 16, top: 16),
+                      padding: const EdgeInsets.only(
+                        left: 16,
+                        right: 16,
+                        top: 16,
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -605,7 +652,7 @@ class _HomePageState extends State<HomePage> {
                             "Próximos Eventos",
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
-                          TextButton(onPressed: () {}, child: Text("Ver mais"))
+                          TextButton(onPressed: () {}, child: Text("Ver mais")),
                         ],
                       ),
                     ),
@@ -614,10 +661,14 @@ class _HomePageState extends State<HomePage> {
                         if (state is EventLoading) {
                           return CarouselSlider.builder(
                             itemCount: 8,
-                            itemBuilder: (BuildContext context, int itemIndex,
-                                int pageViewIndex) {
-                              return const EventSkeletonWidget();
-                            },
+                            itemBuilder:
+                                (
+                                  BuildContext context,
+                                  int itemIndex,
+                                  int pageViewIndex,
+                                ) {
+                                  return const EventSkeletonWidget();
+                                },
                             options: CarouselOptions(
                               height: 300,
                               aspectRatio: 16 / 9,
@@ -628,8 +679,9 @@ class _HomePageState extends State<HomePage> {
                               reverse: false,
                               autoPlay: false,
                               autoPlayInterval: const Duration(seconds: 3),
-                              autoPlayAnimationDuration:
-                                  const Duration(milliseconds: 800),
+                              autoPlayAnimationDuration: const Duration(
+                                milliseconds: 800,
+                              ),
                               autoPlayCurve: Curves.fastOutSlowIn,
                               enlargeCenterPage: false,
                               enlargeFactor: 0.3,
@@ -639,7 +691,8 @@ class _HomePageState extends State<HomePage> {
                         } else if (state is EventLoaded) {
                           if (state.events.isEmpty) {
                             return Center(
-                                child: Text("Sem eventos registados"));
+                              child: Text("Sem eventos registados"),
+                            );
                           } else {
                             final events = state.events;
                             return CarouselSlider(
@@ -653,17 +706,16 @@ class _HomePageState extends State<HomePage> {
                                 reverse: false,
                                 autoPlay: false,
                                 autoPlayInterval: const Duration(seconds: 3),
-                                autoPlayAnimationDuration:
-                                    const Duration(milliseconds: 800),
+                                autoPlayAnimationDuration: const Duration(
+                                  milliseconds: 800,
+                                ),
                                 autoPlayCurve: Curves.fastOutSlowIn,
                                 enlargeCenterPage: false,
                                 enlargeFactor: 0.3,
                                 scrollDirection: Axis.horizontal,
                               ),
                               items: events.map((event) {
-                                return EventWidget(
-                                  event: event,
-                                );
+                                return EventWidget(event: event);
                               }).toList(),
                             );
                           }
@@ -672,8 +724,11 @@ class _HomePageState extends State<HomePage> {
                       },
                     ),
                     Container(
-                      padding:
-                          const EdgeInsets.only(left: 16, right: 16, top: 16),
+                      padding: const EdgeInsets.only(
+                        left: 16,
+                        right: 16,
+                        top: 16,
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -681,7 +736,7 @@ class _HomePageState extends State<HomePage> {
                             "ONG's Populares",
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
-                          TextButton(onPressed: () {}, child: Text("Ver mais"))
+                          TextButton(onPressed: () {}, child: Text("Ver mais")),
                         ],
                       ),
                     ),
@@ -700,8 +755,9 @@ class _HomePageState extends State<HomePage> {
                               reverse: false,
                               autoPlay: false,
                               autoPlayInterval: const Duration(seconds: 3),
-                              autoPlayAnimationDuration:
-                                  const Duration(milliseconds: 800),
+                              autoPlayAnimationDuration: const Duration(
+                                milliseconds: 800,
+                              ),
                               autoPlayCurve: Curves.fastOutSlowIn,
                               enlargeCenterPage: false,
                               enlargeFactor: 0.3,
@@ -715,7 +771,8 @@ class _HomePageState extends State<HomePage> {
                         } else if (state is OngLoaded) {
                           if (state.ongs.isEmpty) {
                             return const Center(
-                                child: Text("Sem ongs registadas"));
+                              child: Text("Sem ongs registadas"),
+                            );
                           }
                           return CarouselSlider(
                             options: CarouselOptions(
@@ -728,17 +785,16 @@ class _HomePageState extends State<HomePage> {
                               reverse: false,
                               autoPlay: false,
                               autoPlayInterval: const Duration(seconds: 3),
-                              autoPlayAnimationDuration:
-                                  const Duration(milliseconds: 800),
+                              autoPlayAnimationDuration: const Duration(
+                                milliseconds: 800,
+                              ),
                               autoPlayCurve: Curves.fastOutSlowIn,
                               enlargeCenterPage: false,
                               enlargeFactor: 0.3,
                               scrollDirection: Axis.horizontal,
                             ),
                             items: state.ongs.map((ong) {
-                              return OngWidget(
-                                ong: ong,
-                              );
+                              return OngWidget(ong: ong);
                             }).toList(),
                           );
                         }
@@ -749,7 +805,7 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-            )
+            ),
           ],
         );
       },
@@ -758,9 +814,7 @@ class _HomePageState extends State<HomePage> {
 }
 
 class HomeCampaignSkeletonWidget extends StatelessWidget {
-  const HomeCampaignSkeletonWidget({
-    super.key,
-  });
+  const HomeCampaignSkeletonWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
