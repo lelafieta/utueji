@@ -1,8 +1,10 @@
+import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:utueji/src/config/themes/app_theme.dart';
 
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/resources/icons/app_icons.dart';
@@ -35,77 +37,98 @@ class _ExplorePageState extends State<ExplorePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: false,
-        title: const Text('Navegador'),
-      ),
-      body: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: "Pesquise campanhas, caridades...",
-                fillColor: Colors.white,
-                filled: true,
-                prefixIcon: Container(
-                  padding: const EdgeInsets.all(12),
-                  child: SvgPicture.asset(
-                    AppIcons.search,
-                    width: 14,
-                    color: Colors.grey,
+      appBar: AppBar(centerTitle: false, title: const Text('Navegador')),
+      body: DefaultTabController(
+        length: 4,
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: "Pesquise campanhas, caridades...",
+                  fillColor: Colors.white,
+                  filled: true,
+                  prefixIcon: Container(
+                    padding: const EdgeInsets.all(12),
+                    child: SvgPicture.asset(
+                      AppIcons.search,
+                      width: 14,
+                      color: Colors.grey,
+                    ),
                   ),
-                ),
-                suffixIcon: Container(
-                  padding: const EdgeInsets.all(12),
-                  child: SvgPicture.asset(
-                    AppIcons.microphone,
-                    width: 14,
-                    color: Colors.grey,
+                  suffixIcon: Container(
+                    padding: const EdgeInsets.all(12),
+                    child: SvgPicture.asset(
+                      AppIcons.microphone,
+                      width: 14,
+                      color: Colors.grey,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              for (int index = 0; index < menus.length; index++)
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      selectedIndex = index;
-                    });
-                  },
-                  child: Container(
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: (index == selectedIndex)
-                          ? AppColors.blackColor
-                          : Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Center(
-                      child: Text(
-                        menus[index],
-                        style: TextStyle(
-                          color: (index == selectedIndex)
-                              ? AppColors.whiteColor
-                              : Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-            ],
-          ),
-          const SizedBox(height: 5),
-          Expanded(
-            child: widgets[selectedIndex],
-          ),
-        ],
+            const SizedBox(height: 10),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //   children: [
+            //     for (int index = 0; index < menus.length; index++)
+            //       InkWell(
+            //         onTap: () {
+            //           setState(() {
+            //             selectedIndex = index;
+            //           });
+            //         },
+            //         child: Container(
+            //           height: 40,
+            //           decoration: BoxDecoration(
+            //             color: (index == selectedIndex)
+            //                 ? AppColors.blackColor
+            //                 : Colors.white,
+            //             borderRadius: BorderRadius.circular(8),
+            //           ),
+            //           padding: const EdgeInsets.symmetric(horizontal: 16),
+            //           child: Center(
+            //             child: Text(
+            //               menus[index],
+            //               style: TextStyle(
+            //                 color: (index == selectedIndex)
+            //                     ? AppColors.whiteColor
+            //                     : Colors.black,
+            //               ),
+            //             ),
+            //           ),
+            //         ),
+            //       ),
+            //   ],
+            // ),
+
+            ButtonsTabBar(
+              backgroundColor: Colors.black,
+              unselectedBackgroundColor: Colors.grey.shade500,
+              unselectedLabelStyle: TextStyle(color: Colors.black, fontFamily:  AppStrings.fontFamily),
+              labelStyle:
+              TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontFamily: AppStrings.fontFamily),
+              contentCenter: true,
+              width: 110,
+                buttonMargin: EdgeInsets.symmetric(horizontal: 16, vertical: 2.5),
+
+              onTap: (index){
+                setState(() {
+                  selectedIndex = index;
+                });
+              },
+              tabs: [
+                Tab(icon: Text("Feeds")),
+                Tab(icon: Text("Blogs")),
+                Tab(icon: Text("Eventos")),
+                Tab(icon: Text("Perfil ONG")),
+              ],
+            ),
+            const SizedBox(height: 5),
+            Expanded(child: widgets[selectedIndex]),
+          ],
+        ),
       ),
     );
   }
@@ -129,16 +152,14 @@ class OngContainer extends StatelessWidget {
                   "ONG's Populares",
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
-                TextButton(onPressed: () {}, child: Text("Ver mais"))
+                TextButton(onPressed: () {}, child: Text("Ver mais")),
               ],
             ),
           ),
           BlocBuilder<OngCubit, OngState>(
             builder: (context, state) {
               if (state is OngLoading) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+                return const Center(child: CircularProgressIndicator());
               } else if (state is OngLoaded) {
                 if (state.ongs.isEmpty) {
                   return Center(child: Text("Sem ongs registadas"));
@@ -147,24 +168,23 @@ class OngContainer extends StatelessWidget {
                   options: CarouselOptions(
                     height: 165,
                     aspectRatio: 16 / 9,
-                    viewportFraction: 0.8,
+                    viewportFraction: 0.95,
                     initialPage: 0,
-                    enableInfiniteScroll: true,
+                    enableInfiniteScroll: false,
                     animateToClosest: false,
                     reverse: false,
                     autoPlay: false,
                     autoPlayInterval: const Duration(seconds: 3),
-                    autoPlayAnimationDuration:
-                        const Duration(milliseconds: 800),
+                    autoPlayAnimationDuration: const Duration(
+                      milliseconds: 800,
+                    ),
                     autoPlayCurve: Curves.fastOutSlowIn,
                     enlargeCenterPage: false,
                     enlargeFactor: 0.3,
                     scrollDirection: Axis.horizontal,
                   ),
                   items: state.ongs.map((ong) {
-                    return OngWidget(
-                      ong: ong,
-                    );
+                    return OngWidget(ong: ong);
                   }).toList(),
                 );
               }
@@ -176,19 +196,14 @@ class OngContainer extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  "Para ti",
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
+                Text("Para ti", style: Theme.of(context).textTheme.titleLarge),
               ],
             ),
           ),
           BlocBuilder<OngCubit, OngState>(
             builder: (context, state) {
               if (state is OngLoading) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+                return const Center(child: CircularProgressIndicator());
               } else if (state is OngLoaded) {
                 if (state.ongs.isEmpty) {
                   return Center(child: Text("Sem ongs registadas"));
@@ -228,8 +243,9 @@ class OngContainer extends StatelessWidget {
                                 children: [
                                   Text(
                                     "Lorem ipsum dolor sit amet",
-                                    style:
-                                        Theme.of(context).textTheme.titleSmall,
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.titleSmall,
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                   ),

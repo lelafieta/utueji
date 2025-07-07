@@ -40,9 +40,11 @@ class _FeedPageState extends State<FeedPage> {
             padding: const EdgeInsets.all(16),
             itemBuilder: (context, index) {
               final feed = state.feeds[index];
-              return Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+              return Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(width: 0.5, color: Colors.black26),
                 ),
                 child: Padding(
                   padding:

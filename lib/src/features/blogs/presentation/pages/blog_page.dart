@@ -67,7 +67,7 @@ class _BlogPageState extends State<BlogPage> {
                 final blogs = state.blogs;
                 return CarouselSlider(
                   options: CarouselOptions(
-                    height: 250.0,
+                    height: 255.0,
                     enableInfiniteScroll: false,
                     padEnds: false,
                     viewportFraction: 0.93,
@@ -79,9 +79,12 @@ class _BlogPageState extends State<BlogPage> {
                       child: Container(
                         width: double.infinity,
                         margin: const EdgeInsets.only(left: 16, top: 16),
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(width: 0.5, color: Colors.black26),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,10 +99,7 @@ class _BlogPageState extends State<BlogPage> {
                                     right: 0,
                                     top: 0,
                                     child: ClipRRect(
-                                      borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(8),
-                                        topRight: Radius.circular(8),
-                                      ),
+                                      borderRadius: BorderRadius.circular(10),
                                       child: Container(
                                         height: 130,
                                         decoration: const BoxDecoration(
@@ -138,28 +138,24 @@ class _BlogPageState extends State<BlogPage> {
                                 ],
                               ),
                               Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                          "Publicado aos ${formatarDataPersonalizada(blog.createdAt)}"),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        blog.title,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
-                                      ),
-                                    ],
-                                  ),
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                        "Publicado aos ${formatarDataPersonalizada(blog.createdAt)}"),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      blog.title,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                    ),
+                                  ],
                                 ),
                               )
                             ],
@@ -190,19 +186,22 @@ class _BlogPageState extends State<BlogPage> {
             physics: ClampingScrollPhysics(),
             padding: EdgeInsets.all(16),
             itemBuilder: (context, index) {
-              return Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+              return Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(width: 0.5, color: Colors.black26),
                 ),
                 child: Container(
+                  padding: EdgeInsets.all(10),
                   child: Row(
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Container(
-                          width: 100,
-                          height: 100,
-                          color: Colors.red,
+                          width: 90,
+                          height: 90,
+                          color: Colors.grey,
                         ),
                       ),
                       Expanded(
@@ -229,7 +228,7 @@ class _BlogPageState extends State<BlogPage> {
                         onPressed: () {},
                         icon: SvgPicture.asset(
                           AppIcons.heart,
-                          color: Colors.red,
+                          color: Colors.black,
                         ),
                       ),
                     ],

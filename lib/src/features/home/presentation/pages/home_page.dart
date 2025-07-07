@@ -188,10 +188,10 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Container(
                       width: double.infinity,
-                      height: 150,
+                      height: 100,
                       margin: EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.grey,
+                        color: Colors.grey.shade300,
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
@@ -748,9 +748,9 @@ class _HomePageState extends State<HomePage> {
                             options: CarouselOptions(
                               height: 165,
                               aspectRatio: 16 / 9,
-                              viewportFraction: 0.8,
+                              viewportFraction: 0.90,
                               initialPage: 0,
-                              enableInfiniteScroll: true,
+                              enableInfiniteScroll: false,
                               animateToClosest: false,
                               reverse: false,
                               autoPlay: false,
@@ -777,8 +777,8 @@ class _HomePageState extends State<HomePage> {
                           return CarouselSlider(
                             options: CarouselOptions(
                               height: 190,
-                              aspectRatio: 16 / 9,
-                              viewportFraction: 0.8,
+                              aspectRatio: 16 / 6,
+                              viewportFraction: 1,
                               initialPage: 0,
                               enableInfiniteScroll: true,
                               animateToClosest: false,

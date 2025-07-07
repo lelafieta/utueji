@@ -22,9 +22,9 @@ class AppColors {
 
   static const Color scaffoldBackgroundColor = Color.fromARGB(
     255,
-    245,
-    245,
-    245,
+    246,
+    246,
+    246,
   );
   static const Color whiteColor = Colors.white;
 

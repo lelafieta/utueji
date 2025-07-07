@@ -22,9 +22,13 @@ class OngWidget extends StatelessWidget {
       onTap: () {
         Get.toNamed(AppRoutes.ongProfileRoute, arguments: ong);
       },
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+      child: Container(
+        width: double.infinity,
+        margin: EdgeInsets.only(left: 16, right: 16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(width: 0.5, color: Colors.black26),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -52,7 +56,7 @@ class OngWidget extends StatelessWidget {
                   Flexible(
                     child: Text(
                       "${ong.name}",
-                      maxLines: 2,
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
