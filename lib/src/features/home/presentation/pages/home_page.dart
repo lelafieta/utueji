@@ -199,7 +199,7 @@ class _HomePageState extends State<HomePage> {
                     //   padding: const EdgeInsets.symmetric(vertical: 20),
                     //   child: CarouselSlider(
                     //     options: CarouselOptions(
-                    //       height: 150.0,
+                    //       height: 150.0,s
                     //       enableInfiniteScroll: false,
                     //       padEnds: false,
                     //       viewportFraction: 0.93,
