@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:utueji/src/core/resources/images/app_images.dart';
+import '../../../../../gen/assets.gen.dart';
 import '../../../../config/routes/app_routes.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/utils/app_date_utils_helper.dart';
@@ -17,18 +19,18 @@ class CampaignWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Get.toNamed(AppRoutes.campaignDetail, arguments: campaign);
-      },
-      child: Container(
-        padding: EdgeInsets.all(10),
-        margin: EdgeInsets.only(right: 16.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(width: 0.5, color: Colors.black26),
-        ),
+    return Container(
+      padding: EdgeInsets.all(10),
+      margin: EdgeInsets.only(right: 16.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(width: 0.5, color: Colors.black26),
+      ),
+      child: InkWell(
+        onTap: () {
+          Get.toNamed(AppRoutes.campaignDetail, arguments: campaign);
+        },
         child: Column(
           children: [
             SizedBox(
@@ -36,10 +38,7 @@ class CampaignWidget extends StatelessWidget {
               child: Column(
                 children: [
                   ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10),
-                    ),
+                    borderRadius: BorderRadius.circular(10),
                     child: Stack(
                       children: [
                         Container(
@@ -83,13 +82,13 @@ class CampaignWidget extends StatelessWidget {
                         (campaign.priority != 0)
                             ? const SizedBox.shrink()
                             : Positioned(
-                                left: 0,
-                                top: 0,
+                                left: 10,
+                                top: 10,
                                 child: Container(
                                   width: 120,
                                   height: 30,
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
+                                    borderRadius: BorderRadius.circular(10),
                                     gradient: const LinearGradient(
                                       colors: [
                                         Color.fromARGB(255, 110, 32, 27),
@@ -109,33 +108,32 @@ class CampaignWidget extends StatelessWidget {
                                   ),
                                 ),
                               ),
+                        Positioned(
+                          right: 5,
+                          top: 5,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: AppUtils.favoriteWidget(
+                              context: context,
+                              itemId: campaign.id!,
+                              itemType: "campaign",
+                            ),
+                          ), //
+                        ),
                       ],
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(5),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                campaign.title!,
-                                style: Theme.of(context).textTheme.titleSmall,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
-                              ),
-                            ),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(50),
-                              child: AppUtils.favoriteWidget(
-                                context: context,
-                                itemId: campaign.id!,
-                                itemType: "campaign",
-                              ),
-                            ),
-                          ],
+                        SizedBox(height: 10),
+                        Text(
+                          campaign.title!,
+                          style: Theme.of(context).textTheme.titleMedium,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
                         const SizedBox(height: 10),
                         RichText(
@@ -244,27 +242,25 @@ class CampaignWidget extends StatelessWidget {
                       ],
                     ),
                   ),
+                  // SizedBox(height: 10,),
                   Align(
                     alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    AppValues.s10,
-                                  ), // Define o raio da borda aqui
-                                ),
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                  AppValues.s10,
+                                ), // Define o raio da borda aqui
                               ),
-                        ),
-                        onPressed: () {},
-                        child: Text("Doar"),
+                            ),
                       ),
+                      onPressed: () {},
+                      child: Text("Doar"),
                     ),
                   ),
-                  SizedBox(height: 10),
+
                 ],
               ),
             ),

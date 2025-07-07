@@ -64,8 +64,8 @@ class _HomePageState extends State<HomePage> {
   String formatarDataPersonalizada(DateTime data) {
     String diaSemana = DateFormat.EEEE('pt_BR').format(data);
     String dia = DateFormat.d().format(data); // 11
-    String mes = DateFormat.MMMM('pt_BR').format(data); // Abril
-    String horaMinuto = DateFormat('HH:mm').format(data); // 10:35
+    String mes = DateFormat.MMMM('pt_BR').format(data);
+    String horaMinuto = DateFormat('HH:mm').format(data);
 
     return '$diaSemana, $dia $mes $horaMinuto';
   }
@@ -405,7 +405,7 @@ class _HomePageState extends State<HomePage> {
                                   return CampaignWidget(campaign: camapaign);
                                 },
                             options: CarouselOptions(
-                              height: 420,
+                              height: 400,
                               aspectRatio: 16 / 9,
                               viewportFraction: 0.95,
                               initialPage: 0,
