@@ -178,58 +178,58 @@ class $AssetsIconsGen {
 
   /// List of all assets
   List<String> get values => [
-    animalPawPrint20Filled,
-    bell,
-    bullseyeArrow,
-    campaignFilled,
-    campaign,
-    categoryAlt,
-    charity,
-    child,
-    commentAlt,
-    commentsBold,
-    comments,
-    compassAltBold,
-    compassAlt,
-    doctor,
-    elderly,
-    envelope,
-    eye,
-    facebook,
-    familyDress,
-    googleIcon,
-    graduationCapSolid,
-    graduationCap,
-    handHoldingHeart,
-    handsHeartBold,
-    handsHeart,
-    heartBold,
-    heartPartnerHandshakeBold,
-    heartPartnerHandshake,
-    heart,
-    houseChimneyBold,
-    houseChimney,
-    instagram,
-    key,
-    lightbulbOn,
-    link,
-    medicineChest,
-    menuDots,
-    microphone,
-    oldPeople,
-    paperPlane,
-    paw,
-    peopleCommunity20Filled,
-    search,
-    shieldTrust,
-    sportSoccer24Filled,
-    squarePlus,
-    tennis,
-    triangleWarning,
-    warning,
-    whatsapp,
-    x,
-  ];
+        animalPawPrint20Filled,
+        bell,
+        bullseyeArrow,
+        campaignFilled,
+        campaign,
+        categoryAlt,
+        charity,
+        child,
+        commentAlt,
+        commentsBold,
+        comments,
+        compassAltBold,
+        compassAlt,
+        doctor,
+        elderly,
+        envelope,
+        eye,
+        facebook,
+        familyDress,
+        googleIcon,
+        graduationCapSolid,
+        graduationCap,
+        handHoldingHeart,
+        handsHeartBold,
+        handsHeart,
+        heartBold,
+        heartPartnerHandshakeBold,
+        heartPartnerHandshake,
+        heart,
+        houseChimneyBold,
+        houseChimney,
+        instagram,
+        key,
+        lightbulbOn,
+        link,
+        medicineChest,
+        menuDots,
+        microphone,
+        oldPeople,
+        paperPlane,
+        paw,
+        peopleCommunity20Filled,
+        search,
+        shieldTrust,
+        sportSoccer24Filled,
+        squarePlus,
+        tennis,
+        triangleWarning,
+        warning,
+        whatsapp,
+        x
+      ];
 }
 
 class $AssetsImagesGen {
@@ -289,23 +289,23 @@ class $AssetsImagesGen {
 
   /// List of all assets
   List<AssetGenImage> get values => [
-    anonymousMask,
-    avatarBackground,
-    charity,
-    child,
-    coverBackground,
-    eu,
-    healthcare,
-    icon,
-    image1,
-    ngo,
-    splash1,
-    splash2,
-    splash3,
-    success,
-    user,
-    wave,
-  ];
+        anonymousMask,
+        avatarBackground,
+        charity,
+        child,
+        coverBackground,
+        eu,
+        healthcare,
+        icon,
+        image1,
+        ngo,
+        splash1,
+        splash2,
+        splash3,
+        success,
+        user,
+        wave
+      ];
 }
 
 class $AssetsFontsPoppinsGen {
@@ -328,12 +328,12 @@ class $AssetsFontsPoppinsGen {
 
   /// List of all assets
   List<String> get values => [
-    poppinsBold,
-    poppinsExtraBold,
-    poppinsMedium,
-    poppinsRegular,
-    poppinsSemiBold,
-  ];
+        poppinsBold,
+        poppinsExtraBold,
+        poppinsMedium,
+        poppinsRegular,
+        poppinsSemiBold
+      ];
 }
 
 class Assets {
@@ -350,7 +350,11 @@ class Assets {
 }
 
 class AssetGenImage {
-  const AssetGenImage(this._assetName, {this.size, this.flavors = const {}});
+  const AssetGenImage(
+    this._assetName, {
+    this.size,
+    this.flavors = const {},
+  });
 
   final String _assetName;
 
@@ -410,8 +414,15 @@ class AssetGenImage {
     );
   }
 
-  ImageProvider provider({AssetBundle? bundle, String? package}) {
-    return AssetImage(_assetName, bundle: bundle, package: package);
+  ImageProvider provider({
+    AssetBundle? bundle,
+    String? package,
+  }) {
+    return AssetImage(
+      _assetName,
+      bundle: bundle,
+      package: package,
+    );
   }
 
   String get path => _assetName;

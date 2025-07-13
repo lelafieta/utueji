@@ -1,4 +1,4 @@
-import 'package:utueji/src/core/errors/error_messages.dart';
+import 'error_messages.dart';
 
 abstract class Failure {
   String? message;
