@@ -1,8 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 
-import 'package:utueji/src/core/errors/failures.dart';
-
 import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/i_auth_repository.dart';
 import '../datasources/i_auth_datasource.dart';

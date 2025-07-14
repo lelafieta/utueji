@@ -33,8 +33,8 @@ void main() async {
   await initializeDateFormatting('pt_BR', null);
 
   runApp(MaterialApp(
-    home: BlocProvider<AuthBloc>(
-      create: (context) => sl<AuthBloc>(),
+    home: BlocProvider<AuthCubit>(
+      create: (context) => sl<AuthCubit>(),
       child: const LoginPage(),
     ),
   )); // Changed for demonstration

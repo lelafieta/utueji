@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:utueji/src/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:utueji/src/features/auth/presentation/bloc/auth_cubit.dart';
+import 'package:utueji/src/features/auth/presentation/pages/register_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -31,16 +32,16 @@ class _LoginPageState extends State<LoginPage> {
               obscureText: true,
             ),
             const SizedBox(height: 16.0),
-            BlocConsumer<AuthBloc, AuthState>(
+            BlocConsumer<AuthCubit, AuthState>(
               listener: (context, state) {
                 if (state is AuthSuccess) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Welcome, ${state.user.name}!')),
+                    SnackBar(content: Text('Login successful! Token: ${state.accessToken}')),
                   );
                   // Navigate to home page or dashboard
                 } else if (state is AuthError) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Error: ${state.message}'))),
+                    SnackBar(content: Text('Error: ${state.message}')),
                   );
                 }
               },
@@ -50,11 +51,9 @@ class _LoginPageState extends State<LoginPage> {
                 }
                 return ElevatedButton(
                   onPressed: () {
-                    context.read<AuthBloc>().add(
-                          LoginEvent(
-                            email: _emailController.text,
-                            password: _passwordController.text,
-                          ),
+                    context.read<AuthCubit>().login(
+                          _emailController.text,
+                          _passwordController.text,
                         );
                   },
                   child: const Text('Login'),
@@ -65,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const RegisterPage()));
               },
-              child: const Text('Don't have an account? Register'),
+              child: const Text('Don\'t have an account? Register'),
             ),
           ],
         ),

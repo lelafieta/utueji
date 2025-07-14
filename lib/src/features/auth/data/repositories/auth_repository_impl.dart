@@ -1,28 +1,26 @@
 import 'package:dartz/dartz.dart';
-import 'package:utueji/src/features/auth/data/datasources/auth_remote_data_source.dart';
-import 'package:utueji/src/features/auth/domain/entities/user_entity.dart';
-import 'package:utueji/src/features/auth/domain/repositories/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
+  final INetwokInfo networkInfo
 
-  AuthRepositoryImpl(this.remoteDataSource);
+  AuthRepositoryImpl({required this.remoteDataSource, required this.networkInfo});
 
   @override
-  Future<Either<Exception, UserEntity>> login(String email, String password) async {
+  Future<Either<Exception, String>> login(String email, String password) async {
     try {
-      final user = await remoteDataSource.login(email, password);
-      return Right(user);
+      final accessToken = await remoteDataSource.login(email, password);
+      return Right(accessToken);
     } catch (e) {
       return Left(Exception(e.toString()));
     }
   }
 
   @override
-  Future<Either<Exception, UserEntity>> register(String name, String email, String password) async {
+  Future<Either<Exception, String>> register(String name, String email, String password) async {
     try {
-      final user = await remoteDataSource.register(name, email, password);
-      return Right(user);
+      final accessToken = await remoteDataSource.register(name, email, password);
+      return Right(accessToken);
     } catch (e) {
       return Left(Exception(e.toString()));
     }

@@ -1,13 +1,17 @@
 import 'package:dartz/dartz.dart';
-import 'package:utueji/src/features/auth/domain/entities/user_entity.dart';
-import 'package:utueji/src/features/auth/domain/repositories/auth_repository.dart';
+import '../../../../core/entities/no_params.dart';
+import '../../../../core/errors/failure.dart';
+import '../../../../core/usecases/base_usecase.dart';
+import '../entities/user_entity.dart';
+import '../repositories/i_auth_repository.dart';
 
-class GetProfileUseCase {
-  final AuthRepository repository;
+class GetProfileUseCase extends BaseUseCase<UserEntity, NoParams> {
+  final IAuthRepository repository;
 
-  GetProfileUseCase(this.repository);
+  GetProfileUseCase({required this.repository});
 
-  Future<Either<Exception, UserEntity>> call() {
+  @override
+  Future<Either<Failure, UserEntity>> call(NoParams params) {
     return repository.getProfile();
   }
 }

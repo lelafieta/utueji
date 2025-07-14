@@ -44,6 +44,7 @@ class _HomePageState extends State<HomePage> {
     // getUserData();
     context.read<FavoriteCubit>().getAllFavorites();
     context.read<HomeCampaignCubit>().getLatestUrgentCampaigns();
+
     context.read<EventCubit>().getLatestEvents();
     context.read<OngCubit>().getLatestOngs();
   }
@@ -181,6 +182,7 @@ class _HomePageState extends State<HomePage> {
                               AppIcons.microphone,
                               width: 14,
                               color: Colors.grey,
+
                             ),
                           ),
                         ),

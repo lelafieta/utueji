@@ -24,13 +24,13 @@ class _AuthRemoteDataSource implements AuthRemoteDataSource {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<UserModel> register(CreateAuthDto createAuthDto) async {
+  Future<String> register(CreateAuthDto createAuthDto) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(createAuthDto.toJson());
-    final _options = _setStreamType<UserModel>(Options(
+    final _options = _setStreamType<String>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -46,10 +46,10 @@ class _AuthRemoteDataSource implements AuthRemoteDataSource {
           _dio.options.baseUrl,
           baseUrl,
         )));
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late UserModel _value;
+    final _result = await _dio.fetch<String>(_options);
+    late String _value;
     try {
-      _value = UserModel.fromJson(_result.data!);
+      _value = _result.data!;
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -58,13 +58,13 @@ class _AuthRemoteDataSource implements AuthRemoteDataSource {
   }
 
   @override
-  Future<UserModel> login(LoginAuthDto loginAuthDto) async {
+  Future<String> login(LoginAuthDto loginAuthDto) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(loginAuthDto.toJson());
-    final _options = _setStreamType<UserModel>(Options(
+    final _options = _setStreamType<String>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -80,10 +80,10 @@ class _AuthRemoteDataSource implements AuthRemoteDataSource {
           _dio.options.baseUrl,
           baseUrl,
         )));
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late UserModel _value;
+    final _result = await _dio.fetch<String>(_options);
+    late String _value;
     try {
-      _value = UserModel.fromJson(_result.data!);
+      _value = _result.data!;
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

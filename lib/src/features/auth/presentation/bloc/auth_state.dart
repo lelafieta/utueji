@@ -1,4 +1,4 @@
-part of 'auth_bloc.dart';
+part of 'auth_cubit.dart';
 
 abstract class AuthState extends Equatable {
   const AuthState();
@@ -12,18 +12,18 @@ class AuthInitial extends AuthState {}
 class AuthLoading extends AuthState {}
 
 class AuthSuccess extends AuthState {
-  final UserEntity user;
+  final String accessToken;
 
-  const AuthSuccess(this.user);
+  const AuthSuccess({required this.accessToken});
 
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [accessToken];
 }
 
 class AuthError extends AuthState {
   final String message;
 
-  const AuthError(this.message);
+  const AuthError({required this.message});
 
   @override
   List<Object> get props => [message];

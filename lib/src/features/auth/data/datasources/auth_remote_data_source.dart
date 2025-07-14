@@ -11,10 +11,10 @@ abstract class AuthRemoteDataSource {
   factory AuthRemoteDataSource(Dio dio, {String baseUrl}) = _AuthRemoteDataSource;
 
   @POST('/register')
-  Future<UserModel> register(@Body() CreateAuthDto createAuthDto);
+  Future<String> register(@Body() CreateAuthDto createAuthDto);
 
   @POST('/login')
-  Future<UserModel> login(@Body() LoginAuthDto loginAuthDto);
+  Future<String> login(@Body() LoginAuthDto loginAuthDto);
 
   @GET('/profile')
   Future<UserModel> getProfile();

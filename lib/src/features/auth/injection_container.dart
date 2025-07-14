@@ -6,13 +6,13 @@ import 'package:utueji/src/features/auth/domain/repositories/auth_repository.dar
 import 'package:utueji/src/features/auth/domain/usecases/get_profile_usecase.dart';
 import 'package:utueji/src/features/auth/domain/usecases/login_usecase.dart';
 import 'package:utueji/src/features/auth/domain/usecases/register_usecase.dart';
-import 'package:utueji/src/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:utueji/src/features/auth/presentation/bloc/auth_cubit.dart';
 
 final sl = GetIt.instance;
 
 Future<void> initAuthDependencies() async {
-  // Bloc
-  sl.registerFactory(() => AuthBloc(
+  // Cubit
+  sl.registerFactory(() => AuthCubit(
         registerUseCase: sl(),
         loginUseCase: sl(),
         getProfileUseCase: sl(),
