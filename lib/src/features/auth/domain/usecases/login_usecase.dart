@@ -12,6 +12,6 @@ class LoginUseCase extends BaseUseCase<String, LoginParams> {
 
   @override
   Future<Either<Failure, String>> call(LoginParams params) {
-    return repository.login(params.email, params.password);
+    return repository.login(params);
   }
 }

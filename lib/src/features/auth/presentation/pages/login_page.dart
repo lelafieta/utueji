@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:utueji/src/features/auth/presentation/bloc/auth_cubit.dart';
+import 'package:utueji/src/features/auth/presentation/cubit/auth/auth_cubit.dart';
 import 'package:utueji/src/features/auth/presentation/pages/register_page.dart';
+
+import '../../domain/params/login_params.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -36,7 +38,11 @@ class _LoginPageState extends State<LoginPage> {
               listener: (context, state) {
                 if (state is AuthSuccess) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Login successful! Token: ${state.accessToken}')),
+                    SnackBar(
+                      content: Text(
+                        'Login successful! Token: ${state.accessToken}',
+                      ),
+                    ),
                   );
                   // Navigate to home page or dashboard
                 } else if (state is AuthError) {
@@ -52,9 +58,11 @@ class _LoginPageState extends State<LoginPage> {
                 return ElevatedButton(
                   onPressed: () {
                     context.read<AuthCubit>().login(
-                          _emailController.text,
-                          _passwordController.text,
-                        );
+                      LoginParams(
+                        email: _emailController.text,
+                        password: _passwordController.text,
+                      ),
+                    );
                   },
                   child: const Text('Login'),
                 );
@@ -62,7 +70,10 @@ class _LoginPageState extends State<LoginPage> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const RegisterPage()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const RegisterPage()),
+                );
               },
               child: const Text('Don\'t have an account? Register'),
             ),

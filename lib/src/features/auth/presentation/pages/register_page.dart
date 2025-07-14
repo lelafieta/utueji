@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:utueji/src/features/auth/presentation/bloc/auth_cubit.dart';
+import 'package:utueji/src/features/auth/presentation/cubit/auth/auth_cubit.dart';
+
+import '../../domain/params/register_params.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -40,7 +42,11 @@ class _RegisterPageState extends State<RegisterPage> {
               listener: (context, state) {
                 if (state is AuthSuccess) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Registration successful! Token: ${state.accessToken}')),
+                    SnackBar(
+                      content: Text(
+                        'Registration successful! Token: ${state.accessToken}',
+                      ),
+                    ),
                   );
                   Navigator.pop(context); // Go back to login page
                 } else if (state is AuthError) {
@@ -56,10 +62,13 @@ class _RegisterPageState extends State<RegisterPage> {
                 return ElevatedButton(
                   onPressed: () {
                     context.read<AuthCubit>().register(
-                          _nameController.text,
-                          _emailController.text,
-                          _passwordController.text,
-                        );
+                      RegisterParams(
+                        name: _nameController.text,
+                        email: _emailController.text,
+                        password: _passwordController.text,
+                        phone: '931225614',
+                      ),
+                    );
                   },
                   child: const Text('Register'),
                 );

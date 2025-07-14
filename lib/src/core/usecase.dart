@@ -1,5 +1,4 @@
-
-import 'package:utueji/src/core/either.dart';
+import 'package:dartz/dartz.dart';
 import 'package:utueji/src/core/error/failure.dart';
 
 abstract class UseCase<Type, Params> {

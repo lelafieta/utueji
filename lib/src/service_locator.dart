@@ -1,7 +1,6 @@
-
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
-import 'package:utueji/src/core/network/dio_client.dart';
+import 'package:utueji/src/core/api/dio_client.dart';
 import 'package:utueji/src/features/posts/data/datasources/post_api_service.dart';
 import 'package:utueji/src/features/posts/data/repositories/post_repository_impl.dart';
 import 'package:utueji/src/features/posts/domain/repositories/post_repository.dart';
