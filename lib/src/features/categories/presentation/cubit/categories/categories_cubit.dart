@@ -9,7 +9,6 @@ import 'package:utueji/src/features/categories/domain/usecases/get_all_categorie
 import 'package:utueji/src/features/categories/domain/usecases/get_category_by_id_usecase.dart';
 import 'package:utueji/src/features/categories/domain/usecases/update_category_usecase.dart';
 
-
 class CategoriesCubit extends Cubit<CategoriesState> {
   final CreateCategoryUseCase createCategoryUseCase;
   final GetAllCategoriesUseCase getAllCategoriesUseCase;
@@ -30,7 +29,9 @@ class CategoriesCubit extends Cubit<CategoriesState> {
     final result = await createCategoryUseCase(params);
     result.fold(
       (failure) => emit(CategoriesError(message: failure.toString())),
-      (category) => emit(const CategoriesSuccess(categories: [])), // Refresh all categories after creation
+      (category) => emit(
+        const CategoriesSuccess(categories: []),
+      ), // Refresh all categories after creation
     );
   }
 
@@ -48,7 +49,9 @@ class CategoriesCubit extends Cubit<CategoriesState> {
     final result = await getCategoryByIdUseCase(id);
     result.fold(
       (failure) => emit(CategoriesError(message: failure.toString())),
-      (category) => emit(CategoriesSuccess(categories: [category])), // Return single category in a list
+      (category) => emit(
+        CategoriesSuccess(categories: [category]),
+      ), // Return single category in a list
     );
   }
 
@@ -57,7 +60,9 @@ class CategoriesCubit extends Cubit<CategoriesState> {
     final result = await updateCategoryUseCase(params);
     result.fold(
       (failure) => emit(CategoriesError(message: failure.toString())),
-      (category) => emit(const CategoriesSuccess(categories: [])), // Refresh all categories after update
+      (category) => emit(
+        const CategoriesSuccess(categories: []),
+      ), // Refresh all categories after update
     );
   }
 
@@ -66,7 +71,9 @@ class CategoriesCubit extends Cubit<CategoriesState> {
     final result = await deleteCategoryUseCase(id);
     result.fold(
       (failure) => emit(CategoriesError(message: failure.toString())),
-      (_) => emit(const CategoriesSuccess(categories: [])), // Refresh all categories after deletion
+      (_) => emit(
+        const CategoriesSuccess(categories: []),
+      ), // Refresh all categories after deletion
     );
   }
 }
