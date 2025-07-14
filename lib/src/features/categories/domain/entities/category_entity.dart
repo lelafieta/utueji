@@ -1,19 +1,14 @@
-import 'package:flutter/material.dart';
+import 'package:equatable/equatable.dart';
 
-class CategoryEntity {
-  String? id;
-  String? name;
-  String? description;
-  String? iconPath;
-  Color? color;
-  DateTime? createdAt;
+class CategoryEntity extends Equatable {
+  final int id;
+  final String name;
 
-  CategoryEntity({
-    this.id,
-    this.createdAt,
-    this.name,
-    this.iconPath,
-    this.color,
-    this.description,
+  const CategoryEntity({
+    required this.id,
+    required this.name,
   });
+
+  @override
+  List<Object> get props => [id, name];
 }

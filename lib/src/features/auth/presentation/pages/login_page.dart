@@ -44,7 +44,8 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   );
-                  // Navigate to home page or dashboard
+                  
+                  
                 } else if (state is AuthError) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Error: ${state.message}')),
