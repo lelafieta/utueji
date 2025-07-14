@@ -21,7 +21,7 @@ class CampaignActionCubit extends Cubit<CampaignActionState> {
 
     result.fold(
         (failure) =>
-            emit(CampaignActionError(message: failure.message.toString())),
+            emit(CampaignActionError(message: failure.toString())),
         (success) => emit(CampaignActionSuccess()));
   }
 

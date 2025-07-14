@@ -4,7 +4,7 @@ import '../utils/app_strings.dart';
 import 'failure.dart';
 
 class ServerFailure extends Failure {
-  ServerFailure({String? failureMsg}) : super(failureMsg: failureMsg);
+  ServerFailure({super.failureMsg});
 
   factory ServerFailure.fromDioException(DioException dioException) {
     switch (dioException.type) {

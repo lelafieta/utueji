@@ -2,25 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:utueji/src/features/auth/presentation/bloc/auth_bloc.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
+      appBar: AppBar(title: const Text('Register')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            TextField(
+              controller: _nameController,
+              decoration: const InputDecoration(labelText: 'Name'),
+            ),
             TextField(
               controller: _emailController,
               decoration: const InputDecoration(labelText: 'Email'),
@@ -35,12 +40,16 @@ class _LoginPageState extends State<LoginPage> {
               listener: (context, state) {
                 if (state is AuthSuccess) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Welcome, ${state.user.name}!')),
+                    SnackBar(
+                      content: Text(
+                        'Registration successful for ${state.user.name}!',
+                      ),
+                    ),
                   );
-                  // Navigate to home page or dashboard
+                  Navigator.pop(context); // Go back to login page
                 } else if (state is AuthError) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Error: ${state.message}'))),
+                    SnackBar(content: Text('Error: ${state.message}')),
                   );
                 }
               },
@@ -51,21 +60,16 @@ class _LoginPageState extends State<LoginPage> {
                 return ElevatedButton(
                   onPressed: () {
                     context.read<AuthBloc>().add(
-                          LoginEvent(
-                            email: _emailController.text,
-                            password: _passwordController.text,
-                          ),
-                        );
+                      RegisterEvent(
+                        name: _nameController.text,
+                        email: _emailController.text,
+                        password: _passwordController.text,
+                      ),
+                    );
                   },
-                  child: const Text('Login'),
+                  child: const Text('Register'),
                 );
               },
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const RegisterPage()));
-              },
-              child: const Text('Don't have an account? Register'),
             ),
           ],
         ),

@@ -1,34 +1,16 @@
-import 'user_fcm_token_entity.dart';
+import 'package:equatable/equatable.dart';
 
-class UserEntity {
-  final String? id;
-  final String? fullName;
-  final String? email;
-  final String? avatarUrl;
-  final String? phoneNumber;
-  final String? bio;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
-  final String? location;
-  final bool? isVerified;
-  final String? role;
-  final String? firstName;
-  final String? lastName;
-  final UserFcmTokenEntity? userFcmTokenEntity;
+class UserEntity extends Equatable {
+  final String id;
+  final String name;
+  final String email;
 
-  const UserEntity(
-      {this.id,
-      this.fullName,
-      this.lastName,
-      this.firstName,
-      this.email,
-      this.avatarUrl,
-      this.phoneNumber,
-      this.bio,
-      this.createdAt,
-      this.updatedAt,
-      this.location,
-      this.isVerified,
-      this.role,
-      this.userFcmTokenEntity});
+  const UserEntity({
+    required this.id,
+    required this.name,
+    required this.email,
+  });
+
+  @override
+  List<Object?> get props => [id, name, email];
 }

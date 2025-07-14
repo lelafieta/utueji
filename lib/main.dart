@@ -10,6 +10,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'src/core/firebase/firebase_services.dart';
 import 'src/core/firebase/local_notification_services.dart';
 import 'src/app/di.dart' as di;
+import 'package:utueji/src/features/auth/injection_container.dart';
+import 'package:utueji/src/features/auth/presentation/pages/login_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,10 +26,16 @@ void main() async {
   }
   await di.init();
   setupServiceLocator(); // New line
+  await initAuthDependencies();
 
   SecureCacheHelper.init();
   AppEntity.uid = await SecureCacheHelper().getData(key: "uid");
   await initializeDateFormatting('pt_BR', null);
 
-  runApp(const MaterialApp(home: PostsPage())); // Changed for demonstration
+  runApp(MaterialApp(
+    home: BlocProvider<AuthBloc>(
+      create: (context) => sl<AuthBloc>(),
+      child: const LoginPage(),
+    ),
+  )); // Changed for demonstration
 }

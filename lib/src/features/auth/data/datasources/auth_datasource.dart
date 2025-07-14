@@ -1,8 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:utueji/src/core/supabase/supabase_consts.dart';
-
-import '../../../../core/errors/failures.dart';
 import '../models/user_model.dart';
 import 'i_auth_datasource.dart';
 
